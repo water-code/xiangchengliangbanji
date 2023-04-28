@@ -46,17 +46,51 @@
             </el-descriptions>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="水安全" name="water_safety">
+      <el-tab-pane label="水安全" name="water_safety" disabled>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="水资源" name="water_resources">
         <div class="basicInfo">
-          
+          <el-table :data="waterResourcesList" :height="300">
+            <el-table-column prop="waterSystemsId" label="水系编号"></el-table-column>
+            <el-table-column prop="resourceType" label="水资源类型"></el-table-column>
+            <el-table-column prop="resourceVolume" label="资源量"></el-table-column>
+            <el-table-column prop="resourceUsage" label="使用用途"></el-table-column>
+            <el-table-column prop="resourceQuality" label="水质情况"></el-table-column>
+            <el-table-column prop="resourceStatus" label="水量状态"></el-table-column>
+            <el-table-column prop="extractionRate" label="提取率"></el-table-column>
+            <el-table-column prop="dataYear" label="数据年份"></el-table-column>
+            <el-table-column label="详情">
+              <template #default="scope">
+                <el-button link type="primary" size="small" @click="waterResourcesDetail(scope.$index, scope.row)">详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </el-tab-pane>
       <el-tab-pane label="水利工程" name="water_projects">
         <div class="basicInfo">
+          <el-table :data="waterProjectsList" :height="300">
+            <el-table-column prop="id" label="ID"></el-table-column>
+            <el-table-column label="名称">
+              <template #default="scope">
+                <a href="#" :class="water_projects_name_decoration">{{ scope.row.name }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column prop="type" label="类型"></el-table-column>
+            <el-table-column prop="location" label="经纬度"></el-table-column>
+            <el-table-column prop="status" label="状态">
+              <template #default="scope">
+                <span :class="getStatusClass(scope.row.status)">{{ scope.row.status }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="详情">
+              <template #default="scope">
+                <el-button link type="primary" size="small" @click="waterProjectsDetail(scope.$index, scope.row)">详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </el-tab-pane>
       <el-tab-pane label="岸线规划" name="shoreline_planning">
@@ -65,7 +99,6 @@
             <el-table-column prop="id" label="ID"></el-table-column>
             <el-table-column prop="planningName" label="规划名称"></el-table-column>
             <el-table-column prop="waterSystemsId" label="水系编号"></el-table-column>
-            <!-- <el-table-column prop="shorelineType" label="岸别类型"></el-table-column> -->
             <el-table-column prop="planningStartPoint" label="规划起点"></el-table-column>
             <el-table-column prop="planningEndPoint" label="规划终点"></el-table-column>
             <el-table-column prop="planningEndPoint" label="定位">
@@ -73,23 +106,19 @@
                 <el-button link type="primary" size="small" @click="planningPosition(scope.$index, scope.row)">定位</el-button>
               </template>
             </el-table-column>
-            <!-- <el-table-column prop="planningLength" label="规划长度"></el-table-column> -->
-            <!-- <el-table-column prop="startPileNumber" label="起始桩号"></el-table-column> -->
-            <!-- <el-table-column prop="endPileNumber" label="结束桩号"></el-table-column> -->
-            <!-- <el-table-column prop="planningDescription" label="规划描述"></el-table-column> -->
             <el-table-column prop="approvalStatus" label="审批状态"></el-table-column>
           </el-table>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="河湖划界" name="river_lake_boundary">
+      <el-tab-pane label="河湖划界" name="river_lake_boundary" disabled>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
-      <el-tab-pane label="移民搬迁" name="relocation">
+      <el-tab-pane label="移民搬迁" name="relocation" disabled>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
-      <el-tab-pane label="防洪减灾" name="disaster_prevention_points">
+      <el-tab-pane label="防洪减灾" name="disaster_prevention_points" disabled>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
@@ -116,12 +145,27 @@ export default {
       }
     },
     getTitle(score) {
-      if (score < 60) {
-        return "健康得分过低";
-      } else if (score < 80) {
-        return "健康得分较低";
+      if (score < 50) {
+        return "劣态";
+      }else if(score < 60){
+        return "不健康";
+      } else if (score < 70) {
+        return "亚健康";
+      }else if (score < 80) {
+        return "亚健康";
+      }else if (score < 90) {
+        return "健康";
       } else {
-        return "健康得分良好";
+        return "非常健康";
+      }
+    },
+    getStatusClass(status) {
+      if (status === '运行中') {
+        return 'status-green';
+      } else if (status === '建设中') {
+        return 'status-yellow';
+      } else if (status === '已关闭') {
+        return 'status-red';
       }
     },
     planningPosition(index,row){
@@ -132,9 +176,15 @@ export default {
       const Lng = (start.lng + end.lng) / 2;
       const Lat = (start.lat + end.lat) / 2;
       const z = 3000;
-      const zoom = 8
+      const zoom = 15
       //组件之间通信，将经纬度传递给SceneView进行处理
       this.$eventBus.emit('location', [[Lng, Lat, z],zoom])
+    },
+    waterResourcesDetail(index,row){
+      alert(JSON.stringify(row))
+    },
+    waterProjectsDetail(index,row){
+      alert(JSON.stringify(row))
     }
   },
   props: {
@@ -149,7 +199,9 @@ export default {
       activeTab: 'basic',
       riverInfo: {},
       healthInfo: {},
-      planningList: []
+      planningList: [],
+      waterResourcesList: [],
+      waterProjectsList:[]
     })
 
     const fetchData = async () => {
@@ -159,11 +211,17 @@ export default {
         try {
           const riverInfoRes = await axios({url:`/api/water-systems/${newfid}`,method:"get"})  //水系基本信息
           const healthRes = await axios({url:`/api/health-evaluation/${newfid}`,method:"get"})  // 健康评价数据
-          const shorelinePlanningList = await axios({url:`/api/shoreline-planning/by-water-systems-id?waterSystemsId=${newfid}`,method:"get"})  // 健康评价数据
-          console.log(shorelinePlanningList)
+          const shorelinePlanningList = await axios({url:`/api/shoreline-planning/by-water-systems-id?waterSystemsId=${newfid}`,method:"get"})
+          const waterResourcesList = await axios({url:`/api/water-resources/water-systems/${newfid}`,method:"get"})
+          
+          const waterProjectsList = await axios({url:`/api/water-projects`,method:"get"})
           state.riverInfo = riverInfoRes.data
           state.healthInfo = healthRes.data
           state.planningList = shorelinePlanningList.data
+          state.waterResourcesList = waterResourcesList.data
+          state.waterProjectsList = waterProjectsList.data
+
+
         } catch (error) {
           console.error(error)
         }
@@ -175,11 +233,6 @@ export default {
       state.dialogVisible = true
       fetchData()
     }
-    // watchEffect(() => {
-    //   console.log('监控', state.riverInfo) // 确认是否正确更新 riverInfo 数据
-    //   console.log('监控', state.healthInfo) // 确认是否正确更新 healthInfo 数据
-    // })
-
     return {
       ...toRefs(state),
       openDialog
@@ -196,5 +249,16 @@ export default {
   --el-result-icon-font-size: 30px !important;
   --el-result-title-font-size: 13px !important;
   --el-result-title-margin-top: 0px !important;
+}
+.status-green {
+  color: green;
+}
+
+.status-yellow {
+  color: yellow;
+}
+
+.status-red {
+  color: red;
 }
 </style>

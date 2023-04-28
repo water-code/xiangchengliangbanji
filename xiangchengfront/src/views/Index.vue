@@ -35,6 +35,10 @@
         console.log('这里是', fid)
         const informationTab = this.$refs.informationTab
         informationTab.openDialog()
+      },
+      hadleShorelinePlanningClick(fid){
+        console.log('岸线规划')
+        console.log(fid)
       }
     },
     setup() {
@@ -46,7 +50,7 @@
   };
 </script>
 <template>
-  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @setFid="hadleSetFid" />
+  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @setFid="hadleSetFid" @shorelinePlanningClick="hadleShorelinePlanningClick" />
   <information-tab :fid="fid" ref="informationTab"></information-tab>
 </template>
 <style scoped>

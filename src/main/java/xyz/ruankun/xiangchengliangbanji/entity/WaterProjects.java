@@ -56,43 +56,13 @@ public class WaterProjects {
 }
 
 enum WaterProjectType {
-    HYDROPOWER_STATION("水电站"),
-    RESERVOIR("水库"),
-    WATER_INTAKE_PROJECT("取水工程");
-
-    private String value;
-
-    WaterProjectType(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
+    水电站,
+    水库,
+    取水工程
 }
 
 enum WaterProjectStatus {
-    RUNNING("运行中"),
-    UNDER_CONSTRUCTION("建设中"),
-    CLOSED("已关闭");
-
-    private String value;
-
-    WaterProjectStatus(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
+    运行中,
+    建设中,
+    已关闭
 }

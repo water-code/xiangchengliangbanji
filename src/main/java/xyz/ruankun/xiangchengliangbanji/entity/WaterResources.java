@@ -67,67 +67,27 @@ public class WaterResources {
 }
 
 enum ResourceType {
-    SURFACE_WATER("地表水"),
-    GROUND_WATER("地下水"),
-    RECYCLED_WATER("再生水");
-
-    private final String name;
-
-    ResourceType(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    地表水,
+    地下水,
+    再生水
 }
 
 enum ResourceUsage {
-    AGRICULTURE("农业"),
-    INDUSTRY("工业"),
-    LIFE("生活"),
-    ECOLOGY("生态");
-
-    private final String name;
-
-    ResourceUsage(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    农业,
+    工业,
+    生活,
+    生态
 }
 
 enum ResourceQuality {
-    EXCELLENT("优"),
-    GOOD("良"),
-    AVERAGE("中"),
-    POOR("差");
-
-    private final String name;
-
-    ResourceQuality(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    优,
+    良,
+    中,
+    差
 }
 
 enum ResourceStatus {
-    ADEQUATE("充足"),
-    TENSE("紧张"),
-    EXHAUSTED("枯竭");
-
-    private final String name;
-
-    ResourceStatus(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    充足,
+    紧张,
+    枯竭
 }

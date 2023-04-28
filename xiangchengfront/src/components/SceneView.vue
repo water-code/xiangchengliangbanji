@@ -13,8 +13,8 @@
     <div ref="basemapGalleryNode"></div>
     <div class="measure-tools-wrapper">
       <div class="measure-tools">
-        <div class="measure-tools-icon"  @click="toggleDirectLine()"><el-icon color="#409EFC" :size="50"><EditPen /></el-icon></div>
-        <div class="measure-tools-icon"  @click="toggleArea()"><el-icon color="#409EFC" :size="50"><Edit /></el-icon></div>
+        <div class="measure-tools-icon"  @click="toggleDirectLine()"><el-icon color="rgb(110,110,110)" :size="20"><EditPen /></el-icon></div>
+        <div class="measure-tools-icon"  @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20"><Edit /></el-icon></div>
       </div>
     </div>
   </div>
@@ -52,13 +52,13 @@ export default {
     async initializeMap() {
       try {
         esriConfig.apiKey = "AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR";
-        const map = new WebScene({
+        let map = new WebScene({
           portalItem: {
             id: "5a392557cffb485f8fe004e668e9edc0"
           }
         });
         // Create the SceneView
-        const view = new SceneView({
+        let view = new SceneView({
           map: map,
           container: "app",
           center: [99.80, 29.1],
@@ -76,7 +76,7 @@ export default {
           }
         });
         //添加图例
-        const legend = new Legend({
+        let legend = new Legend({
           view: view,  // 地图视图对象
           container: "legendDiv",  // 指定容器元素的 ID
           style: {
@@ -91,31 +91,41 @@ export default {
         // 将图例组件添加到地图中
         view.ui.add(legend, "bottom-right");
         //加载map service
-        const apiUrl = import.meta.env.VITE_MAP_SERVER_URL;
-        const layer = new MapImageLayer({
+        let apiUrl = import.meta.env.VITE_MAP_SERVER_URL;
+        let layer = new MapImageLayer({
           url: apiUrl,
           outFields: ["*"],
           sublayers: [
             {
-              id: 2,
-              visible: true
-            },{
-              id: 1,
-              visible: true
-            },{
               id: 0,
               visible: true,
-              autoCloseEnabled: true, // 启用自动隐藏功能
+              autoCloseEnabled: true,
               popupTemplate: {
                 content:(e)=>{
                   console.log(e.graphic.attributes)
-                  this.$emit('setFid', e.graphic.attributes)
-                },
-                actions:[{
-                  id:"show-tab"
-              }]
+                  this.$emit('setFid', e.graphic.attributes) 
+                }
               }
-              
+            },{
+              id: 1,
+              visible: true,
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content:(e)=>{
+                  console.log(attributes)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
+            },{
+              id: 2,
+              visible: true,
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content:(e)=>{
+                  console.log(e)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
             },{
               id: 3,
               visible: true
@@ -132,7 +142,12 @@ export default {
               id: 7,
               visible: true
             },{
-              id: 8,
+              id: 8
+            },{
+              id: 9,
+              visible: true
+            },{
+              id: 10,
               visible: true
             }
           ]
@@ -140,13 +155,13 @@ export default {
         map.add(layer);
 
         // 创建直线测量工具
-        const directLineMeasurement = new DirectLineMeasurement3D({
+        let directLineMeasurement = new DirectLineMeasurement3D({
           view: view,
           visible: this.directLineVisible,
           label:"距离测量"
         });
         // 创建面积测量工具
-        const areaMeasurement = new AreaMeasurement3D({
+        let areaMeasurement = new AreaMeasurement3D({
           view: view,
           visible: this.areaVisible,
           label:"面积测量"
@@ -157,7 +172,7 @@ export default {
         // 添加到视图中
         view.ui.add(areaMeasurement, 'bottom-left');
 
-        const basemapGallery = new BasemapGallery({
+        let basemapGallery = new BasemapGallery({
           view: view
         });
         view.ui.add(basemapGallery, {
@@ -169,17 +184,16 @@ export default {
 
         // 触发 "map-ready" 事件
         this.$emit('map-ready', this.view);
-        
+      
         // 监听全局事件进行定位操作
         this.$eventBus.on('location',(data)=>{
-          console.log('组件通信成功')
-          this.sceneView.goTo({
-            target:data[0],
-            zoom:data[1]
-          })
-        })
+          view.when(function() {
+            view.goTo({center:[data[0][0], data[0][1]],zoom: data[1]})
 
-        //...
+          }).catch(function(err) {
+            console.error("SceneView rejected:", err);
+          });
+        })
       } catch (error) {
         console.error('地图初始化失败：', error);
       }
@@ -193,7 +207,7 @@ export default {
           message: h('i', { style: 'color: teal' }, "开启距离测量"),
           duration:1000
         })
-        document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
+        // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
       }else {
         document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display='none'
         ElNotification({
@@ -201,7 +215,7 @@ export default {
           message: h('i', { style: 'color: teal' }, "关闭距离测量"),
           duration:1000
         })
-        document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0)'
+        // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     },
     toggleArea() {
@@ -213,7 +227,7 @@ export default {
           message: h('i', { style: 'color: teal' }, "开启面积测量"),
           duration:1000
         })
-        document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
+        // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
       }else {
         document.getElementsByClassName('esri-area-measurement-3d')[0].style.display='none'
         ElNotification({
@@ -221,27 +235,27 @@ export default {
           message: h('i', { style: 'color: teal' }, "关闭面积测量"),
           duration:1000
         })
-        document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
+        // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     }
   }
 };
 </script>
 <style>
+/* 控制popupTemplate显示 */
 .esri-popup__main-container{
   display: none !important;
 }
 /* *设置图例大小 */
 .esri-legend {
-  width: 200px;
-  height: 300px;
+  height: 200px;
 }
 .esri-ui-corner .esri-component.esri-widget--panel{
-  width: 200px !important;
+  width: 150px !important;
 }
 .esri-basemap-gallery {
   max-width: 100px !important;
-  max-height: 300px !important;
+  max-height: 130px !important;
 }
 .esri-direct-line-measurement-3d {
   display: none;
@@ -251,13 +265,23 @@ export default {
 }
 .measure-tools-wrapper {
   position: fixed;
-  bottom: 50px;
-  left: 50%;
+  display: flex;
+  flex-direction: row;
+  left: 40px;
+  top: 250px;
   transform: translateX(-50%);
 }
 .measure-tools {
-  display: flex;
   justify-content: center;
+}
+.measure-tools-icon{
+  background-color: #ffffff;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
 }
 
 /* 设置导航 */
@@ -324,13 +348,9 @@ export default {
   height: 35px;
   transition-duration: 0.4s;
 }
-.measure-tools-icon{
-  border-radius: 5px;
-}
+
 .measure-tools-icon:hover {
   cursor: pointer;
-  background-color: rgba(199, 199, 199, 0.5);
-  border-radius: 5px;
-  transition-duration: 0.4s;
+  background-color: rgb(243,243,243);
 }
 </style>
