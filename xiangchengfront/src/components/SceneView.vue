@@ -17,8 +17,17 @@
         <div class="measure-tools-icon"  @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20"><Edit /></el-icon></div>
       </div>
     </div>
+    <div class="map-FigureLayer">
+      <div class="map-FigureLayer-Font" @click="showTF()">
+        <p>图层</p>
+      </div>
+      <div class="map-FigureLayer-TF" v-if="TFvisiable">
+        11111
+      </div>
   </div>
   
+  </div>
+
 </template>
 <script>
 import SceneView from "@arcgis/core/views/SceneView";
@@ -38,7 +47,8 @@ export default {
     return {
       sceneView: null,
       directLineVisible: true,
-      areaVisible: true
+      areaVisible: true,
+      TFvisiable:false  //一开始的TF选项是隐藏的，只有点击后才是可见的
     };
   },
   created() {
@@ -92,6 +102,7 @@ export default {
         view.ui.add(legend, "bottom-right");
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL;
+        // console.log(apiUrl);
         let layer = new MapImageLayer({
           url: apiUrl,
           outFields: ["*"],
@@ -142,7 +153,8 @@ export default {
               id: 7,
               visible: true
             },{
-              id: 8
+              id: 8,
+              visible:true
             },{
               id: 9,
               visible: true
@@ -237,6 +249,76 @@ export default {
         })
         // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
+    },
+    //设置点击函数
+    showTF(){
+      let apiUrl2 = import.meta.env.VITE_MAP_SERVER_URL;
+      let layer2 = new MapImageLayer({
+          url: apiUrl2,
+          outFields: ["*"],
+          sublayers: [
+            {
+              id: 0,
+              visible: true,
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content:(e)=>{
+                  console.log(e.graphic.attributes)
+                  this.$emit('setFid', e.graphic.attributes) 
+                }
+              }
+            },{
+              id: 1,
+              visible: true,
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content:(e)=>{
+                  console.log(attributes)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
+            },{
+              id: 2,
+              visible: true,
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content:(e)=>{
+                  console.log(e)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
+            },{
+              id: 3,
+              visible: true
+            },{
+              id: 4,
+              visible: true
+            },{
+              id: 5,
+              visible: true
+            },{
+              id: 6,
+              visible: true
+            },{
+              id: 7,
+              visible: true
+            },{
+              id: 8,
+              visible:true
+            },{
+              id: 9,
+              visible: true
+            },{
+              id: 10,
+              visible: true
+            }
+          ]
+        });
+      this.TFvisiable = !this.TFvisiable;
+      // console.log(this);
+      // console.log(this.initializeMap());
+      console.log(this.TFvisiable);
+      // console.log(layer2.sublayers._items[0].visible);
     }
   }
 };
@@ -283,7 +365,34 @@ export default {
   justify-content: center;
   margin: 10px 0;
 }
+/*图层按钮的样式*/
+.map-FigureLayer{
+  position: fixed;
+  width: 60px;
+  height: 40px;
+  right:40px;
+  top:200px;
+  background-color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+}
+.map-FigureLayer p{
+  margin: 0 auto;
+  line-height: 40px;
+}
+.map-FigureLayer-Font :hover{
+  cursor: pointer;
+  user-select:none;
+}
 
+.map-FigureLayer-TF{
+  position: fixed;
+  right:40px;
+  top:260px;
+  background-color: #4f8ee1;
+  height: 500px;
+  width: 200px;
+}
 /* 设置导航 */
 .navbar {
   background-color: #4f8ee1 !important;
@@ -353,4 +462,6 @@ export default {
   cursor: pointer;
   background-color: rgb(243,243,243);
 }
+
+
 </style>
