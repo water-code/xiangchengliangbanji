@@ -18,11 +18,14 @@
       </div>
     </div>
     <div class="map-FigureLayer">
-      <div class="map-FigureLayer-Font" @click="showTF()">
+      <div class="map-FigureLayer-Font" @click="showFigureLayer()">
         <p>图层</p>
       </div>
-      <div class="map-FigureLayer-TF" v-if="TFvisiable">
-        11111
+      <div class="map-FigureLayer-TF" v-if="FigureLayerVisible">
+      <div v-for="(i,index) in FigureFigureLayerFont" :key="index" class="map-FigureLayer-TFdiv">
+        <p v-text="i"></p>
+        <el-switch v-model="FigureLayerInsideVisible[index]" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check" :inactive-icon="Close"/>
+      </div>
       </div>
   </div>
   
@@ -40,6 +43,8 @@ import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
 import BasemapGallery  from '@arcgis/core/widgets/BasemapGallery';
 import { ElNotification } from 'element-plus'
 import { h } from 'vue'
+import { Check, Close } from '@element-plus/icons-vue'
+
 
 export default {
   name: 'SceneView',
@@ -48,7 +53,11 @@ export default {
       sceneView: null,
       directLineVisible: true,
       areaVisible: true,
-      TFvisiable:false  //一开始的TF选项是隐藏的，只有点击后才是可见的
+      FigureLayerVisible:false,  //一开始的TF选项是隐藏的，只有点击后才是可见的
+      FigureFigureLayerFont:['水系','定曲岸线规划','许曲岸线规划','水电站','水文站','县（区)界','乡（镇）界','晕线1','晕线2','乡镇面 (10)','乡城县农田灌溉面积(水资源)'],
+      FigureLayerInsideVisible:[true,true,true,true,true,true,true,true,true,true,true],
+      Check,
+      Close,
     };
   },
   created() {
@@ -56,7 +65,6 @@ export default {
   },
   mounted() {
     this.initializeMap();
-    
   },
   methods: {
     async initializeMap() {
@@ -103,13 +111,14 @@ export default {
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL;
         // console.log(apiUrl);
+        console.log(this);
         let layer = new MapImageLayer({
           url: apiUrl,
           outFields: ["*"],
           sublayers: [
             {
               id: 0,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[0],
               autoCloseEnabled: true,
               popupTemplate: {
                 content:(e)=>{
@@ -119,7 +128,7 @@ export default {
               }
             },{
               id: 1,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[1],
               autoCloseEnabled: true,
               popupTemplate: {
                 content:(e)=>{
@@ -129,7 +138,7 @@ export default {
               }
             },{
               id: 2,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[2],
               autoCloseEnabled: true,
               popupTemplate: {
                 content:(e)=>{
@@ -139,32 +148,33 @@ export default {
               }
             },{
               id: 3,
-              visible: true
+              visible: this.FigureLayerInsideVisible[3]
             },{
               id: 4,
-              visible: true
+              visible: this.FigureLayerInsideVisible[4]
             },{
               id: 5,
-              visible: true
+              visible: this.FigureLayerInsideVisible[5]
             },{
               id: 6,
-              visible: true
+              visible: this.FigureLayerInsideVisible[6]
             },{
               id: 7,
-              visible: true
+              visible: this.FigureLayerInsideVisible[7]
             },{
               id: 8,
-              visible:true
+              visible:this.FigureLayerInsideVisible[8]
             },{
               id: 9,
-              visible: true
+              visible: this.FigureLayerInsideVisible[9]
             },{
               id: 10,
-              visible: true
+              visible: this.FigureLayerInsideVisible[10]
             }
           ]
         });
         map.add(layer);
+
 
         // 创建直线测量工具
         let directLineMeasurement = new DirectLineMeasurement3D({
@@ -251,74 +261,84 @@ export default {
       }
     },
     //设置点击函数
-    showTF(){
-      let apiUrl2 = import.meta.env.VITE_MAP_SERVER_URL;
-      let layer2 = new MapImageLayer({
-          url: apiUrl2,
-          outFields: ["*"],
-          sublayers: [
-            {
-              id: 0,
-              visible: true,
-              autoCloseEnabled: true,
-              popupTemplate: {
-                content:(e)=>{
-                  console.log(e.graphic.attributes)
-                  this.$emit('setFid', e.graphic.attributes) 
-                }
-              }
-            },{
-              id: 1,
-              visible: true,
-              autoCloseEnabled: true,
-              popupTemplate: {
-                content:(e)=>{
-                  console.log(attributes)
-                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
-                }
-              }
-            },{
-              id: 2,
-              visible: true,
-              autoCloseEnabled: true,
-              popupTemplate: {
-                content:(e)=>{
-                  console.log(e)
-                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
-                }
-              }
-            },{
-              id: 3,
-              visible: true
-            },{
-              id: 4,
-              visible: true
-            },{
-              id: 5,
-              visible: true
-            },{
-              id: 6,
-              visible: true
-            },{
-              id: 7,
-              visible: true
-            },{
-              id: 8,
-              visible:true
-            },{
-              id: 9,
-              visible: true
-            },{
-              id: 10,
-              visible: true
-            }
-          ]
-        });
-      this.TFvisiable = !this.TFvisiable;
+    showFigureLayer(){
+      // let apiUrl2 = import.meta.env.VITE_MAP_SERVER_URL;
+      // let layer2 = new MapImageLayer({
+      //     url: apiUrl2,
+      //     outFields: ["*"],
+      //     sublayers: [
+      //       {
+      //         id: 0,
+      //         visible: true,
+      //         autoCloseEnabled: true,
+      //         popupTemplate: {
+      //           content:(e)=>{
+      //             console.log(e.graphic.attributes)
+      //             this.$emit('setFid', e.graphic.attributes) 
+      //           }
+      //         }
+      //       },{
+      //         id: 1,
+      //         visible: true,
+      //         autoCloseEnabled: true,
+      //         popupTemplate: {
+      //           content:(e)=>{
+      //             console.log(attributes)
+      //             this.$emit('shorelinePlanningClick', e.graphic.attributes)
+      //           }
+      //         }
+      //       },{
+      //         id: 2,
+      //         visible: true,
+      //         autoCloseEnabled: true,
+      //         popupTemplate: {
+      //           content:(e)=>{
+      //             console.log(e)
+      //             this.$emit('shorelinePlanningClick', e.graphic.attributes)
+      //           }
+      //         }
+      //       },{
+      //         id: 3,
+      //         visible: true
+      //       },{
+      //         id: 4,
+      //         visible: true
+      //       },{
+      //         id: 5,
+      //         visible: true
+      //       },{
+      //         id: 6,
+      //         visible: true
+      //       },{
+      //         id: 7,
+      //         visible: true
+      //       },{
+      //         id: 8,
+      //         visible:true
+      //       },{
+      //         id: 9,
+      //         visible: true
+      //       },{
+      //         id: 10,
+      //         visible: true
+      //       }
+      //     ]
+      //   });
+      this.FigureLayerVisible = !this.FigureLayerVisible;
       // console.log(this);
       // console.log(this.initializeMap());
-      console.log(this.TFvisiable);
+      console.log(this.FigureLayerVisible);
       // console.log(layer2.sublayers._items[0].visible);
+    }
+  },
+  watch:{
+    FigureLayerInsideVisible:{
+      // immediate:true,
+      deep:true,
+      handler(){
+        console.log("1111");
+        this.initializeMap();
+      }
     }
   }
 };
@@ -370,7 +390,7 @@ export default {
   position: fixed;
   width: 60px;
   height: 40px;
-  right:40px;
+  right:22px;
   top:200px;
   background-color: #ffffff;
   text-align: center;
@@ -387,11 +407,32 @@ export default {
 
 .map-FigureLayer-TF{
   position: fixed;
-  right:40px;
+  right:22px;
   top:260px;
   background-color: #4f8ee1;
   height: 500px;
-  width: 200px;
+  width: 225px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+
+}
+.map-FigureLayer-TF p{
+  width: 180px;
+    overflow:hidden; 
+  text-overflow:ellipsis; 
+  white-space:nowrap; 
+}
+.map-FigureLayer-TFdiv{
+  display: flex;
+}
+.map-FigureLayer-TFdiv>div{
+  line-height: 40px;
+  flex-wrap: wrap;
+  right: 20px;
+  height: 40px;
+  align-items: center;
 }
 /* 设置导航 */
 .navbar {
