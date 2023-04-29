@@ -262,68 +262,6 @@ export default {
     },
     //设置点击函数
     showFigureLayer(){
-      // let apiUrl2 = import.meta.env.VITE_MAP_SERVER_URL;
-      // let layer2 = new MapImageLayer({
-      //     url: apiUrl2,
-      //     outFields: ["*"],
-      //     sublayers: [
-      //       {
-      //         id: 0,
-      //         visible: true,
-      //         autoCloseEnabled: true,
-      //         popupTemplate: {
-      //           content:(e)=>{
-      //             console.log(e.graphic.attributes)
-      //             this.$emit('setFid', e.graphic.attributes) 
-      //           }
-      //         }
-      //       },{
-      //         id: 1,
-      //         visible: true,
-      //         autoCloseEnabled: true,
-      //         popupTemplate: {
-      //           content:(e)=>{
-      //             console.log(attributes)
-      //             this.$emit('shorelinePlanningClick', e.graphic.attributes)
-      //           }
-      //         }
-      //       },{
-      //         id: 2,
-      //         visible: true,
-      //         autoCloseEnabled: true,
-      //         popupTemplate: {
-      //           content:(e)=>{
-      //             console.log(e)
-      //             this.$emit('shorelinePlanningClick', e.graphic.attributes)
-      //           }
-      //         }
-      //       },{
-      //         id: 3,
-      //         visible: true
-      //       },{
-      //         id: 4,
-      //         visible: true
-      //       },{
-      //         id: 5,
-      //         visible: true
-      //       },{
-      //         id: 6,
-      //         visible: true
-      //       },{
-      //         id: 7,
-      //         visible: true
-      //       },{
-      //         id: 8,
-      //         visible:true
-      //       },{
-      //         id: 9,
-      //         visible: true
-      //       },{
-      //         id: 10,
-      //         visible: true
-      //       }
-      //     ]
-      //   });
       this.FigureLayerVisible = !this.FigureLayerVisible;
       // console.log(this);
       // console.log(this.initializeMap());
