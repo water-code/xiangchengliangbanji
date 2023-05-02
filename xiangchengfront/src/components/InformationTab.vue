@@ -22,28 +22,36 @@
             <el-descriptions-item label="终点位置">{{ riverInfo.endLocation }}</el-descriptions-item>
           </el-descriptions>
         </div>
+        <!-- 雷达基本信息 -->
+        <div class="radar">
+          <el-collapse>
+            <el-collapse-item title="雷达图基本信息" name="1">
+              <Radar :targetValue="state.radarList.value" :indicator="state.radarList.indicatorList"></Radar>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="健康评价" name="health">
         <div class="basicInfo">
-            <el-descriptions :border="true" :column="2">
-                <!-- <el-descriptions-item label="id">{{ healthInfo.id }}</el-descriptions-item> -->
-                <!-- <el-descriptions-item label="水系ID">{{ healthInfo.waterSystemsId }}</el-descriptions-item> -->
-                <el-descriptions-item label="评价标准">{{ healthInfo.evaluationStandard }}</el-descriptions-item>
-                <el-descriptions-item label="河长">{{ healthInfo.riverChief }}</el-descriptions-item>
-                <el-descriptions-item label="健康得分">
-                    <el-text :style="{ color: healthInfo.healthScore < 60 ? 'red' : (healthInfo.healthScore < 70 ? 'orange' : (healthInfo.healthScore < 80 ? 'gray' : 'green')) }">
-                        {{ healthInfo.healthScore }}
-                    </el-text>
-                </el-descriptions-item>
-                <el-descriptions-item label="健康状况">
-                  <el-result :icon="getIcon(healthInfo.healthScore)" :title="getTitle(healthInfo.healthScore)">
-                    {{ healthInfo.healthStatus }}
-                  </el-result>
-                </el-descriptions-item>
-                <el-descriptions-item label="评价结论">{{ healthInfo.evaluationConclusion }}</el-descriptions-item>
-                <el-descriptions-item label="附件">{{ healthInfo.attachment }}</el-descriptions-item>
-                <el-descriptions-item label="评价时间">{{ healthInfo.evaluationDate }}</el-descriptions-item>
-            </el-descriptions>
+          <el-descriptions :border="true" :column="2">
+            <!-- <el-descriptions-item label="id">{{ healthInfo.id }}</el-descriptions-item> -->
+            <!-- <el-descriptions-item label="水系ID">{{ healthInfo.waterSystemsId }}</el-descriptions-item> -->
+            <el-descriptions-item label="评价标准">{{ healthInfo.evaluationStandard }}</el-descriptions-item>
+            <el-descriptions-item label="河长">{{ healthInfo.riverChief }}</el-descriptions-item>
+            <el-descriptions-item label="健康得分">
+              <el-text :style="{ color: healthInfo.healthScore < 60 ? 'red' : (healthInfo.healthScore < 70 ? 'orange' : (healthInfo.healthScore < 80 ? 'gray' : 'green')) }">
+                {{ healthInfo.healthScore }}
+              </el-text>
+            </el-descriptions-item>
+            <el-descriptions-item label="健康状况">
+              <el-result :icon="getIcon(healthInfo.healthScore)" :title="getTitle(healthInfo.healthScore)">
+                {{ healthInfo.healthStatus }}
+              </el-result>
+            </el-descriptions-item>
+            <el-descriptions-item label="评价结论">{{ healthInfo.evaluationConclusion }}</el-descriptions-item>
+            <el-descriptions-item label="附件">{{ healthInfo.attachment }}</el-descriptions-item>
+            <el-descriptions-item label="评价时间">{{ healthInfo.evaluationDate }}</el-descriptions-item>
+          </el-descriptions>
         </div>
       </el-tab-pane>
       <el-tab-pane label="水安全" name="water_safety" disabled>
@@ -127,63 +135,64 @@
 </template>
 
 <script>
-import { reactive, toRefs, watchEffect,watch  } from 'vue'
+import { reactive, toRefs, watchEffect, watch } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
 import axios from '../api/request'
+import Radar from './Radar.vue'
 
 export default {
-  components: { ElDialog, ElTabs, ElTabPane },
-  
-  methods:{
+  components: { ElDialog, ElTabs, ElTabPane, Radar },
+
+  methods: {
     getIcon(score) {
       if (score < 60) {
-        return "error";
+        return 'error'
       } else if (score < 80) {
-        return "warning";
+        return 'warning'
       } else {
-        return "success";
+        return 'success'
       }
     },
     getTitle(score) {
       if (score < 50) {
-        return "劣态";
-      }else if(score < 60){
-        return "不健康";
+        return '劣态'
+      } else if (score < 60) {
+        return '不健康'
       } else if (score < 70) {
-        return "亚健康";
-      }else if (score < 80) {
-        return "亚健康";
-      }else if (score < 90) {
-        return "健康";
+        return '亚健康'
+      } else if (score < 80) {
+        return '亚健康'
+      } else if (score < 90) {
+        return '健康'
       } else {
-        return "非常健康";
+        return '非常健康'
       }
     },
     getStatusClass(status) {
       if (status === '运行中') {
-        return 'status-green';
+        return 'status-green'
       } else if (status === '建设中') {
-        return 'status-yellow';
+        return 'status-yellow'
       } else if (status === '已关闭') {
-        return 'status-red';
+        return 'status-red'
       }
     },
-    planningPosition(index,row){
+    planningPosition(index, row) {
       //定位planning函数
       const start = JSON.parse(row.planningStartPoint)
       const end = JSON.parse(row.planningEndPoint)
       console.log(start, end)
-      const Lng = (start.lng + end.lng) / 2;
-      const Lat = (start.lat + end.lat) / 2;
-      const z = 3000;
+      const Lng = (start.lng + end.lng) / 2
+      const Lat = (start.lat + end.lat) / 2
+      const z = 3000
       const zoom = 15
       //组件之间通信，将经纬度传递给SceneView进行处理
-      this.$eventBus.emit('location', [[Lng, Lat, z],zoom])
+      this.$eventBus.emit('location', [[Lng, Lat, z], zoom])
     },
-    waterResourcesDetail(index,row){
+    waterResourcesDetail(index, row) {
       alert(JSON.stringify(row))
     },
-    waterProjectsDetail(index,row){
+    waterProjectsDetail(index, row) {
       alert(JSON.stringify(row))
     }
   },
@@ -201,39 +210,67 @@ export default {
       healthInfo: {},
       planningList: [],
       waterResourcesList: [],
-      waterProjectsList:[]
+      waterProjectsList: [],
+      // 声明雷达的数据
+      radarList: {
+        // 评价指标赋分
+        value: [100, 100, 66.1, 100, 100, 80, 100, 80, 90, 100, 60, 90.2, 100, 100, 100],
+        // 雷达图指示器配置
+        indicatorList: [
+          // name：指示器名称  max：指示器最大值,min：指示器最小值color：指示器线条颜色。
+          { name: '水资源开发利用率', max: 100 },
+          { name: '生态流量/水位满足程度', max: 100 },
+          { name: '岸线自然状况', max: 100 },
+          { name: '违规开发利用水域岸线程度', max: 100 },
+          { name: '河流纵向连通性指数', max: 100 },
+          { name: '水体整洁程度', max: 100 },
+          { name: '水质优劣程度', max: 100 },
+          { name: '水体自净能力', max: 100 },
+          { name: '水质变化趋势', max: 100 },
+          { name: '鱼类保有指数', max: 100 },
+          { name: '外来入侵物种', max: 100 },
+          { name: '公众满意程度', max: 100 },
+          { name: '防洪指标', max: 100 },
+          { name: '供水指标', max: 100 },
+          { name: '开发利用现状与规划的符合性', max: 100 }
+        ]
+      }
     })
 
     const fetchData = async () => {
       //监听 fid 的变化,因为父传过来的props可能产生异步,所以要监听props的变化
-      watch(() => props.fid, async newfid => {
-        console.log(props.fid, newfid)
-        try {
-          const riverInfoRes = await axios({url:`/api/water-systems/${newfid}`,method:"get"})  //水系基本信息
-          const healthRes = await axios({url:`/api/health-evaluation/${newfid}`,method:"get"})  // 健康评价数据
-          const shorelinePlanningList = await axios({url:`/api/shoreline-planning/by-water-systems-id?waterSystemsId=${newfid}`,method:"get"})
-          const waterResourcesList = await axios({url:`/api/water-resources/water-systems/${newfid}`,method:"get"})
-          
-          const waterProjectsList = await axios({url:`/api/water-projects`,method:"get"})
-          state.riverInfo = riverInfoRes.data
-          state.healthInfo = healthRes.data
-          state.planningList = shorelinePlanningList.data
-          state.waterResourcesList = waterResourcesList.data
-          state.waterProjectsList = waterProjectsList.data
+      watch(
+        () => props.fid,
+        async newfid => {
+          console.log(props.fid, newfid)
+          try {
+            const riverInfoRes = await axios({ url: `/api/water-systems/${newfid}`, method: 'get' }) //水系基本信息
+            const healthRes = await axios({ url: `/api/health-evaluation/${newfid}`, method: 'get' }) // 健康评价数据
+            const shorelinePlanningList = await axios({ url: `/api/shoreline-planning/by-water-systems-id?waterSystemsId=${newfid}`, method: 'get' })
+            const waterResourcesList = await axios({ url: `/api/water-resources/water-systems/${newfid}`, method: 'get' })
 
-
-        } catch (error) {
-          console.error(error)
-        }
-      }, { immediate: true }) // 立即执行一次
+            const waterProjectsList = await axios({ url: `/api/water-projects`, method: 'get' })
+            state.riverInfo = riverInfoRes.data
+            state.healthInfo = healthRes.data
+            state.planningList = shorelinePlanningList.data
+            state.waterResourcesList = waterResourcesList.data
+            state.waterProjectsList = waterProjectsList.data
+          } catch (error) {
+            console.error(error)
+          }
+        },
+        { immediate: true }
+      ) // 立即执行一次
     }
 
-    const openDialog =  () => {
+    const openDialog = () => {
       console.log('hello world')
       state.dialogVisible = true
       fetchData()
     }
+
     return {
+      state,
       ...toRefs(state),
       openDialog
     }
@@ -260,5 +297,12 @@ export default {
 
 .status-red {
   color: red;
+}
+.el-dialog__body {
+  height: 420px;
+  overflow: auto;
+}
+.el-collapse-item__content {
+  padding: 0;
 }
 </style>
