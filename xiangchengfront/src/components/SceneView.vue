@@ -13,22 +13,26 @@
     <div ref="basemapGalleryNode"></div>
     <div class="measure-tools-wrapper">
       <div class="measure-tools">
-        <div class="measure-tools-icon"  @click="toggleDirectLine()"><el-icon color="rgb(110,110,110)" :size="20"><EditPen /></el-icon></div>
-        <div class="measure-tools-icon"  @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20"><Edit /></el-icon></div>
+        <div class="measure-tools-icon" @click="toggleDirectLine()"><el-icon color="rgb(110,110,110)" :size="20">
+            <EditPen />
+          </el-icon></div>
+        <div class="measure-tools-icon" @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20">
+            <Edit />
+          </el-icon></div>
       </div>
     </div>
   </div>
-  
+
 </template>
 <script>
-import SceneView from "@arcgis/core/views/SceneView";
-import WebScene from "@arcgis/core/WebScene";
-import esriConfig from "@arcgis/core/config";
-import Legend from "@arcgis/core/widgets/Legend";
-import MapImageLayer from "@arcgis/core/layers/MapImageLayer";
-import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D';
-import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D';
-import BasemapGallery  from '@arcgis/core/widgets/BasemapGallery';
+import SceneView from '@arcgis/core/views/SceneView'
+import WebScene from '@arcgis/core/WebScene'
+import esriConfig from '@arcgis/core/config'
+import Legend from '@arcgis/core/widgets/Legend'
+import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
+import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
+import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
+import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
 import { ElNotification } from 'element-plus'
 import { h } from 'vue'
 
@@ -39,33 +43,39 @@ export default {
       sceneView: null,
       directLineVisible: true,
       areaVisible: true
-    };
+    }
   },
   created() {
-    document.body.style.marginTop = '40px';
+    document.body.style.marginTop = '40px'
   },
   mounted() {
-    this.initializeMap();
-    
+    this.initializeMap()
   },
   methods: {
     async initializeMap() {
       try {
-        esriConfig.apiKey = "AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR";
+        esriConfig.apiKey = 'AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR'
         let map = new WebScene({
           portalItem: {
-            id: "5a392557cffb485f8fe004e668e9edc0"
+            id: '5a392557cffb485f8fe004e668e9edc0'
           }
-        });
+        })
         // Create the SceneView
         let view = new SceneView({
+          // map：指定需要渲染的 Web 地图或场景实例。
           map: map,
-          container: "app",
-          center: [99.80, 29.1],
+          // container：指定地图渲染的容器，此处传入 'app' 表示渲染到 id 为 'app' 的 HTML 元素上。
+          container: 'app',
+          // center：指定地图视角的中心点坐标， [99.8, 29.1] 表示经度为 99.8，纬度为 29.1。
+          center: [99.8, 29.1],
+          // zoom：指定地图的缩放级别,表示缩放级别为 10。
           zoom: 10,
-          environment:{
-            lighting:null
+          // environment：指定地图的环境设置，{ lighting: null } 表示使用默认的光照环境。
+          environment: {
+            lighting: null
           },
+          // popup：指定弹出窗口的设置
+          // 表示禁用弹出窗口的操作按钮，并在地图右侧显示弹出窗口。
           popup: {
             actions: [],
             dockEnabled: true,
@@ -74,183 +84,214 @@ export default {
               breakpoint: false
             }
           }
-        });
+        })
         //添加图例
         let legend = new Legend({
-          view: view,  // 地图视图对象
-          container: "legendDiv",  // 指定容器元素的 ID
+          view: view, // 地图视图对象
+          container: 'legendDiv', // 指定容器元素的 ID
           style: {
-            backgroundColor: "white",
-            borderColor: "black",
-            fontFamily: "Arial, sans-serif",
-            fontSize: "14px",
-            fontWeight: "normal",
+            backgroundColor: 'white',
+            borderColor: 'black',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '14px',
+            fontWeight: 'normal',
             opacity: 0.8
           }
-        });
+        })
         // 将图例组件添加到地图中
-        view.ui.add(legend, "bottom-right");
+        view.ui.add(legend, 'bottom-right')
         //加载map service
-        let apiUrl = import.meta.env.VITE_MAP_SERVER_URL;
+        let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
         let layer = new MapImageLayer({
+          // 指定地图服务的 URL 地址
           url: apiUrl,
-          outFields: ["*"],
+          // outFields: 指定需要查询的字段信息
+          // ['*'] 表示查询所有字段。
+          outFields: ['*'],
+          // sublayers：指定地图中的子图层信息，包括 ID、可见性、弹出窗口模板等属性。
           sublayers: [
             {
+              // 水系
               id: 0,
               visible: true,
               autoCloseEnabled: true,
+              // popupTemplate 属性指定了子图层的弹出窗口模板，用于在用户点击该图层时显示相关信息。
               popupTemplate: {
-                content:(e)=>{
-                  console.log(e.graphic.attributes)
-                  this.$emit('setFid', e.graphic.attributes) 
+                content: e => {
+                  console.log(e)
+                  this.$emit('setFid', e.graphic.attributes)
                 }
               }
-            },{
+            },
+            {
+              // 定曲岸线规划
               id: 1,
               visible: true,
               autoCloseEnabled: true,
               popupTemplate: {
-                content:(e)=>{
+                content: e => {
+                  // e.graphic.attributes 表示当前弹出窗口关联的要素（feature）的属性信息
+                  // e 表示事件对象，graphic 表示与事件相关的图形对象，attributes 则表示该图形对象所关联的要素的属性信息
+                  // 通过访问 attributes 属性，可以获取到该要素的所有属性信息
                   console.log(attributes)
                   this.$emit('shorelinePlanningClick', e.graphic.attributes)
                 }
               }
-            },{
+            },
+            {
+              // 许曲岸线规划
               id: 2,
               visible: true,
               autoCloseEnabled: true,
               popupTemplate: {
-                content:(e)=>{
+                content: e => {
                   console.log(e)
                   this.$emit('shorelinePlanningClick', e.graphic.attributes)
                 }
               }
-            },{
+            },
+            {
+              // 水电站
               id: 3,
               visible: true
-            },{
+            },
+            {
+              // 水文站
               id: 4,
               visible: true
-            },{
+            },
+            {
+              // 县（区）界
               id: 5,
               visible: true
-            },{
+            },
+            {
+              // 乡（镇）界
               id: 6,
               visible: true
-            },{
+            },
+            {
+              // 晕线
               id: 7,
               visible: true
-            },{
-              id: 8
-            },{
+            },
+            {
+              // 晕线1
+              id: 8,
+              visible: true
+            },
+            {
+              // 晕线2
               id: 9,
               visible: true
-            },{
+            },
+            {
+              // 乡镇面
               id: 10,
               visible: true
             }
           ]
-        });
-        map.add(layer);
+        })
+        map.add(layer)
 
         // 创建直线测量工具
         let directLineMeasurement = new DirectLineMeasurement3D({
           view: view,
           visible: this.directLineVisible,
-          label:"距离测量"
-        });
+          label: '距离测量'
+        })
         // 创建面积测量工具
         let areaMeasurement = new AreaMeasurement3D({
           view: view,
           visible: this.areaVisible,
-          label:"面积测量"
-        });
+          label: '面积测量'
+        })
 
         // 添加到视图中
-        view.ui.add(directLineMeasurement, 'bottom-left');
+        view.ui.add(directLineMeasurement, 'bottom-left')
         // 添加到视图中
-        view.ui.add(areaMeasurement, 'bottom-left');
+        view.ui.add(areaMeasurement, 'bottom-left')
 
         let basemapGallery = new BasemapGallery({
           view: view
-        });
+        })
         view.ui.add(basemapGallery, {
-          position: "top-right"
-        });
+          position: 'top-right'
+        })
 
         // 将 SceneView 对象保存到组件的 data 中
-        this.sceneView = view;
+        this.sceneView = view
 
         // 触发 "map-ready" 事件
-        this.$emit('map-ready', this.view);
-      
-        // 监听全局事件进行定位操作
-        this.$eventBus.on('location',(data)=>{
-          view.when(function() {
-            view.goTo({center:[data[0][0], data[0][1]],zoom: data[1]})
+        this.$emit('map-ready', this.view)
 
-          }).catch(function(err) {
-            console.error("SceneView rejected:", err);
-          });
+        // 监听全局事件进行定位操作
+        this.$eventBus.on('location', data => {
+          view
+            .when(function () {
+              view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1] })
+            })
+            .catch(function (err) {
+              console.error('SceneView rejected:', err)
+            })
         })
       } catch (error) {
-        console.error('地图初始化失败：', error);
+        console.error('地图初始化失败：', error)
       }
     },
     toggleDirectLine() {
-      this.directLineVisible = !this.directLineVisible;
+      this.directLineVisible = !this.directLineVisible
       if (this.directLineVisible) {
-        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display='block'
+        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display = 'block'
         ElNotification({
           title: '提示',
-          message: h('i', { style: 'color: teal' }, "开启距离测量"),
-          duration:1000
+          message: h('i', { style: 'color: teal' }, '开启距离测量'),
+          duration: 1000
         })
         // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
-      }else {
-        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display='none'
+      } else {
+        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display = 'none'
         ElNotification({
           title: '提示',
-          message: h('i', { style: 'color: teal' }, "关闭距离测量"),
-          duration:1000
+          message: h('i', { style: 'color: teal' }, '关闭距离测量'),
+          duration: 1000
         })
         // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     },
     toggleArea() {
-      this.areaVisible = !this.areaVisible;
+      this.areaVisible = !this.areaVisible
       if (this.areaVisible) {
-        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display='block'
+        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display = 'block'
         ElNotification({
           title: '提示',
-          message: h('i', { style: 'color: teal' }, "开启面积测量"),
-          duration:1000
+          message: h('i', { style: 'color: teal' }, '开启面积测量'),
+          duration: 1000
         })
         // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
-      }else {
-        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display='none'
+      } else {
+        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display = 'none'
         ElNotification({
           title: '提示',
-          message: h('i', { style: 'color: teal' }, "关闭面积测量"),
-          duration:1000
+          message: h('i', { style: 'color: teal' }, '关闭面积测量'),
+          duration: 1000
         })
         // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     }
   }
-};
+}
 </script>
 <style>
 /* 控制popupTemplate显示 */
-.esri-popup__main-container{
+.esri-popup__main-container {
   display: none !important;
 }
 /* *设置图例大小 */
 .esri-legend {
   height: 200px;
 }
-.esri-ui-corner .esri-component.esri-widget--panel{
+.esri-ui-corner .esri-component.esri-widget--panel {
   width: 150px !important;
 }
 .esri-basemap-gallery {
@@ -274,7 +315,7 @@ export default {
 .measure-tools {
   justify-content: center;
 }
-.measure-tools-icon{
+.measure-tools-icon {
   background-color: #ffffff;
   width: 32px;
   height: 32px;
@@ -297,7 +338,7 @@ export default {
   align-items: center;
   z-index: 1; /* 设置比地图视图层级高 */
 }
-.navbar-left img{
+.navbar-left img {
   display: inline;
   width: 30px;
   height: 30px;
@@ -338,11 +379,11 @@ export default {
   color: #ffffff;
   margin: 0;
 }
-.navbar-right p:hover{
+.navbar-right p:hover {
   cursor: pointer;
   color: yellowgreen;
 }
-.navbar-right img:hover{
+.navbar-right img:hover {
   cursor: pointer;
   width: 35px;
   height: 35px;
@@ -351,6 +392,6 @@ export default {
 
 .measure-tools-icon:hover {
   cursor: pointer;
-  background-color: rgb(243,243,243);
+  background-color: rgb(243, 243, 243);
 }
 </style>
