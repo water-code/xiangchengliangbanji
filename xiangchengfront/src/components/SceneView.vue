@@ -34,7 +34,6 @@
     </div>
 
   </div>
-
 </template>
 <script>
 import SceneView from '@arcgis/core/views/SceneView'
@@ -54,11 +53,11 @@ export default {
   data() {
     return {
       sceneView: null,
-      directLineVisible: true,
-      areaVisible: true,
-      FigureLayerVisible: false, //一开始的TF选项是隐藏的，只有点击后才是可见的
-      FigureFigureLayerFont: ['水系', '定曲岸线规划', '许曲岸线规划', '水电站', '水文站', '县（区)界', '乡（镇）界', '晕线1', '晕线2', '乡镇面 (10)', '乡城县农田灌溉面积(水资源)'],
-      FigureLayerInsideVisible: [true, true, true, true, true, true, true, true, true, true, true],
+      directLineVisible: false,
+      areaVisible: false,   //一开始的面积测量和距离测量是关闭状态???
+      FigureLayerVisible:false,  //一开始的TF选项是隐藏的，只有点击后才是可见的
+      FigureFigureLayerFont:['水系','定曲岸线规划','许曲岸线规划','水电站','水文站','县（区)界','乡（镇）界','晕线1','晕线2','乡镇面 (10)','乡城县农田灌溉面积(水资源)'],
+      FigureLayerInsideVisible:[true,true,true,true,true,true,true,true,true,true,true],
       Check,
       Close
     }
@@ -210,15 +209,15 @@ export default {
         // 创建直线测量工具
         let directLineMeasurement = new DirectLineMeasurement3D({
           view: view,
-          visible: this.directLineVisible,
-          label: '距离测量'
-        })
+          visible: true,
+          label:"距离测量"
+        });
         // 创建面积测量工具
         let areaMeasurement = new AreaMeasurement3D({
           view: view,
-          visible: this.areaVisible,
-          label: '面积测量'
-        })
+          visible: true,
+          label:"面积测量"
+        });
 
         // 添加到视图中
         view.ui.add(directLineMeasurement, 'bottom-left')
@@ -304,16 +303,22 @@ export default {
   watch: {
     FigureLayerInsideVisible: {
       // immediate:true,
-      deep: true,
-      handler() {
-        console.log('1111')
-        this.initializeMap()
+      deep:true,
+      handler(){
+        // console.log("1111");
+        this.initializeMap();
       }
     }
   }
 }
 </script>
 <style>
+/* *{
+  margin: 0px;
+} */
+body{
+  margin-bottom: 0px;
+}
 /* 控制popupTemplate显示 */
 .esri-popup__main-container {
   display: none !important;
@@ -365,6 +370,9 @@ export default {
   background-color: #ffffff;
   text-align: center;
   font-size: 1em;
+  border-radius: 10px;
+  border:2px solid skyblue;
+  /* box-shadow:  1px 1px 3px 3px black; */
 }
 .map-FigureLayer p {
   margin: 0 auto;
@@ -380,12 +388,18 @@ export default {
   right: 22px;
   top: 260px;
   background-color: #4f8ee1;
-  height: 500px;
+  border-radius: 10px;
+  height: 400px;
+  color: white;
+  font-weight: bold;
   width: 225px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: stretch;
+  overflow-y: scroll;
+  opacity: 0.88;
+  user-select:none;
 }
 .map-FigureLayer-TF p {
   width: 180px;
