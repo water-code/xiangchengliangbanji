@@ -21,6 +21,18 @@
           </el-icon></div>
       </div>
     </div>
+    <div class="map-FigureLayer">
+      <div class="map-FigureLayer-Font" @click="showFigureLayer()">
+        <p>图层</p>
+      </div>
+      <div class="map-FigureLayer-TF" v-if="FigureLayerVisible">
+        <div v-for="(i,index) in FigureFigureLayerFont" :key="index" class="map-FigureLayer-TFdiv">
+          <p v-text="i"></p>
+          <el-switch v-model="FigureLayerInsideVisible[index]" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check" :inactive-icon="Close" />
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </template>
@@ -35,6 +47,7 @@ import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
 import { ElNotification } from 'element-plus'
 import { h } from 'vue'
+import { Check, Close } from '@element-plus/icons-vue'
 
 export default {
   name: 'SceneView',
@@ -42,7 +55,12 @@ export default {
     return {
       sceneView: null,
       directLineVisible: true,
-      areaVisible: true
+      areaVisible: true,
+      FigureLayerVisible: false, //一开始的TF选项是隐藏的，只有点击后才是可见的
+      FigureFigureLayerFont: ['水系', '定曲岸线规划', '许曲岸线规划', '水电站', '水文站', '县（区)界', '乡（镇）界', '晕线1', '晕线2', '乡镇面 (10)', '乡城县农田灌溉面积(水资源)'],
+      FigureLayerInsideVisible: [true, true, true, true, true, true, true, true, true, true, true],
+      Check,
+      Close
     }
   },
   created() {
@@ -102,6 +120,8 @@ export default {
         view.ui.add(legend, 'bottom-right')
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
+        // console.log(apiUrl);
+        console.log(this)
         let layer = new MapImageLayer({
           // 指定地图服务的 URL 地址
           url: apiUrl,
@@ -113,7 +133,7 @@ export default {
             {
               // 水系
               id: 0,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[0],
               autoCloseEnabled: true,
               // popupTemplate 属性指定了子图层的弹出窗口模板，用于在用户点击该图层时显示相关信息。
               popupTemplate: {
@@ -126,7 +146,7 @@ export default {
             {
               // 定曲岸线规划
               id: 1,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[1],
               autoCloseEnabled: true,
               popupTemplate: {
                 content: e => {
@@ -141,7 +161,7 @@ export default {
             {
               // 许曲岸线规划
               id: 2,
-              visible: true,
+              visible: this.FigureLayerInsideVisible[2],
               autoCloseEnabled: true,
               popupTemplate: {
                 content: e => {
@@ -153,42 +173,35 @@ export default {
             {
               // 水电站
               id: 3,
-              visible: true
+              visible: this.FigureLayerInsideVisible[3]
             },
             {
-              // 水文站
               id: 4,
-              visible: true
+              visible: this.FigureLayerInsideVisible[4]
             },
             {
-              // 县（区）界
               id: 5,
-              visible: true
+              visible: this.FigureLayerInsideVisible[5]
             },
             {
-              // 乡（镇）界
               id: 6,
-              visible: true
+              visible: this.FigureLayerInsideVisible[6]
             },
             {
-              // 晕线
               id: 7,
-              visible: true
+              visible: this.FigureLayerInsideVisible[7]
             },
             {
-              // 晕线1
               id: 8,
-              visible: true
+              visible: this.FigureLayerInsideVisible[8]
             },
             {
-              // 晕线2
               id: 9,
-              visible: true
+              visible: this.FigureLayerInsideVisible[9]
             },
             {
-              // 乡镇面
               id: 10,
-              visible: true
+              visible: this.FigureLayerInsideVisible[10]
             }
           ]
         })
@@ -278,6 +291,24 @@ export default {
         })
         // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
+    },
+    //设置点击函数
+    showFigureLayer() {
+      this.FigureLayerVisible = !this.FigureLayerVisible
+      // console.log(this);
+      // console.log(this.initializeMap());
+      console.log(this.FigureLayerVisible)
+      // console.log(layer2.sublayers._items[0].visible);
+    }
+  },
+  watch: {
+    FigureLayerInsideVisible: {
+      // immediate:true,
+      deep: true,
+      handler() {
+        console.log('1111')
+        this.initializeMap()
+      }
     }
   }
 }
@@ -324,7 +355,54 @@ export default {
   justify-content: center;
   margin: 10px 0;
 }
+/*图层按钮的样式*/
+.map-FigureLayer {
+  position: fixed;
+  width: 60px;
+  height: 40px;
+  right: 22px;
+  top: 200px;
+  background-color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+}
+.map-FigureLayer p {
+  margin: 0 auto;
+  line-height: 40px;
+}
+.map-FigureLayer-Font :hover {
+  cursor: pointer;
+  user-select: none;
+}
 
+.map-FigureLayer-TF {
+  position: fixed;
+  right: 22px;
+  top: 260px;
+  background-color: #4f8ee1;
+  height: 500px;
+  width: 225px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+}
+.map-FigureLayer-TF p {
+  width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-FigureLayer-TFdiv {
+  display: flex;
+}
+.map-FigureLayer-TFdiv > div {
+  line-height: 40px;
+  flex-wrap: wrap;
+  right: 20px;
+  height: 40px;
+  align-items: center;
+}
 /* 设置导航 */
 .navbar {
   background-color: #4f8ee1 !important;
