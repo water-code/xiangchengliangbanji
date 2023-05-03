@@ -1,5 +1,6 @@
 package xyz.ruankun.xiangchengliangbanji.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
 import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -26,15 +28,29 @@ import java.util.stream.Collectors;
  * @author: 阮超越
  * @date: 2022/8/30 20:32
  */
+
+
+/**
+ * knife4j
+ */
+@EnableSwagger2
+@EnableKnife4j
 @Configuration
 public class SwaggerConfiguration {
     @Bean
     public Docket docket() {
-        return new Docket(DocumentationType.OAS_30)
+        return new Docket(DocumentationType.SWAGGER_2)
+
                 .select().apis(RequestHandlerSelectors.basePackage("xyz.ruankun.xiangchengliangbanji.controller"))
                 .paths(PathSelectors.any()).build()
                 .apiInfo(setApiInfo());
     }
+
+    /*private ApiInfo apiInfo() {
+
+
+    }*/
+
     private ApiInfo setApiInfo() {
         Contact contact = new Contact("阮超越", "https://www.ruankun.xyz", "qkmc@outlook.com");
         ApiInfo info = new ApiInfo("乡城凉拌鸡", "最爱吃凉拌鸡", "v1.0",
