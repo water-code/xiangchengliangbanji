@@ -44,6 +44,21 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+    /**
+     * cyy
+     */
+    implementation 'com.aliyun:aliyun-java-sdk-core:4.5.3'
+    implementation 'com.aliyun:aliyun-java-sdk-green:3.6.6'
+    implementation 'com.alibaba.nls:nls-sdk-transcriber:2.2.1'
+    implementation 'com.github.xiaoymin:knife4j-spring-boot-starter:3.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.alibaba:fastjson:1.2.42'
+    implementation 'com.aliyun:aliyun-java-sdk-core:3.7.1'
+    implementation 'org.apache.commons:commons-configuration2:2.7'
+
+
 }
 
 tasks.named('test') {
