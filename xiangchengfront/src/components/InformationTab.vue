@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" :title="riverInfo.riverName + '（河流编码:' + riverInfo.riverCode + '）'" width="50%">
+  <el-dialog v-model="dialogVisible" :title="riverInfo.riverName + '（河流编码:' + riverInfo.riverCode + '）'" width="50%" @close="restore">
     <el-tabs v-model="activeTab">
       <el-tab-pane label="河流基本信息" name="basic">
         <div class="basicInfo">
@@ -24,9 +24,9 @@
         </div>
         <!-- 雷达基本信息 -->
         <div class="radar">
-          <el-collapse>
+          <el-collapse v-model="radarList.activeName">
             <el-collapse-item title="雷达图基本信息" name="1">
-              <Radar :targetValue="state.radarList.value" :indicator="state.radarList.indicatorList"></Radar>
+              <Radar :targetValue="radarList.value" :indicator="radarList.indicatorList"></Radar>
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, watchEffect, watch } from 'vue'
+import { reactive, toRefs, watchEffect, watch, toRaw, onMounted } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
 import axios from '../api/request'
 import Radar from './Radar.vue'
@@ -213,6 +213,8 @@ export default {
       waterProjectsList: [],
       // 声明雷达的数据
       radarList: {
+        // 响应面板
+        activeName: [],
         // 评价指标赋分
         value: [100, 100, 66.1, 100, 100, 80, 100, 80, 90, 100, 60, 90.2, 100, 100, 100],
         // 雷达图指示器配置
@@ -269,10 +271,18 @@ export default {
       fetchData()
     }
 
+    // 关闭当前河流窗口后触发
+    const restore = () => {
+      // 收缩雷达图信息栏collapse
+      state.radarList.activeName = []
+      // 重置Tab当前所在信息栏
+      state.activeTab = 'basic'
+    }
+
     return {
-      state,
       ...toRefs(state),
-      openDialog
+      openDialog,
+      restore
     }
   }
 }
