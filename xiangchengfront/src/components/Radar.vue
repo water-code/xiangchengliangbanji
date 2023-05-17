@@ -77,7 +77,9 @@ export default {
     }
     // mounted钩子函数
     onMounted(() => {
+      // 基于准备好的dom，初始化echarts实例
       const chartInstance = echarts.init(chart.value)
+      // 绘制图表
       chartInstance.setOption(options)
     })
 
