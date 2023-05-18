@@ -11,12 +11,13 @@ export default defineConfig({
     include: ['axios'],
   },
   server: {
-    host:'0.0.0.0',
+    host:'43.136.217.83',
+    port: 8080,
     cors: true,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://43.136.217.83:8080',   //代理接口
+        target: 'http://127.0.0.1:8081',   //代理接口
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')  // 重定向.
       }
