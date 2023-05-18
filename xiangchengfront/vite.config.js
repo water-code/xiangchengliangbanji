@@ -11,8 +11,7 @@ export default defineConfig({
     include: ['axios'],
   },
   server: {
-    host:'43.136.217.83',
-    port: 8080,
+    host:'0.0.0.0',
     cors: true,
     open: true,
     proxy: {
