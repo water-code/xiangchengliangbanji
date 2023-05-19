@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import viteCompression from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+
+//在plugins配置数组里添加gzip插件
+ plugins: [vue(),viteCompression({
+  verbose: true,
+  disable: false,
+  threshold: 10240,
+  algorithm: 'gzip',
+  ext: '.gz',
+})],
   define: {
     'process.env':{}
   },
@@ -24,7 +33,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['/api/captcha?type=math']
+      external: ['/api/captcha?type=math'],
     }
   }
 })
