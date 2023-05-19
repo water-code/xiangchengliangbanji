@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf node_modules && npm run build",
+    "build": "vite build",
     "preview": "vite preview",
     "fix-memory-limit": "cross-env LIMIT=8096 increase-memory-limit"
   },
