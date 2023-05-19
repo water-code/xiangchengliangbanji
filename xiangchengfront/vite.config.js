@@ -21,10 +21,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')  // 重定向.
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      external: ['/api/captcha?type=math']
+    }
   }
-  // build: {
-  //   rollupOptions: {
-  //     external: ['/api/captcha?type=math']
-  //   }
-  // }
 })
