@@ -2,9 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import viteCompression from 'vite-plugin-compression'
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
-
+  publicPath:'./',
 //在plugins配置数组里添加gzip插件
  plugins: [vue(),viteCompression({
   verbose: true,
