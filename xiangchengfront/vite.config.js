@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import viteCompression from 'vite-plugin-compression'
-
+import CompressionPlugin from "compression-webpack-plugin"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  cacheDir: 'node_modules/.vite-cache',
   publicPath:'./',
 //在plugins配置数组里添加gzip插件
  plugins: [vue(),viteCompression({
@@ -40,13 +41,26 @@ export default defineConfig({
         chunkFileNames: 'static/js/[name]-[hash].js',
         entryFileNames: 'static/js/[name]-[hash].js',
         assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
-        // manualChunks(id) {
-        //   if (id.includes('node_modules')) {
-        //     return id.toString().split('node_modules/')[1].split('/')[0].toString();
-        //   }
-        // }
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        }
       }
 
     }
-  }
+  },
+
+  chainWebpack: (config) => {
+    // 生产环境，开启js\css压缩
+    if (process.env.NODE_ENV === 'production') {
+      config.plugin('compressionPlugin').use(new CompressionPlugin({
+        test: /\.(js|css|less|map)$/, // 匹配文件名
+        threshold: 1024, // 对超过10k的数据压缩
+        minRatio: 0.8,
+      }))
+    }
+ 
+  },
+
 })
