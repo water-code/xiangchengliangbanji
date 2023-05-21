@@ -4,7 +4,7 @@ setlocal
 set HOST=xiangcheng.ruankun.xyz
 set USER=root
 set PASSWORD=@Sicau211
-set REMOTE_SCRIPT=/root/xiangchengfront/start.sh
+set REMOTE_SCRIPT=/root/xiangchengfront/xiangchengliangbanji/xiangchengfront/start.sh
 set COMMIT_MSG="script auto commit"
 set REMOTE_NAME=gitee
 
