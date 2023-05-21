@@ -27,7 +27,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8081',   //代理接口
+        target: 'http://xiangcheng.ruankun.xyz:8081',   //代理接口
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')  // 重定向.
       }
