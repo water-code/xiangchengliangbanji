@@ -57,7 +57,7 @@ export default {
       areaVisible: false,   //一开始的面积测量和距离测量是关闭状态???
       FigureLayerVisible:false,  //一开始的TF选项是隐藏的，只有点击后才是可见的
       FigureFigureLayerFont:['水系','定曲岸线规划','许曲岸线规划','水电站','水文站','县（区)界','乡（镇）界','晕线1','晕线2','乡镇面 (10)','乡城县农田灌溉面积(水资源)'],
-      FigureLayerInsideVisible:[true,true,true,true,true,true,true,true,true,true,true],
+      FigureLayerInsideVisible:[true,false,false,true,true,false,false,false,false,false,false],
       Check,
       Close
     }
@@ -75,7 +75,8 @@ export default {
         let map = new WebScene({
           portalItem: {
             id: '5a392557cffb485f8fe004e668e9edc0'
-          }
+          },
+          basemap:"arcgis-oceans"
         })
         // Create the SceneView
         let view = new SceneView({
