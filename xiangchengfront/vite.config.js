@@ -25,6 +25,7 @@ export default defineConfig({
     host:'0.0.0.0',
     cors: true,
     open: true,
+    port: 80,
     proxy: {
       '/api': {
         target: 'http://xiangcheng.ruankun.xyz:8081',   //代理接口
