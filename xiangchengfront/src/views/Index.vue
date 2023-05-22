@@ -1,6 +1,8 @@
 <script>
 import SceneView from '../components/SceneView.vue'
 import InformationTab from '../components/InformationTab.vue'
+import SearchTab from '../components/SearchTab.vue'
+
 import { ref } from 'vue'
 import { ElButton } from 'element-plus'
 
@@ -39,19 +41,25 @@ export default {
     hadleShorelinePlanningClick(fid) {
       console.log('岸线规划')
       console.log(fid)
+    },
+    hadlesearchComplete(element){
+      console.log('嘿嘿', element)
     }
   },
   setup() {
     const fid = ref(0) // 假设当前河流信息的fid为123
+    const srname = "许曲"
     return {
-      fid
+      fid,
+      srname
     }
   }
 }
 </script>
 <template>
-  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @setFid="hadleSetFid" @shorelinePlanningClick="hadleShorelinePlanningClick" />
+  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @searchComplete="hadlesearchComplete" @setFid="hadleSetFid" @shorelinePlanningClick="hadleShorelinePlanningClick" />
   <information-tab :fid="fid" ref="informationTab"></information-tab>
+  <SearchTab :srname="srname" ref="searchTab"></SearchTab>
 </template>
 <style scoped>
 </style>

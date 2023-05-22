@@ -44,6 +44,8 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
+import Search from "@arcgis/core/widgets/Search.js";
+
 import { ElNotification } from 'element-plus'
 import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
@@ -118,6 +120,30 @@ export default {
         })
         // 将图例组件添加到地图中
         view.ui.add(legend, 'bottom-right')
+
+        //添加搜索小组件
+        const searchWidget = new Search({
+          view: view,
+          sources: [{
+            featureLayer: {
+              url: "http://xiangcheng.natapp1.cc/arcgis/rest/services/xiangchengliangbanji/MapServer/FeatureServer/0",
+              outFields: ["*"]
+            },
+            name: "水系",
+            placeholder: "搜索 水系",
+            zoomScale: 50000
+          }]
+        });
+        // Adds the search widget below other elements in
+        // the top left corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-left",
+          index: 0
+        });
+        searchWidget.on('search-complete',function(element){
+          this.$emit('searchComplete', element)
+        })
+
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
         // console.log(apiUrl);
