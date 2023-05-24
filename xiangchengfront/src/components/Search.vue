@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <span>关键字</span>
-    <el-input v-model="data.inputVal" placeholder="请输入河流关键字信息" clearable class="input" @clear="storageAllRiverData" />
+    <el-input v-model="data.inputVal" placeholder="请输入河流关键字信息" clearable class="input" @clear="getAllRiverData" />
     <el-button type="primary" @click="getAllRiverDataByKey">查询</el-button>
   </div>
   <el-table ref="singleTable" :data="data.tableData" highlight-current-row @current-change="handleCurrentChange" @row-click="goLocation" style="width: 100%" height="200" class="table">
@@ -52,6 +52,11 @@ async function storageAllRiverData() {
 function getAllRiverDataByKey() {
   const list = JSON.parse(localStorage.getItem('riverList'))
   data.tableData = list.filter(item => item.riverName.includes(data.inputVal.trim())).map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
+}
+// 获取河流全部基本信息
+function getAllRiverData() {
+  const list = JSON.parse(localStorage.getItem('riverList'))
+  data.tableData = list.map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
 }
 storageAllRiverData()
 </script>
