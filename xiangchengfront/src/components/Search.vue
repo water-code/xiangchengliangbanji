@@ -26,9 +26,6 @@ const data = reactive({
 })
 
 // 定义方法
-function setCurrent(row) {
-  this.$refs.singleTable.setCurrentRow(row)
-}
 function handleCurrentChange(val) {
   data.currentRow = val
 }
@@ -44,7 +41,6 @@ async function storageAllRiverData() {
   const res = await axios({ url: '/api/water-systems', method: 'get' }) //水系基本信息
   if (res.status == 200) {
     localStorage.setItem('riverList', JSON.stringify(res.data))
-    console.log(res.data)
     data.tableData = res.data.map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
   }
 }
