@@ -29,5 +29,9 @@ public class WaterSystemsService {
     public List<WaterSystems> getWaterSystemsByWaterType(String waterType) {
         return waterSystemsRepository.findByWaterType(WaterType.valueOf(waterType));
     }
+
+    public List<WaterSystems> getWaterSystemsByKeyword(String keyword) {
+        return waterSystemsRepository.findByRiverNameContaining(keyword);
+    }
 }
 

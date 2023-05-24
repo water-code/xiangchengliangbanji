@@ -50,5 +50,11 @@ public class WaterSystemsController {
         List<WaterSystems> waterSystemsList = waterSystemsService.getWaterSystemsByWaterType(waterType);
         return new ResponseEntity<>(waterSystemsList, HttpStatus.OK);
     }
+
+    @GetMapping("/by-keyword")
+    public ResponseEntity<List<WaterSystems>> getWaterSystemsByKeyword(@RequestParam(value = "keyword") String keyword) {
+        List<WaterSystems> waterSystemsList = waterSystemsService.getWaterSystemsByKeyword(keyword);
+        return new ResponseEntity<>(waterSystemsList, HttpStatus.OK);
+    }
 }
 

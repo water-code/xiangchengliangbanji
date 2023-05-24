@@ -11,4 +11,5 @@ import java.util.List;
 public interface WaterSystemsRepository extends JpaRepository<WaterSystems, Integer> {
     List<WaterSystems> findByRiverCodeOrRiverName(String riverCode, String riverName);
     List<WaterSystems> findByWaterType(WaterType waterType);
+    List<WaterSystems> findByRiverNameContaining(String keyword);
 }
