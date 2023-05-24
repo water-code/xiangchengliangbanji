@@ -47,12 +47,16 @@ async function storageAllRiverData() {
 // 通过关键字请求对应的信息
 function getAllRiverDataByKey() {
   const list = JSON.parse(localStorage.getItem('riverList'))
-  data.tableData = list.filter(item => item.riverName.includes(data.inputVal.trim())).map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
+  if (list) {
+    data.tableData = list.filter(item => item.riverName.includes(data.inputVal.trim())).map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
+  }
 }
 // 获取河流全部基本信息
 function getAllRiverData() {
   const list = JSON.parse(localStorage.getItem('riverList'))
-  data.tableData = list.map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
+  if (list) {
+    data.tableData = list.map(item => ({ name: item.riverName, type: item.waterType, location: item.extraJson }))
+  }
 }
 storageAllRiverData()
 </script>
