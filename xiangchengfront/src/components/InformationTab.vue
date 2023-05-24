@@ -1,7 +1,9 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="riverInfo.riverName + '（河流编码:' + riverInfo.riverCode + '）'" width="50%" @close="restore">
-    <el-tabs v-model="activeTab">
+    <el-tabs v-model="activeTab" @tab-change="tabChange">
       <el-tab-pane label="河流基本信息" name="basic">
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
           <el-descriptions :border="true" :column="2">
             <!-- <el-descriptions-item label="id">{{ riverInfo.id }}</el-descriptions-item> -->
@@ -32,6 +34,8 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="健康评价" name="health">
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
           <el-descriptions :border="true" :column="2">
             <!-- <el-descriptions-item label="id">{{ healthInfo.id }}</el-descriptions-item> -->
@@ -55,10 +59,14 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="水安全" name="water_safety" disabled>
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="水资源" name="water_resources">
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
           <el-table :data="waterResourcesList" :height="300">
             <el-table-column prop="waterSystemsId" label="水系编号"></el-table-column>
@@ -78,6 +86,8 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="水利工程" name="water_projects">
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
           <el-table :data="waterProjectsList" :height="300">
             <el-table-column prop="id" label="ID"></el-table-column>
@@ -102,6 +112,8 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="岸线规划" name="shoreline_planning">
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
           <el-table :data="planningList" :height="300">
             <el-table-column prop="id" label="ID"></el-table-column>
@@ -119,14 +131,20 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="河湖划界" name="river_lake_boundary" disabled>
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="移民搬迁" name="relocation" disabled>
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="防洪减灾" name="disaster_prevention_points" disabled>
+        <!-- 搜索河流功能实现 -->
+        <Search :key="searchKey"></Search>
         <div class="basicInfo">
         </div>
       </el-tab-pane>
@@ -139,9 +157,11 @@ import { reactive, toRefs, watchEffect, watch, toRaw, onMounted } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
 import axios from '../api/request'
 import Radar from './Radar.vue'
+import Search from './Search.vue'
+import bus from '../utils/bus.js'
 
 export default {
-  components: { ElDialog, ElTabs, ElTabPane, Radar },
+  components: { ElDialog, ElTabs, ElTabPane, Radar, Search },
 
   methods: {
     getIcon(score) {
@@ -185,15 +205,20 @@ export default {
       const Lng = (start.lng + end.lng) / 2
       const Lat = (start.lat + end.lat) / 2
       const z = 3000
-      const zoom = 15
+      const zoom = 12
       //组件之间通信，将经纬度传递给SceneView进行处理
-      this.$eventBus.emit('location', [[Lng, Lat, z], zoom])
+      bus.emit('location', [[Lng, Lat, z], zoom])
     },
     waterResourcesDetail(index, row) {
       alert(JSON.stringify(row))
     },
     waterProjectsDetail(index, row) {
       alert(JSON.stringify(row))
+    },
+    tabChange() {
+      console.log('监听到了tab的变化')
+      const tab = document.querySelector('.el-tabs__content')
+      tab.scrollTop = 0
     }
   },
   props: {
@@ -204,6 +229,7 @@ export default {
   },
   setup(props) {
     const state = reactive({
+      searchKey: 0,
       dialogVisible: false,
       activeTab: 'basic',
       riverInfo: {},
@@ -277,8 +303,14 @@ export default {
       state.radarList.activeName = []
       // 重置Tab当前所在信息栏
       state.activeTab = 'basic'
+      // 关闭窗口之后销毁当前search组件,下次打开时重新加载
+      state.searchKey += 1
     }
 
+    // 当监听到location定位的时候,关闭弹窗
+    bus.on('closePop', data => {
+      state.dialogVisible = data
+    })
     return {
       ...toRefs(state),
       openDialog,
@@ -308,7 +340,7 @@ export default {
 .status-red {
   color: red;
 }
-.el-dialog__body {
+.el-tabs__content {
   height: 420px;
   overflow: auto;
 }
