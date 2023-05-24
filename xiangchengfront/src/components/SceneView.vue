@@ -44,9 +44,15 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
+import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion'
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
+import Point from '@arcgis/core/geometry/Point'
+import Graphic from '@arcgis/core/Graphic'
+import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
 import { ElNotification } from 'element-plus'
 import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
+import bus from '../utils/bus.js'
 
 export default {
   name: 'SceneView',
@@ -54,10 +60,10 @@ export default {
     return {
       sceneView: null,
       directLineVisible: false,
-      areaVisible: false,   //一开始的面积测量和距离测量是关闭状态???
-      FigureLayerVisible:false,  //一开始的TF选项是隐藏的，只有点击后才是可见的
-      FigureFigureLayerFont:['水系','定曲岸线规划','许曲岸线规划','水电站','水文站','县（区)界','乡（镇）界','晕线1','晕线2','乡镇面 (10)','乡城县农田灌溉面积(水资源)'],
-      FigureLayerInsideVisible:[true,false,false,true,true,false,false,false,false,false,false],
+      areaVisible: false, //一开始的面积测量和距离测量是关闭状态???
+      FigureLayerVisible: false, //一开始的TF选项是隐藏的，只有点击后才是可见的
+      FigureFigureLayerFont: ['水系', '定曲岸线规划', '许曲岸线规划', '水电站', '水文站', '县（区)界', '乡（镇）界', '晕线1', '晕线2', '乡镇面 (10)', '乡城县农田灌溉面积(水资源)'],
+      FigureLayerInsideVisible: [true, false, false, true, true, false, false, false, false, false, false],
       Check,
       Close
     }
@@ -76,7 +82,7 @@ export default {
           portalItem: {
             id: '5a392557cffb485f8fe004e668e9edc0'
           },
-          basemap:"arcgis-oceans"
+          basemap: 'arcgis-oceans'
         })
         // Create the SceneView
         let view = new SceneView({
@@ -116,6 +122,10 @@ export default {
             opacity: 0.8
           }
         })
+        const ccWidget = new CoordinateConversion({
+          view: view
+        })
+        view.ui.add(ccWidget, 'bottom-left')
         // 将图例组件添加到地图中
         view.ui.add(legend, 'bottom-right')
         //加载map service
@@ -211,14 +221,14 @@ export default {
         let directLineMeasurement = new DirectLineMeasurement3D({
           view: view,
           visible: true,
-          label:"距离测量"
-        });
+          label: '距离测量'
+        })
         // 创建面积测量工具
         let areaMeasurement = new AreaMeasurement3D({
           view: view,
           visible: true,
-          label:"面积测量"
-        });
+          label: '面积测量'
+        })
 
         // 添加到视图中
         view.ui.add(directLineMeasurement, 'bottom-left')
@@ -238,8 +248,51 @@ export default {
         // 触发 "map-ready" 事件
         this.$emit('map-ready', this.view)
 
+        // 定义变量保存上一次添加的闪烁图标
+        let lastGraphic = null
+
         // 监听全局事件进行定位操作
-        this.$eventBus.on('location', data => {
+        // 监听positioning事件实现对应河流的定位
+        bus.on('location', data => {
+          //当监听到location定位的时候,触发closePop事件关闭弹窗
+          bus.emit('closePop', false)
+          // 添加闪烁效果
+          var gLayer = new GraphicsLayer()
+          map.add(gLayer)
+          var point = new Point(data[0][0], data[0][1])
+          const markerSymbol = new SimpleMarkerSymbol({
+            color: [255, 0, 0],
+            outline: {
+              color: [255, 255, 255],
+              width: 2
+            },
+            size: 10
+          })
+          const graphic = new Graphic({
+            geometry: point,
+            symbol: markerSymbol
+          })
+
+          // 移除上一次添加的闪烁图标
+          if (lastGraphic) {
+            view.graphics.remove(lastGraphic)
+          }
+
+          // 将图形添加到地图视图中
+          view.graphics.add(graphic)
+          // 保存当前添加的闪烁图标
+          lastGraphic = graphic
+          // 创建闪烁效果
+          let flashInterval = setInterval(() => {
+            graphic.visible = !graphic.visible
+          }, 500)
+
+          // 停止闪烁效果
+          setTimeout(() => {
+            clearInterval(flashInterval)
+            graphic.visible = false
+          }, 10000)
+
           view
             .when(function () {
               view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1] })
@@ -304,10 +357,10 @@ export default {
   watch: {
     FigureLayerInsideVisible: {
       // immediate:true,
-      deep:true,
-      handler(){
+      deep: true,
+      handler() {
         // console.log("1111");
-        this.initializeMap();
+        this.initializeMap()
       }
     }
   }
@@ -317,7 +370,7 @@ export default {
 /* *{
   margin: 0px;
 } */
-body{
+body {
   margin-bottom: 0px;
 }
 /* 控制popupTemplate显示 */
@@ -372,7 +425,7 @@ body{
   text-align: center;
   font-size: 1em;
   border-radius: 10px;
-  border:2px solid skyblue;
+  border: 2px solid skyblue;
   /* box-shadow:  1px 1px 3px 3px black; */
 }
 .map-FigureLayer p {
@@ -400,7 +453,7 @@ body{
   align-items: stretch;
   overflow-y: scroll;
   opacity: 0.88;
-  user-select:none;
+  user-select: none;
 }
 .map-FigureLayer-TF p {
   width: 180px;

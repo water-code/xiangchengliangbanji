@@ -4,7 +4,12 @@
  
 <script>
 import { ref, onMounted, toRaw } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { TitleComponent, LegendComponent, TooltipComponent } from 'echarts/components'
+import { RadarChart } from 'echarts/charts'
+import { CanvasRenderer } from 'echarts/renderers'
+
+echarts.use([TitleComponent, LegendComponent, RadarChart, CanvasRenderer, TooltipComponent])
 export default {
   props: ['indicator', 'targetValue'],
   setup(props) {
