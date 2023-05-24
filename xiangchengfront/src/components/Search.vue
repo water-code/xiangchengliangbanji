@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <span>关键字</span>
-    <el-input v-model="data.inputVal" placeholder="请输入河流关键字信息" clearable class="input" @clear="getAllRiverData" />
+    <el-input v-model="data.inputVal" placeholder="请输入河流关键字信息" clearable class="input" @clear="storageAllRiverData" />
     <el-button type="primary" @click="getAllRiverDataByKey">查询</el-button>
   </div>
   <el-table ref="singleTable" :data="data.tableData" highlight-current-row @current-change="handleCurrentChange" @row-click="goLocation" style="width: 100%" height="200" class="table">
