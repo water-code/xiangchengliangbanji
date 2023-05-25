@@ -32,7 +32,10 @@
         </div>
       </div>
     </div>
-
+    <!-- 搜索功能的实现 -->
+    <div class="searchTab">
+      <SearchView></SearchView>
+    </div>
   </div>
 </template>
 <script>
@@ -53,9 +56,11 @@ import { ElNotification } from 'element-plus'
 import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import bus from '../utils/bus.js'
+import SearchView from './SearchView.vue'
 
 export default {
   name: 'SceneView',
+  components: { SearchView },
   data() {
     return {
       sceneView: null,
@@ -539,5 +544,11 @@ body {
 .measure-tools-icon:hover {
   cursor: pointer;
   background-color: rgb(243, 243, 243);
+}
+/* 搜索功能 */
+.searchTab {
+  position: absolute;
+  left: 80px;
+  top: 55px;
 }
 </style>
