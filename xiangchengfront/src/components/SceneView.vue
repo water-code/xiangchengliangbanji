@@ -282,6 +282,10 @@ export default {
         // 定义变量保存上一次添加的闪烁图标
         let lastGraphic = null
 
+        //将对象添加进入window 调试使用
+        window.FigureLayerInsideVisible = this.FigureLayerInsideVisible
+        window.view = view
+
         // 监听全局事件进行定位操作
         // 监听positioning事件实现对应河流的定位
         bus.on('location', data => {
@@ -391,7 +395,11 @@ export default {
       deep: true,
       handler() {
         // console.log("1111");
-        this.initializeMap()
+        // this.initializeMap()
+        for(var i=0; i<FigureLayerInsideVisible.length; i++){
+          //view.map.layers.items[0].allSublayers.items[i].visible 有没有其它办法调用这个变量
+          view.map.layers.items[0].allSublayers.items[i].visible = FigureLayerInsideVisible[i]
+        }
       }
     }
   }
