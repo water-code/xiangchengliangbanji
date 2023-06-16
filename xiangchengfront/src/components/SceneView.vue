@@ -47,6 +47,8 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
+import Camera from "@arcgis/core/Camera";
+import SpatialReference from "@arcgis/core/geometry/SpatialReference";
 import Search from "@arcgis/core/widgets/Search.js";
 
 import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion'
@@ -59,6 +61,7 @@ import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
+import Basemap from "@arcgis/core/Basemap.js";
 
 export default {
   name: 'SceneView',
@@ -89,8 +92,18 @@ export default {
           portalItem: {
             id: '5a392557cffb485f8fe004e668e9edc0'
           },
-          basemap: 'arcgis-oceans'
+          // basemap: 'arcgis-oceans'
         })
+        let camera = new Camera({
+          position: new Point({
+            x: 99.738,
+            y: 27.420,
+            z: 66574.05307454057,
+            spatialReference: new SpatialReference({ wkid: 4326 })
+          }),
+          heading: 0,
+          tilt: 68.60544723556448
+        });
         // Create the SceneView
         let view = new SceneView({
           // map：指定需要渲染的 Web 地图或场景实例。
@@ -98,7 +111,8 @@ export default {
           // container：指定地图渲染的容器，此处传入 'app' 表示渲染到 id 为 'app' 的 HTML 元素上。
           container: 'app',
           // center：指定地图视角的中心点坐标， [99.8, 29.1] 表示经度为 99.8，纬度为 29.1。
-          center: [99.8, 29.1],
+          // center: [99.8, 29.1],
+          camera:camera,
           // zoom：指定地图的缩放级别,表示缩放级别为 10。
           zoom: 10,
           // environment：指定地图的环境设置，{ lighting: null } 表示使用默认的光照环境。
@@ -116,48 +130,10 @@ export default {
             }
           }
         })
-        //添加图例
-        let legend = new Legend({
-          view: view, // 地图视图对象
-          container: 'legendDiv', // 指定容器元素的 ID
-          style: {
-            backgroundColor: 'white',
-            borderColor: 'black',
-            fontFamily: 'Arial, sans-serif',
-            fontSize: '14px',
-            fontWeight: 'normal',
-            opacity: 0.8
-          }
-        })
         const ccWidget = new CoordinateConversion({
           view: view
         })
         view.ui.add(ccWidget, 'bottom-left')
-        // 将图例组件添加到地图中
-        view.ui.add(legend, 'bottom-right')
-
-        //添加搜索小组件
-        // const searchWidget = new Search({
-        //   view: view,
-        //   sources: [{
-        //     featureLayer: {
-        //       url: "http://xiangcheng.natapp1.cc/arcgis/rest/services/xiangchengliangbanji/MapServer/FeatureServer/0",
-        //       outFields: ["*"]
-        //     },
-        //     name: "水系",
-        //     placeholder: "搜索 水系",
-        //     zoomScale: 50000
-        //   }]
-        // });
-        // // Adds the search widget below other elements in
-        // // the top left corner of the view
-        // view.ui.add(searchWidget, {
-        //   position: "top-left",
-        //   index: 0
-        // });
-        // searchWidget.on('search-complete',function(element){
-        //   this.$emit('searchComplete', element)
-        // })
 
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
@@ -267,10 +243,11 @@ export default {
         view.ui.add(areaMeasurement, 'bottom-left')
 
         let basemapGallery = new BasemapGallery({
-          view: view
+          view: view,
+          source: [Basemap.fromId("hybrid"), Basemap.fromId("streets"),Basemap.fromId("satellite") ]
         })
         view.ui.add(basemapGallery, {
-          position: 'top-right'
+          position: 'bottom-right'
         })
 
         // 将 SceneView 对象保存到组件的 data 中
@@ -330,7 +307,7 @@ export default {
 
           view
             .when(function () {
-              view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1] })
+              view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1]})
             })
             .catch(function (err) {
               console.error('SceneView rejected:', err)
@@ -416,16 +393,16 @@ body {
 .esri-popup__main-container {
   display: none !important;
 }
-/* *设置图例大小 */
-.esri-legend {
-  height: 200px;
-}
 .esri-ui-corner .esri-component.esri-widget--panel {
   width: 150px !important;
 }
 .esri-basemap-gallery {
-  max-width: 100px !important;
-  max-height: 130px !important;
+  max-width: 80px !important;
+  max-height: 150px !important;
+  background-color: rgba(0,0,0,0);
+}
+.esri-basemap-gallery li{
+  background-color: rgba(0,0,0,0);
 }
 .esri-direct-line-measurement-3d {
   display: none;

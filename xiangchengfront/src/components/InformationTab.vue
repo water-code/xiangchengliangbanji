@@ -3,7 +3,7 @@
     <el-tabs v-model="activeTab" @tab-change="tabChange">
       <el-tab-pane label="河流基本信息" name="basic">
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
           <el-descriptions :border="true" :column="2">
             <!-- <el-descriptions-item label="id">{{ riverInfo.id }}</el-descriptions-item> -->
@@ -35,7 +35,7 @@
       </el-tab-pane>
       <el-tab-pane label="健康评价" name="health">
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
           <el-descriptions :border="true" :column="2">
             <!-- <el-descriptions-item label="id">{{ healthInfo.id }}</el-descriptions-item> -->
@@ -60,13 +60,13 @@
       </el-tab-pane>
       <el-tab-pane label="水安全" name="water_safety" disabled>
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="水资源" name="water_resources">
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
           <el-table :data="waterResourcesList" :height="300">
             <el-table-column prop="waterSystemsId" label="水系编号"></el-table-column>
@@ -87,13 +87,13 @@
       </el-tab-pane>
       <el-tab-pane label="水利工程" name="water_projects">
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
           <el-table :data="waterProjectsList" :height="300">
             <el-table-column prop="id" label="ID"></el-table-column>
             <el-table-column label="名称">
               <template #default="scope">
-                <a href="#" :class="water_projects_name_decoration">{{ scope.row.name }}</a>
+                <a href="" :class="water_projects_name_decoration">{{ scope.row.name }}</a>
               </template>
             </el-table-column>
             <el-table-column prop="type" label="类型"></el-table-column>
@@ -113,7 +113,7 @@
       </el-tab-pane>
       <el-tab-pane label="岸线规划" name="shoreline_planning">
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
           <el-table :data="planningList" :height="300">
             <el-table-column prop="id" label="ID"></el-table-column>
@@ -132,19 +132,19 @@
       </el-tab-pane>
       <el-tab-pane label="河湖划界" name="river_lake_boundary" disabled>
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="移民搬迁" name="relocation" disabled>
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
         </div>
       </el-tab-pane>
       <el-tab-pane label="防洪减灾" name="disaster_prevention_points" disabled>
         <!-- 搜索河流功能实现 -->
-        <Search :key="searchKey"></Search>
+        <!-- <Search :key="searchKey"></Search> -->
         <div class="basicInfo">
         </div>
       </el-tab-pane>
@@ -240,7 +240,7 @@ export default {
       // 声明雷达的数据
       radarList: {
         // 响应面板
-        activeName: [],
+        activeName: ['1'],
         // 评价指标赋分
         value: [100, 100, 66.1, 100, 100, 80, 100, 80, 90, 100, 60, 90.2, 100, 100, 100],
         // 雷达图指示器配置
