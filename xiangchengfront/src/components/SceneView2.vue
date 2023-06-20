@@ -1,3 +1,8 @@
+<!--老版本加载mapService的版本
+
+VITE_MAP_SERVER_URL=http://xiangcheng.natapp1.cc/arcgis/rest/services/xiangchengliangbanji/MapServer
+
+-->
 <template>
   <div class="navbar">
     <div class="navbar-left">
@@ -10,28 +15,48 @@
     </div>
   </div>
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
+    <div ref="basemapGalleryNode"></div>
+    <div class="measure-tools-wrapper">
+      <div class="measure-tools">
+        <div class="measure-tools-icon" @click="toggleDirectLine()"><el-icon color="rgb(110,110,110)" :size="20">
+          <EditPen />
+        </el-icon></div>
+        <div class="measure-tools-icon" @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20">
+          <Edit />
+        </el-icon></div>
+      </div>
+    </div>
+    <div class="map-FigureLayer">
+      <div class="map-FigureLayer-Font" @click="showFigureLayer()">
+        <p>图层</p>
+      </div>
+      <div class="map-FigureLayer-TF" v-if="FigureLayerVisible">
+        <div v-for="(i,index) in FigureFigureLayerFont" :key="index" class="map-FigureLayer-TFdiv">
+          <p v-text="i"></p>
+          <el-switch v-model="FigureLayerInsideVisible[index]" class="mt-2" style="margin-left: 24px" inline-prompt :active-icon="Check" :inactive-icon="Close" />
+        </div>
+      </div>
+    </div>
+    <!-- 搜索功能的实现 -->
+    <div class="searchTab">
+      <SearchView></SearchView>
+    </div>
   </div>
 </template>
 <script>
 import SceneView from '@arcgis/core/views/SceneView'
 import WebScene from '@arcgis/core/WebScene'
-
-import Expand from '@arcgis/core/widgets/Expand'
-import Weather from '@arcgis/core/widgets/Weather'
-import Daylight from '@arcgis/core/widgets/Daylight'
-import ElevationProfile from '@arcgis/core/widgets/ElevationProfile'
-
 import esriConfig from '@arcgis/core/config'
 import Legend from '@arcgis/core/widgets/Legend'
-
+import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
+import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
+import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
 import Camera from "@arcgis/core/Camera";
 import SpatialReference from "@arcgis/core/geometry/SpatialReference";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import LayerList from "@arcgis/core/widgets/LayerList";
+import Search from "@arcgis/core/widgets/Search.js";
 
-import Search from "@arcgis/core/widgets/Search";
-
+import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion'
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
 import Graphic from '@arcgis/core/Graphic'
@@ -41,8 +66,7 @@ import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
-
-
+import Basemap from "@arcgis/core/Basemap.js";
 
 export default {
   name: 'SceneView',
@@ -72,291 +96,188 @@ export default {
         let map = new WebScene({
           portalItem: {
             id: '5a392557cffb485f8fe004e668e9edc0'
-          }
+          },
+          // basemap: 'arcgis-oceans'
         })
         let camera = new Camera({
           position: new Point({
-            x: 99.82975225369145,
-            y: 28.802280667091217,
-            z: 3613.927701551467,
+            x: 99.738,
+            y: 27.420,
+            z: 66574.05307454057,
             spatialReference: new SpatialReference({ wkid: 4326 })
           }),
-          heading: 1.962013105645539,
-          tilt: 84.3710848755085
+          heading: 0,
+          tilt: 68.60544723556448
         });
         // Create the SceneView
-        const view = new SceneView({
+        let view = new SceneView({
+          // map：指定需要渲染的 Web 地图或场景实例。
           map: map,
+          // container：指定地图渲染的容器，此处传入 'app' 表示渲染到 id 为 'app' 的 HTML 元素上。
           container: 'app',
-          qualityProfile: "high",
+          // center：指定地图视角的中心点坐标， [99.8, 29.1] 表示经度为 99.8，纬度为 29.1。
+          // center: [99.8, 29.1],
           camera:camera,
+          // zoom：指定地图的缩放级别,表示缩放级别为 10。
+          zoom: 10,
+          // environment：指定地图的环境设置，{ lighting: null } 表示使用默认的光照环境。
           environment: {
-            weather: {
-              type: "cloudy",
-              cloudCover: 0.3
-            }
+            lighting: null
           },
-          zoom: 10
+          // popup：指定弹出窗口的设置
+          // 表示禁用弹出窗口的操作按钮，并在地图右侧显示弹出窗口。
+          popup: {
+            actions: [],
+            dockEnabled: true,
+            dockOptions: {
+              buttonEnabled: true,
+              breakpoint: false
+            }
+          }
         })
+
+        //左下角添加当前经纬度显示
+        const ccWidget = new CoordinateConversion({
+          view: view
+        })
+        view.ui.add(ccWidget, 'bottom-left')
 
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
-        let layer0 = new FeatureLayer({
-          url:apiUrl + "/0",
-          outFields:['*']
-        })
-        let layer1 = new FeatureLayer({
-          url:apiUrl + "/1",
-          outFields:['*'],
-        })
-        let layer2 = new FeatureLayer({
-          url:apiUrl + "/2",
-          outFields:['*'],
-        })
-        let layer3 = new FeatureLayer({
-          url:apiUrl + "/3",
-          outFields:['*'],
-          visible:false
-        })
-        let layer4 = new FeatureLayer({
-          url:apiUrl + "/4",
-          outFields:['*'],
-          visible:false
-        })
-        let layer5 = new FeatureLayer({
-          url:apiUrl + "/5",
-          outFields:['*'],
-        })
-        let layer6 = new FeatureLayer({
-          url:apiUrl + "/6",
-          outFields:['*'],
-          visible:false
-        })
-        let layer7 = new FeatureLayer({
-          url:apiUrl + "/7",
-          outFields:['*'],
-          visible:false
-        })
-        let layer9 = new FeatureLayer({
-          url:apiUrl + "/9",
-          outFields:['*'],
-          visible:false
-        })
-        let layer10 = new FeatureLayer({
-          url:apiUrl + "/10",
-          outFields:['*'],
-          visible:false
-        })
-        let layer11 = new FeatureLayer({
-          url:apiUrl + "/11",
-          outFields:['*'],
-          visible:false
-        })
-        map.add(layer11)
-        map.add(layer10)
-        map.add(layer9)
-        map.add(layer7)
-        map.add(layer6)
-        map.add(layer5)
-        map.add(layer4)
-        map.add(layer3)
-        map.add(layer2)
-        map.add(layer1)
-        map.add(layer0)
 
-        let weatherExpand = new Expand({
-          view: view,
-          content: new Weather({
-            view: view
-          }),
-          group: "top-right",
-          expanded: false
-        });
-
-        let daylightExpand = new Expand({
-          view: view,
-          content: new Daylight({
-            view: view
-          }),
-          group: "top-right"
-        });
-
-        let elevationProfileExpand = new Expand({
-          view:view,
-          content:new ElevationProfile({
-            view: view,
-            profiles: [
-              {type: "ground"},
-              {type: "view"}
-            ],
-            visibleElements: {
-              selectButton: true
+        let layer = new MapImageLayer({
+          // 指定地图服务的 URL 地址
+          url: apiUrl,
+          // outFields: 指定需要查询的字段信息
+          // ['*'] 表示查询所有字段。
+          outFields: ['*'],
+          // sublayers：指定地图中的子图层信息，包括 ID、可见性、弹出窗口模板等属性。
+          sublayers: [
+            {
+              // 水系
+              id: 0,
+              visible: this.FigureLayerInsideVisible[0],
+              autoCloseEnabled: true,
+              // popupTemplate 属性指定了子图层的弹出窗口模板，用于在用户点击该图层时显示相关信息。
+              popupTemplate: {
+                content: e => {
+                  console.log(e)
+                  this.$emit('setFid', e.graphic.attributes)
+                }
+              }
+            },
+            {
+              // 定曲岸线规划
+              id: 1,
+              visible: this.FigureLayerInsideVisible[1],
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content: e => {
+                  // e.graphic.attributes 表示当前弹出窗口关联的要素（feature）的属性信息
+                  // e 表示事件对象，graphic 表示与事件相关的图形对象，attributes 则表示该图形对象所关联的要素的属性信息
+                  // 通过访问 attributes 属性，可以获取到该要素的所有属性信息
+                  console.log(attributes)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
+            },
+            {
+              // 许曲岸线规划
+              id: 2,
+              visible: this.FigureLayerInsideVisible[2],
+              autoCloseEnabled: true,
+              popupTemplate: {
+                content: e => {
+                  console.log(e)
+                  this.$emit('shorelinePlanningClick', e.graphic.attributes)
+                }
+              }
+            },
+            {
+              // 水电站
+              id: 3,
+              visible: this.FigureLayerInsideVisible[3]
+            },
+            {
+              id: 4,
+              visible: this.FigureLayerInsideVisible[4]
+            },
+            {
+              id: 5,
+              visible: this.FigureLayerInsideVisible[5]
+            },
+            {
+              id: 6,
+              visible: this.FigureLayerInsideVisible[6]
+            },
+            {
+              id: 7,
+              visible: this.FigureLayerInsideVisible[7]
+            },
+            {
+              id: 8,
+              visible: this.FigureLayerInsideVisible[8]
+            },
+            {
+              id: 9,
+              visible: this.FigureLayerInsideVisible[9]
+            },
+            {
+              id: 10,
+              visible: this.FigureLayerInsideVisible[10]
             }
-          }),
-          group: "top-right",
+          ]
         })
+        map.add(layer)
 
-        let basemapGalleryExpand = new Expand({
-          view:view,
-          content:new BasemapGallery({
-            view: view
-          }),
-          group: "top-right"
-        })
-        const legendExpand = new Expand({
-          content: new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layer0,
-                title: "地质灾害点"
-              },{
-                layer: layer1,
-                title: "水电站"
-              },{
-                layer: layer2,
-                title: "水文站"
-              },{
-                layer: layer3,
-                title: "岸线规划功能分区"
-              },{
-                layer: layer4,
-                title: "岸线规划功能分区 "
-              },{
-                layer: layer5,
-                title: "水系"
-              },{
-                layer: layer6,
-                title: "县（区）界"
-              },{
-                layer: layer7,
-                title: "乡（镇）界"
-              },{
-                layer: layer9,
-                title: "晕线1"
-              },{
-                layer: layer10,
-                title: "晕线2"
-              },{
-                layer: layer11,
-                title: "乡镇名称"
-              }
-            ]
-          }),
+        // 创建直线测量工具
+        let directLineMeasurement = new DirectLineMeasurement3D({
           view: view,
-          expanded: false
-        });
-        const dizhizaihai = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/0",
-          popupTemplate: {
-            title: "地质灾害点: {town}{county}{goudaoming}{name} </br>{type}, ({suggestion})",
-            overwriteActions: true
-          }
-        });
-        const shuidianzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/1",
-          popupTemplate: {
-            title: "水电站: {name}",
-            overwriteActions: true
-          }
-        });
-        const shuiwenzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/2",
-          popupTemplate: {
-            title: "水文站: {stnm}",
-            overwriteActions: true
-          }
-        });
-        const shuixi = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5",
-          popupTemplate: {
-            title: "水系: {rname}",
-            overwriteActions: true
-          }
-        });
-
-        let searchExpand = new Expand({
-          view:view,
-          content:new Search({
-            view: view,
-            allPlaceholder: "下拉选取搜索目标",
-            includeDefaultSources: false,
-            sources: [
-              {
-                layer: shuidianzhan,
-                searchFields: ["name"],
-                displayField: "name",
-                exactMatch: false,
-                outFields: ["*"],
-                name: "水电站",
-                placeholder: "水电站名称"
-              },{
-                layer: shuiwenzhan,
-                searchFields: ["stnm"],
-                displayField: "stnm",
-                exactMatch: false,
-                outFields: ["*"],
-                name: "水文站",
-                placeholder: "水文站名称"
-              },{
-                layer: shuixi,
-                searchFields: ["rname"],
-                displayField: "rname",
-                exactMatch: false,
-                outFields: ["*"],
-                name: "水系",
-                placeholder: "水系名称"
-              },{
-                layer: shuidianzhan,
-                searchFields: ["town", "county", "name", "code", "type", "people", "goudaoming", "danger", "tip"],
-                displayField: "name",
-                exactMatch: false,
-                outFields: ["*"],
-                name: "地质灾害点位",
-                placeholder: "键入地质灾害相关内容"
-              }
-            ]
-          }),
-          group: "top-right"
+          visible: true,
+          label: '距离测量'
+        })
+        // 创建面积测量工具
+        let areaMeasurement = new AreaMeasurement3D({
+          view: view,
+          visible: true,
+          label: '面积测量'
         })
 
-        let layerListExpand = new Expand({
-          view:view,
-          content: new LayerList({view: view}),
-          group: "top-right"
+        // 添加到视图中
+        view.ui.add(directLineMeasurement, 'bottom-left')
+        // 添加到视图中
+        view.ui.add(areaMeasurement, 'bottom-left')
+
+        let basemapGallery = new BasemapGallery({
+          view: view,
+          source: [Basemap.fromId("hybrid"), Basemap.fromId("streets"),Basemap.fromId("satellite") ]
         })
-        view.ui.add([legendExpand], "bottom-left");
-        view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand], "top-right");
-
-
-
-
-
-
-
-
-
-
-
+        view.ui.add(basemapGallery, {
+          position: 'bottom-right'
+        })
 
         // 将 SceneView 对象保存到组件的 data 中
         this.sceneView = view
+
         // 触发 "map-ready" 事件
         this.$emit('map-ready', this.view)
+
         // 定义变量保存上一次添加的闪烁图标
         let lastGraphic = null
+
         //将对象添加进入window 调试使用
         window.FigureLayerInsideVisible = this.FigureLayerInsideVisible
         window.view = view
+
         // 监听全局事件进行定位操作
         // 监听positioning事件实现对应河流的定位
         bus.on('location', data => {
           //当监听到location定位的时候,触发closePop事件关闭弹窗
           bus.emit('closePop', false)
           // 添加闪烁效果
-          let gLayer = new GraphicsLayer()
+          var gLayer = new GraphicsLayer()
           map.add(gLayer)
-          let point = new Point(data[0][0], data[0][1])
+          var point = new Point(data[0][0], data[0][1])
           const markerSymbol = new SimpleMarkerSymbol({
             color: [255, 0, 0],
             outline: {
@@ -389,6 +310,14 @@ export default {
             clearInterval(flashInterval)
             graphic.visible = false
           }, 10000)
+
+          view
+              .when(function () {
+                view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1]})
+              })
+              .catch(function (err) {
+                console.error('SceneView rejected:', err)
+              })
         })
       } catch (error) {
         console.error('地图初始化失败：', error)
@@ -403,6 +332,7 @@ export default {
           message: h('i', { style: 'color: teal' }, '开启距离测量'),
           duration: 1000
         })
+        // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
       } else {
         document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display = 'none'
         ElNotification({
@@ -410,6 +340,7 @@ export default {
           message: h('i', { style: 'color: teal' }, '关闭距离测量'),
           duration: 1000
         })
+        // document.getElementsByClassName('measure-tools-icon')[0].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     },
     toggleArea() {
@@ -421,6 +352,7 @@ export default {
           message: h('i', { style: 'color: teal' }, '开启面积测量'),
           duration: 1000
         })
+        // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0.5)'
       } else {
         document.getElementsByClassName('esri-area-measurement-3d')[0].style.display = 'none'
         ElNotification({
@@ -428,6 +360,7 @@ export default {
           message: h('i', { style: 'color: teal' }, '关闭面积测量'),
           duration: 1000
         })
+        // document.getElementsByClassName('measure-tools-icon')[1].style.backgroundColor = 'rgba(199, 199, 199, 0)'
       }
     },
     //设置点击函数
@@ -444,6 +377,8 @@ export default {
       // immediate:true,
       deep: true,
       handler() {
+        // console.log("1111");
+        // this.initializeMap()
         for(var i=0; i<FigureLayerInsideVisible.length; i++){
           //view.map.layers.items[0].allSublayers.items[i].visible 有没有其它办法调用这个变量
           view.map.layers.items[0].allSublayers.items[i].visible = FigureLayerInsideVisible[i]
@@ -466,6 +401,14 @@ body {
 }
 .esri-ui-corner .esri-component.esri-widget--panel {
   width: 150px !important;
+}
+.esri-basemap-gallery {
+  max-width: 80px !important;
+  max-height: 150px !important;
+  background-color: rgba(0,0,0,0);
+}
+.esri-basemap-gallery li{
+  background-color: rgba(0,0,0,0);
 }
 .esri-direct-line-measurement-3d {
   display: none;
