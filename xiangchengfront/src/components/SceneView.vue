@@ -11,6 +11,149 @@
   </div>
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
   </div>
+  <div id="topbar">
+    <button
+        class="action-button esri-icon-measure-line"
+        id="distanceButton"
+        type="button"
+        title="Measure distance between two points"
+    ></button>
+    <button
+        class="action-button esri-icon-measure-area"
+        id="areaButton"
+        type="button"
+        title="Measure area"
+    ></button>
+  </div>
+  <div id="sketchPanel" class="esri-widget">
+    <div id="startbuttons">
+      <button id="point" data-type="point" class="esri-button starttool">
+        兴趣点描绘
+      </button>
+      <button id="line" data-type="polyline" class="esri-button starttool">
+        路线描绘
+      </button>
+      <button
+          id="extrudedPolygon"
+          data-type="polygon"
+          class="esri-button starttool"
+      >
+        建筑物描绘
+      </button>
+      <button id="canoe" class="esri-button">电站模型加载</button>
+    </div>
+    <div id="actionbuttons">
+      <button id="cancel" class="esri-button">取消</button>
+      <button id="done" class="esri-button">完成</button>
+    </div>
+    <div id="edgeoperationbuttons">
+      <br />选择边缘操作:
+      <div class="update-options" id="edge">
+        <button
+            class="esri-widget--button edge-button"
+            id="none-edge-button"
+            value="none"
+        >
+          无
+        </button>
+        <button
+            class="esri-widget--button edge-button edge-button-selected"
+            id="split-edge-button"
+            value="split"
+        >
+          分割
+        </button>
+        <button
+            class="esri-widget--button edge-button"
+            id="offset-edge-button"
+            value="offset"
+        >
+          位移
+        </button>
+      </div>
+      选择移动操作:
+      <div class="update-options" id="shape">
+        <button
+            class="esri-widget--button shape-button"
+            id="none-shape-button"
+            value="none"
+        >
+          无
+        </button>
+        <button
+            class="esri-widget--button shape-button shape-button-selected"
+            id="move-shape-button"
+            value="move"
+        >
+          移动
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="configurationDiv" class="esri-widget">
+    <table id="configurationTable">
+      <tbody>
+      <tr>
+        <td>
+          <label><b>提示/标签 </b></label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label
+              for="tooltipOptionscheckbox"
+              id="tooltipOptionscheckboxlabel"
+          >
+            - 提示</label
+          >
+        </td>
+        <td><input type="checkbox" id="tooltipOptionsheckbox" /></td>
+      </tr>
+      <tr>
+        <td>
+          <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel">
+            - 标签</label
+          >
+        </td>
+        <td><input type="checkbox" id="labelOptionscheckbox" /></td>
+      </tr>
+      <tr>
+        <td>
+          <label for="enabledcheckbox" id="enabledcheckboxlabel"
+          ><b
+          >裁剪开启 (
+            <div id="snappingctrlkey">CTRL-键</div>
+            )</b
+          ></label
+          >
+        </td>
+        <td><input type="checkbox" id="enabledcheckbox" checked /></td>
+      </tr>
+      <tr>
+        <td>
+          <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel">
+            - 自动裁剪</label
+          >
+        </td>
+        <td><input type="checkbox" id="selfsnappingcheckbox" /></td>
+      </tr>
+      <tr>
+        <td>
+          <label
+              for="featuresnappingcheckbox"
+              id="featuresnappingcheckboxlabel"
+          >
+            - 特征裁剪</label
+          >
+        </td>
+        <td><input type="checkbox" id="featuresnappingcheckbox" /></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="configurationInfoDiv" class="esri-widget">
+    <b>打开3D绘画设置 <span>&#8594;</span></b>
+  </div>
 </template>
 <script>
 import SceneView from '@arcgis/core/views/SceneView'
@@ -41,6 +184,10 @@ import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
+import Sketch from "@arcgis/core/widgets/Sketch.js";
+import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
+import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
+import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
 
 
 
@@ -103,29 +250,33 @@ export default {
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
         let layer0 = new FeatureLayer({
           url:apiUrl + "/0",
-          outFields:['*']
+          outFields:['*'],
+          visible:true
         })
         let layer1 = new FeatureLayer({
           url:apiUrl + "/1",
           outFields:['*'],
+          visible:true
         })
         let layer2 = new FeatureLayer({
           url:apiUrl + "/2",
           outFields:['*'],
+          visible:true
         })
         let layer3 = new FeatureLayer({
           url:apiUrl + "/3",
           outFields:['*'],
-          visible:false
+          visible:true
         })
         let layer4 = new FeatureLayer({
           url:apiUrl + "/4",
           outFields:['*'],
-          visible:false
+          visible:true
         })
         let layer5 = new FeatureLayer({
           url:apiUrl + "/5",
           outFields:['*'],
+          visible:true
         })
         let layer6 = new FeatureLayer({
           url:apiUrl + "/6",
@@ -136,6 +287,11 @@ export default {
           url:apiUrl + "/7",
           outFields:['*'],
           visible:false
+        })
+        let layer8 = new FeatureLayer({
+          url:apiUrl + "/8",
+          outFields:['*'],
+          visible:true
         })
         let layer9 = new FeatureLayer({
           url:apiUrl + "/9",
@@ -152,9 +308,38 @@ export default {
           outFields:['*'],
           visible:false
         })
+        let layer12 = new FeatureLayer({
+          url:apiUrl + "/12",
+          outFields:['*'],
+          visible:false
+        })
+        let layer13 = new FeatureLayer({
+          url:apiUrl + "/13",
+          outFields:['*'],
+          visible:false
+        })
+        let layer14 = new FeatureLayer({
+          url:apiUrl + "/14",
+          outFields:['*'],
+          visible:false
+        })
+        let layer15 = new FeatureLayer({
+          url:apiUrl + "/15",
+          outFields:['*'],
+          visible:false
+        })
+
+        //用于作图的图层
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer)
+        map.add(layer15)
+        map.add(layer14)
+        map.add(layer13)
+        map.add(layer12)
         map.add(layer11)
         map.add(layer10)
         map.add(layer9)
+        map.add(layer8)
         map.add(layer7)
         map.add(layer6)
         map.add(layer5)
@@ -209,37 +394,40 @@ export default {
             layerInfos: [
               {
                 layer: layer0,
-                title: "地质灾害点"
+                title: "护岸"
               },{
                 layer: layer1,
-                title: "水电站"
+                title: "堤防"
               },{
                 layer: layer2,
-                title: "水文站"
+                title: "水资源"
               },{
                 layer: layer3,
-                title: "岸线规划功能分区"
+                title: "地质灾害点"
               },{
                 layer: layer4,
-                title: "岸线规划功能分区 "
+                title: "水电站 "
               },{
                 layer: layer5,
-                title: "水系"
+                title: "水文站"
               },{
                 layer: layer6,
-                title: "县（区）界"
+                title: "岸线规划"
               },{
                 layer: layer7,
-                title: "乡（镇）界"
+                title: "岸线规划"
+              },{
+                layer: layer8,
+                title: "水系"
               },{
                 layer: layer9,
-                title: "晕线1"
+                title: "县（区）界 "
               },{
                 layer: layer10,
-                title: "晕线2"
+                title: "乡（镇）界"
               },{
-                layer: layer11,
-                title: "乡镇名称"
+                layer: layer15,
+                title: "河湖划界"
               }
             ]
           }),
@@ -247,28 +435,28 @@ export default {
           expanded: false
         });
         const dizhizaihai = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/0",
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/3",
           popupTemplate: {
             title: "地质灾害点: {town}{county}{goudaoming}{name} </br>{type}, ({suggestion})",
             overwriteActions: true
           }
         });
         const shuidianzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/1",
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/4",
           popupTemplate: {
             title: "水电站: {name}",
             overwriteActions: true
           }
         });
         const shuiwenzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/2",
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5",
           popupTemplate: {
             title: "水文站: {stnm}",
             overwriteActions: true
           }
         });
         const shuixi = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5",
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/8",
           popupTemplate: {
             title: "水系: {rname}",
             overwriteActions: true
@@ -307,7 +495,7 @@ export default {
                 name: "水系",
                 placeholder: "水系名称"
               },{
-                layer: shuidianzhan,
+                layer: dizhizaihai,
                 searchFields: ["town", "county", "name", "code", "type", "people", "goudaoming", "danger", "tip"],
                 displayField: "name",
                 exactMatch: false,
@@ -325,13 +513,457 @@ export default {
           content: new LayerList({view: view}),
           group: "top-right"
         })
+
+        let sketchExpand = new Expand({
+          view:view,
+          content: new Sketch({
+            view,
+            layer: graphicsLayer,
+            creationMode: "update"
+          }),
+          group: "top-right"
+        })
         view.ui.add([legendExpand], "bottom-left");
-        view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand], "top-right");
+        view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand, sketchExpand], "top-right");
+        view.ui.add("topbar", "top-right");
+
+
+        //3D绘画技术
+        const extrudedPolygon = {
+          type: "polygon-3d",
+          symbolLayers: [
+            {
+              type: "extrude",
+              size: 10, // extrude by 10 meters
+              material: {
+                color: "white"
+              },
+              edges: {
+                type: "solid",
+                size: "3px",
+                color: "blue"
+              }
+            }
+          ]
+        };
+        // polyline symbol used for sketching routes
+        const route = {
+          type: "line-3d",
+          symbolLayers: [
+            {
+              type: "line",
+              size: "10px",
+              material: {
+                color: "white"
+              }
+            },
+            {
+              type: "line",
+              size: "3px",
+              material: {
+                color: "blue"
+              }
+            }
+          ]
+        };
+
+        // point symbol used for sketching points of interest
+        const point = {
+          type: "point-3d",
+          symbolLayers: [
+            {
+              type: "icon",
+              size: "30px",
+              resource: { primitive: "kite" },
+              outline: {
+                color: "blue",
+                size: "3px"
+              },
+              material: {
+                color: "white"
+              }
+            }
+          ]
+        };
+        // Set-up event handlers for buttons and click events
+        const enabledcheckbox = document.getElementById("enabledcheckbox");
+        const startbuttons = document.getElementById("startbuttons");
+        const actionbuttons = document.getElementById("actionbuttons");
+        const edgeoperationbuttons = document.getElementById(
+            "edgeoperationbuttons"
+        );
+        const tooltipOptionsheckbox = document.getElementById(
+            "tooltipOptionsheckbox"
+        );
+        const configurationInfoDiv = document.getElementById(
+            "configurationInfoDiv"
+        );
+        const labelOptionscheckbox = document.getElementById(
+            "labelOptionscheckbox"
+        );
+        const selfsnappingcheckbox = document.getElementById(
+            "selfsnappingcheckbox"
+        );
+        const snappingctrlkey = document.getElementById("snappingctrlkey");
+        const featuresnappingcheckbox = document.getElementById(
+            "featuresnappingcheckbox"
+        );
+        // load the default value from the snapping checkbox
+        let snappingcheckboxsavedstate = enabledcheckbox.checked ? true : false;
+
+        // define the SketchViewModel and pass in the symbols for each geometry type
+        // set the snappingOptions.selfEnabled to the default state
+        const sketchViewModel = new SketchViewModel({
+          layer: graphicsLayer,
+          view: view,
+          pointSymbol: point,
+          polygonSymbol: extrudedPolygon,
+          polylineSymbol: route,
+          snappingOptions: {
+            enabled: snappingcheckboxsavedstate,
+            featureSources: [{ layer: graphicsLayer }]
+          },
+          tooltipOptions: { enabled: true },
+          labelOptions: { enabled: true },
+          defaultUpdateOptions: {
+            tool: "reshape"
+          }
+        });
+        // after drawing the geometry, enter the update mode to update the geometry
+        // and the deactivate the buttons
+        sketchViewModel.on("create", (event) => {
+          if (event.state === "complete") {
+            startbuttons.style.display = "inline";
+            actionbuttons.style.display = "none";
+            sketchViewModel.update(event.graphic);
+          }
+          if (event.state === "cancel") {
+            startbuttons.style.display = "inline";
+            actionbuttons.style.display = "none";
+          }
+        });
+
+        sketchViewModel.on("update", (event) => {
+          if (event.state === "start") {
+            startbuttons.style.display = "none";
+            actionbuttons.style.display = "inline";
+            if (
+                event.graphics[0].geometry.type === "polygon" ||
+                event.graphics[0].geometry.type === "polyline"
+            ) {
+              edgeoperationbuttons.style.display = "inline";
+            }
+          }
+          if (event.state === "complete") {
+            startbuttons.style.display = "inline";
+            actionbuttons.style.display = "none";
+            edgeoperationbuttons.style.display = "none";
+          }
+        });
+
+        /**********************************************
+         * Drawing UI with configuration
+         *********************************************/
+
+        const drawButtons = Array.prototype.slice.call(
+            document.getElementsByClassName("starttool")
+        );
+        const cancelBtn = document.getElementById("cancel");
+        const doneBtn = document.getElementById("done");
+
+        // set event listeners to activate sketching graphics
+        drawButtons.forEach((btn) => {
+          btn.addEventListener("click", (event) => {
+            // to activate sketching the create method is called passing in the geometry type
+            // from the data-type attribute of the html element
+            sketchViewModel.create(event.target.getAttribute("data-type"));
+            startbuttons.style.display = "none";
+            actionbuttons.style.display = "inline";
+          });
+        });
+
+        cancelBtn.addEventListener("click", (event) => {
+          sketchViewModel.cancel();
+        });
+        doneBtn.addEventListener("click", (event) => {
+          if (sketchViewModel.updateGraphics.length !== 0) {
+            sketchViewModel.complete();
+          } else {
+            sketchViewModel.cancel();
+          }
+        });
+
+        view.ui.add("sketchPanel", "top-right");
+
+        // default values for edge/move operations
+        let edgeType = "split";
+        let shapeType = "move";
+
+        // Handling the configuration for edge operation
+        const noneEdgeBtn = document.getElementById("none-edge-button");
+        const splitEdgeBtn = document.getElementById("split-edge-button");
+        const offsetEdgeBtn = document.getElementById("offset-edge-button");
+        noneEdgeBtn.onclick = edgeChangedClickHandler;
+        splitEdgeBtn.onclick = edgeChangedClickHandler;
+        offsetEdgeBtn.onclick = edgeChangedClickHandler;
+
+        function edgeChangedClickHandler(event) {
+          edgeType = event.target.value;
+
+          // handle the buttons
+          const buttons = document.getElementsByClassName("edge-button");
+          for (const button of buttons) {
+            button.classList.remove("edge-button-selected");
+          }
+          this.classList.add("edge-button-selected");
+          restartUpdateMode({
+            reshapeOptions: {
+              edgeOperation: edgeType,
+              shapeOperation: shapeType
+            }
+          });
+        }
+
+        // Handling the configuration for move operation
+        const noneShapeButton = document.getElementById("none-shape-button");
+        const moveShapeButton = document.getElementById("move-shape-button");
+        noneShapeButton.onclick = shapeChangedClickHandler;
+        moveShapeButton.onclick = shapeChangedClickHandler;
+
+        function shapeChangedClickHandler(event) {
+          shapeType = event.target.value;
+
+          // handle the buttons
+          const buttons = document.getElementsByClassName("shape-button");
+          for (const button of buttons) {
+            button.classList.remove("shape-button-selected");
+          }
+          this.classList.add("shape-button-selected");
+          restartUpdateMode({
+            reshapeOptions: {
+              edgeOperation: edgeType,
+              shapeOperation: shapeType
+            }
+          });
+        }
+
+        function restartUpdateMode(updateOptions) {
+          sketchViewModel.defaultUpdateOptions = {
+            ...sketchViewModel.defaultUpdateOptions,
+            ...updateOptions
+          };
+
+          if (sketchViewModel.activeTool) {
+            if (
+                sketchViewModel.activeTool === "transform" ||
+                sketchViewModel.activeTool === "move" ||
+                sketchViewModel.activeTool === "reshape"
+            ) {
+              updateOptions.tool = sketchViewModel.activeTool;
+              sketchViewModel.update(
+                  sketchViewModel.updateGraphics.toArray(),
+                  updateOptions
+              );
+            }
+          }
+        }
+
+        /**********************************************
+         * Configuration UI for snapping
+         *********************************************/
+
+        sketchViewModel.watch("snappingOptions.enabled", (newValue) => {
+          enabledcheckbox.checked = newValue;
+        });
+
+        enabledcheckbox.checked = sketchViewModel.snappingOptions.enabled;
+        enabledcheckbox.addEventListener("change", (event) => {
+          sketchViewModel.snappingOptions.enabled = event.target.checked
+              ? true
+              : false;
+        });
+
+        tooltipOptionsheckbox.checked = sketchViewModel.tooltipOptions.enabled;
+        tooltipOptionsheckbox.addEventListener("change", (event) => {
+          sketchViewModel.tooltipOptions.enabled = event.target.checked
+              ? true
+              : false;
+        });
+
+        labelOptionscheckbox.checked = sketchViewModel.labelOptions.enabled;
+        labelOptionscheckbox.addEventListener("change", (event) => {
+          sketchViewModel.labelOptions.enabled = event.target.checked
+              ? true
+              : false;
+        });
+
+        selfsnappingcheckbox.checked =
+            sketchViewModel.snappingOptions.selfEnabled;
+        selfsnappingcheckbox.addEventListener("change", (event) => {
+          sketchViewModel.snappingOptions.selfEnabled = event.target.checked
+              ? true
+              : false;
+        });
+
+        featuresnappingcheckbox.checked =
+            sketchViewModel.snappingOptions.featureEnabled;
+        featuresnappingcheckbox.addEventListener("change", (event) => {
+          sketchViewModel.snappingOptions.featureEnabled = event.target.checked
+              ? true
+              : false;
+        });
+
+        const configurationExpand = new Expand({
+          expandIcon: "gear",
+          expandTooltip: "Show configuration",
+          expanded: false,
+          view: view,
+          content: document.getElementById("configurationDiv")
+        });
+
+        // observe the if the CTRL-key got pressed to give the user a visual feedback
+        // the logic itself for toggling snapping is in the SketchViewModel
+        view.on(["key-down"], (ev) => {
+          if (ev.key === "Control") {
+            snappingctrlkey.style.fontWeight = "bold";
+            snappingctrlkey.style.color = "royalblue";
+          }
+        });
+        view.on(["key-up"], (ev) => {
+          if (ev.key === "Control") {
+            snappingctrlkey.style.fontWeight = "normal";
+            snappingctrlkey.style.color = "black";
+          }
+        });
+
+        view.ui.add(configurationExpand, "bottom-right");
+
+        configurationInfoDiv.addEventListener("click", (event) => {
+          configurationExpand.expand();
+        });
+        view.ui.add("configurationInfoDiv", "bottom-right");
 
 
 
 
 
+
+
+
+        let activeWidget = null;
+        document
+            .getElementById("distanceButton")
+            .addEventListener("click", (event) => {
+              setActiveWidget(null);
+              if (!event.target.classList.contains("active")) {
+                setActiveWidget("distance");
+              } else {
+                setActiveButton(null);
+              }
+            });
+
+        document
+            .getElementById("areaButton")
+            .addEventListener("click", (event) => {
+              setActiveWidget(null);
+              if (!event.target.classList.contains("active")) {
+                setActiveWidget("area");
+              } else {
+                setActiveButton(null);
+              }
+            });
+
+        function setActiveWidget(type) {
+          switch (type) {
+            case "distance":
+              activeWidget = new DirectLineMeasurement3D({
+                view: view
+              });
+
+              // skip the initial 'new measurement' button
+              activeWidget.viewModel.start();
+
+              view.ui.add(activeWidget, "top-right");
+              setActiveButton(document.getElementById("distanceButton"));
+              break;
+            case "area":
+              activeWidget = new AreaMeasurement3D({
+                view: view
+              });
+
+              // skip the initial 'new measurement' button
+              activeWidget.viewModel.start();
+
+              view.ui.add(activeWidget, "top-right");
+              setActiveButton(document.getElementById("areaButton"));
+              break;
+            case null:
+              if (activeWidget) {
+                view.ui.remove(activeWidget);
+                activeWidget.destroy();
+                activeWidget = null;
+              }
+              break;
+          }
+        }
+
+        function setActiveButton(selectedButton) {
+          // focus the view to activate keyboard shortcuts for sketching
+          view.focus();
+          const elements = document.getElementsByClassName("active");
+          for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("active");
+          }
+          if (selectedButton) {
+            selectedButton.classList.add("active");
+          }
+        }
+
+        //防止glb模型的代码
+        const canoeBtn = document.getElementById("canoe");
+        view.when(() => {
+              // This sample uses the SketchViewModel to add points to a
+              // GraphicsLayer. The points have 3D glTF models as symbols.
+              const sketchVM = new SketchViewModel({
+                layer: graphicsLayer,
+                view: view
+              });
+              canoeBtn.addEventListener("click", () => {
+                // reference the relative path to the glTF model
+                // in the resource of an ObjectSymbol3DLayer
+                sketchVM.pointSymbol = {
+                  type: "point-3d",
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href: "/glb/sjg.glb"
+                      }
+                    }
+                  ]
+                };
+                deactivateButtons();
+                sketchVM.create("point");
+                canoeBtn.classList.add("esri-button--secondary");
+              });
+
+              sketchVM.on("create", (event) => {
+                if (event.state === "complete") {
+                  sketchVM.update(event.graphic);
+                  deactivateButtons();
+                }
+              });
+            })
+            .catch(console.error);
+
+        function deactivateButtons() {
+          const elements = Array.prototype.slice.call(
+              document.getElementsByClassName("esri-button")
+          );
+          elements.forEach((element) => {
+            element.classList.remove("esri-button--secondary");
+          });
+        }
 
 
 
@@ -625,4 +1257,83 @@ body {
   left: 80px;
   top: 55px;
 }
+
+/*测量工具*/
+#topbar {
+  background: #fff;
+  padding: 10px;
+}
+
+.action-button {
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid #d3d3d3;
+  color: #6e6e6e;
+  height: 32px;
+  width: 32px;
+  text-align: center;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.action-button:hover,
+.action-button:focus {
+  background: #0079c1;
+  color: #e4e4e4;
+}
+
+.active {
+  background: #0079c1;
+  color: #e4e4e4;
+}
+
+/*3D绘画工具*/
+#sketchPanel {
+  width: 200px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.esri-button {
+  margin: 2px;
+}
+
+#configurationDiv {
+  padding: 10px;
+  text-align: left;
+  width: 250px;
+}
+
+#configurationInfoDiv {
+  padding: 7px;
+  text-align: left;
+}
+
+#snappingctrlkey {
+  display: inline;
+}
+
+#actionbuttons,
+#edgeoperationbuttons {
+  display: none;
+}
+
+.update-options {
+  display: flex;
+  flex-direction: row;
+}
+
+.edge-button,
+.shape-button {
+  flex: 1;
+  border-style: solid;
+  border-width: 1px;
+  border-image: none;
+}
+
+.edge-button-selected,
+.shape-button-selected {
+  background: #4c4c4c;
+  color: #fff;
+}
+
 </style>
