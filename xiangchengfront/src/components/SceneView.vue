@@ -2,7 +2,11 @@
   <div class="navbar">
     <div class="navbar-left">
       <img src="/images/logo.png" alt="Avatar">
-      <h1>乡城县水利数字沙盘</h1>
+      <h1 class="logo-title">乡城县水利数字沙盘</h1>
+
+      <h4 class="water-system-button">许曲</h4>
+      <h4 class="water-system-button">定曲</h4>
+      <h4 class="water-system-button">玛曲</h4>
     </div>
     <div class="navbar-right">
       <img src="/images/avatar.jpg" alt="Avatar">
@@ -12,34 +16,24 @@
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
   </div>
   <div id="topbar">
-    <button
-        class="action-button esri-icon-measure-line"
-        id="distanceButton"
-        type="button"
-        title="Measure distance between two points"
-    ></button>
-    <button
-        class="action-button esri-icon-measure-area"
-        id="areaButton"
-        type="button"
-        title="Measure area"
-    ></button>
+    <button class="action-button esri-icon-measure-line" id="distanceButton" type="button" title="测量两点的距离"></button>
+    <button class="action-button esri-icon-measure-area" id="areaButton" type="button" title="测量面积"></button>
   </div>
+  <div class="seven-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" /></div>
+  <div class="seven-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" /></div>
+  <div class="seven-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" /></div>
+  <div class="seven-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" /></div>
+  <div class="seven-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" /></div>
+  <div class="seven-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" /></div>
+  <div class="seven-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" /></div>
+  <div class="seven-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" /></div>
+  <div class="seven-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" /></div>
+
   <div id="sketchPanel" class="esri-widget">
     <div id="startbuttons">
-      <button id="point" data-type="point" class="esri-button starttool">
-        兴趣点描绘
-      </button>
-      <button id="line" data-type="polyline" class="esri-button starttool">
-        路线描绘
-      </button>
-      <button
-          id="extrudedPolygon"
-          data-type="polygon"
-          class="esri-button starttool"
-      >
-        建筑物描绘
-      </button>
+      <button id="point" data-type="point" class="esri-button starttool">兴趣点描绘</button>
+      <button id="line" data-type="polyline" class="esri-button starttool">路线描绘</button>
+      <button id="extrudedPolygon" data-type="polygon" class="esri-button starttool">建筑物描绘</button>
       <button id="canoe" class="esri-button">电站模型加载</button>
     </div>
     <div id="actionbuttons">
@@ -49,44 +43,14 @@
     <div id="edgeoperationbuttons">
       <br />选择边缘操作:
       <div class="update-options" id="edge">
-        <button
-            class="esri-widget--button edge-button"
-            id="none-edge-button"
-            value="none"
-        >
-          无
-        </button>
-        <button
-            class="esri-widget--button edge-button edge-button-selected"
-            id="split-edge-button"
-            value="split"
-        >
-          分割
-        </button>
-        <button
-            class="esri-widget--button edge-button"
-            id="offset-edge-button"
-            value="offset"
-        >
-          位移
-        </button>
+        <button class="esri-widget--button edge-button" id="none-edge-button" value="none">无</button>
+        <button class="esri-widget--button edge-button edge-button-selected" id="split-edge-button" value="split">分割</button>
+        <button class="esri-widget--button edge-button" id="offset-edge-button" value="offset">位移</button>
       </div>
       选择移动操作:
       <div class="update-options" id="shape">
-        <button
-            class="esri-widget--button shape-button"
-            id="none-shape-button"
-            value="none"
-        >
-          无
-        </button>
-        <button
-            class="esri-widget--button shape-button shape-button-selected"
-            id="move-shape-button"
-            value="move"
-        >
-          移动
-        </button>
+        <button class="esri-widget--button shape-button" id="none-shape-button" value="none">无</button>
+        <button class="esri-widget--button shape-button shape-button-selected" id="move-shape-button" value="move">移动</button>
       </div>
     </div>
   </div>
@@ -100,51 +64,31 @@
       </tr>
       <tr>
         <td>
-          <label
-              for="tooltipOptionscheckbox"
-              id="tooltipOptionscheckboxlabel"
-          >
-            - 提示</label
-          >
+          <label for="tooltipOptionscheckbox" id="tooltipOptionscheckboxlabel">- 提示</label>
         </td>
         <td><input type="checkbox" id="tooltipOptionsheckbox" /></td>
       </tr>
       <tr>
         <td>
-          <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel">
-            - 标签</label
-          >
+          <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel">- 标签</label>
         </td>
         <td><input type="checkbox" id="labelOptionscheckbox" /></td>
       </tr>
       <tr>
         <td>
-          <label for="enabledcheckbox" id="enabledcheckboxlabel"
-          ><b
-          >裁剪开启 (
-            <div id="snappingctrlkey">CTRL-键</div>
-            )</b
-          ></label
-          >
+          <label for="enabledcheckbox" id="enabledcheckboxlabel"><b>捕捉开启 (<div id="snappingctrlkey">CTRL-键</div>)</b></label>
         </td>
         <td><input type="checkbox" id="enabledcheckbox" checked /></td>
       </tr>
       <tr>
         <td>
-          <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel">
-            - 自动裁剪</label
-          >
+          <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel">- 自动捕捉</label>
         </td>
         <td><input type="checkbox" id="selfsnappingcheckbox" /></td>
       </tr>
       <tr>
         <td>
-          <label
-              for="featuresnappingcheckbox"
-              id="featuresnappingcheckboxlabel"
-          >
-            - 特征裁剪</label
-          >
+          <label for="featuresnappingcheckbox" id="featuresnappingcheckboxlabel">- 特征捕捉</label>
         </td>
         <td><input type="checkbox" id="featuresnappingcheckbox" /></td>
       </tr>
@@ -177,31 +121,45 @@ import Search from "@arcgis/core/widgets/Search";
 
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
-import Graphic from '@arcgis/core/Graphic'
-import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
-import { ElNotification } from 'element-plus'
-import { h } from 'vue'
-import { Check, Close } from '@element-plus/icons-vue'
+import {Check, Close, Edit,Lock,PieChart,Flag,SortDown,SortUp,Umbrella,WarnTriangleFilled,UserFilled } from '@element-plus/icons-vue'
+
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
 import Sketch from "@arcgis/core/widgets/Sketch.js";
 import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
-
+import Basemap from "@arcgis/core/Basemap.js";
 
 
 export default {
   name: 'SceneView',
+  computed: {
+    Edit() {
+      return Edit
+    },
+    Lock() {
+      return Lock
+    },PieChart() {
+      return PieChart
+    },Flag() {
+      return Flag
+    },SortDown() {
+      return SortDown
+    },SortUp() {
+      return SortUp
+    },Umbrella() {
+      return Umbrella
+    },WarnTriangleFilled() {
+      return WarnTriangleFilled
+    },UserFilled() {
+      return UserFilled
+    }
+  },
   components: { SearchView },
   data() {
     return {
       sceneView: null,
-      directLineVisible: false,
-      areaVisible: false, //一开始的面积测量和距离测量是关闭状态???
-      FigureLayerVisible: false, //一开始的TF选项是隐藏的，只有点击后才是可见的
-      FigureFigureLayerFont: ['水系', '定曲岸线规划', '许曲岸线规划', '水电站', '水文站', '县（区)界', '乡（镇）界', '晕线1', '晕线2', '乡镇面 (10)', '乡城县农田灌溉面积(水资源)'],
-      FigureLayerInsideVisible: [true, false, false, true, true, false, false, false, false, false, false],
       Check,
       Close
     }
@@ -251,82 +209,189 @@ export default {
         let layer0 = new FeatureLayer({
           url:apiUrl + "/0",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"护岸",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer1 = new FeatureLayer({
           url:apiUrl + "/1",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"堤防",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer2 = new FeatureLayer({
           url:apiUrl + "/2",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"水资源",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer3 = new FeatureLayer({
           url:apiUrl + "/3",
           outFields:['*'],
-          visible:true
+          visible:true,
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          },
+          title:"灾害点"
         })
         let layer4 = new FeatureLayer({
           url:apiUrl + "/4",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"水电站",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer5 = new FeatureLayer({
           url:apiUrl + "/5",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"水文站",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer6 = new FeatureLayer({
           url:apiUrl + "/6",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"岸线规划",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer7 = new FeatureLayer({
           url:apiUrl + "/7",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"岸线规划",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer8 = new FeatureLayer({
           url:apiUrl + "/8",
           outFields:['*'],
-          visible:true
+          visible:true,
+          title:"水系",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer9 = new FeatureLayer({
           url:apiUrl + "/9",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"县（区）界",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer10 = new FeatureLayer({
           url:apiUrl + "/10",
           outFields:['*'],
-          visible:false
-        })
-        let layer11 = new FeatureLayer({
-          url:apiUrl + "/11",
-          outFields:['*'],
-          visible:false
+          visible:false,
+          title:"乡（镇）界",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
         let layer12 = new FeatureLayer({
           url:apiUrl + "/12",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"晕线"
         })
         let layer13 = new FeatureLayer({
           url:apiUrl + "/13",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"晕线"
         })
         let layer14 = new FeatureLayer({
           url:apiUrl + "/14",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"乡镇分区图",
+          opacity:0.5
         })
         let layer15 = new FeatureLayer({
           url:apiUrl + "/15",
           outFields:['*'],
-          visible:false
+          visible:false,
+          title:"河湖划界",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+        let layer16 = new FeatureLayer({
+          url:apiUrl + "/16",
+          outFields:['*'],
+          visible:true,
+          title:"灌区",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+        let layer17 = new FeatureLayer({
+          url:apiUrl + "/17",
+          outFields:['*'],
+          visible:true,
+          title:"拟建水库",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
         })
 
         //用于作图的图层
@@ -336,11 +401,12 @@ export default {
         map.add(layer14)
         map.add(layer13)
         map.add(layer12)
-        map.add(layer11)
         map.add(layer10)
         map.add(layer9)
         map.add(layer8)
         map.add(layer7)
+        map.add(layer17)
+        map.add(layer16)
         map.add(layer6)
         map.add(layer5)
         map.add(layer4)
@@ -384,7 +450,8 @@ export default {
         let basemapGalleryExpand = new Expand({
           view:view,
           content:new BasemapGallery({
-            view: view
+            view: view,
+            source: [Basemap.fromId("hybrid"), Basemap.fromId("streets"),Basemap.fromId("satellite") ]
           }),
           group: "top-right"
         })
@@ -428,6 +495,12 @@ export default {
               },{
                 layer: layer15,
                 title: "河湖划界"
+              },{
+                layer: layer16,
+                title: "灌区"
+              },{
+                layer: layer17,
+                title: "拟建水库"
               }
             ]
           }),
@@ -442,32 +515,20 @@ export default {
           }
         });
         const shuidianzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/4",
-          popupTemplate: {
-            title: "水电站: {name}",
-            overwriteActions: true
-          }
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/4"
         });
         const shuiwenzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5",
-          popupTemplate: {
-            title: "水文站: {stnm}",
-            overwriteActions: true
-          }
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5"
         });
         const shuixi = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/8",
-          popupTemplate: {
-            title: "水系: {rname}",
-            overwriteActions: true
-          }
+          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/8"
         });
 
         let searchExpand = new Expand({
           view:view,
           content:new Search({
             view: view,
-            allPlaceholder: "下拉选取搜索目标",
+            allPlaceholder: "定位搜索,下拉选择搜索图层",
             includeDefaultSources: false,
             sources: [
               {
@@ -501,7 +562,7 @@ export default {
                 exactMatch: false,
                 outFields: ["*"],
                 name: "地质灾害点位",
-                placeholder: "键入地质灾害相关内容"
+                placeholder: "地质灾害相关信息"
               }
             ]
           }),
@@ -528,15 +589,26 @@ export default {
         view.ui.add("topbar", "top-right");
 
 
+
+        view.ui.add("river", "top-left");
+        view.ui.add("safety", "top-left");
+        view.ui.add("resource", "top-left");
+        view.ui.add("project", "top-left");
+        view.ui.add("shoreline", "top-left");
+        view.ui.add("boundary", "top-left");
+        view.ui.add("health", "top-left");
+        view.ui.add("disaster", "top-left");
+        view.ui.add("relocation", "top-left");
+
         //3D绘画技术
         const extrudedPolygon = {
           type: "polygon-3d",
           symbolLayers: [
             {
               type: "extrude",
-              size: 10, // extrude by 10 meters
+              size: 50, // extrude by 10 meters
               material: {
-                color: "white"
+                color: "gray"
               },
               edges: {
                 type: "solid",
@@ -844,12 +916,7 @@ export default {
         view.ui.add("configurationInfoDiv", "bottom-right");
 
 
-
-
-
-
-
-
+        //距离面积测量
         let activeWidget = null;
         document
             .getElementById("distanceButton")
@@ -919,7 +986,7 @@ export default {
           }
         }
 
-        //防止glb模型的代码
+        //放置glb模型的代码
         const canoeBtn = document.getElementById("canoe");
         view.when(() => {
               // This sample uses the SketchViewModel to add points to a
@@ -965,165 +1032,28 @@ export default {
           });
         }
 
-
-
-
-
-
-
         // 将 SceneView 对象保存到组件的 data 中
         this.sceneView = view
         // 触发 "map-ready" 事件
         this.$emit('map-ready', this.view)
-        // 定义变量保存上一次添加的闪烁图标
-        let lastGraphic = null
+
         //将对象添加进入window 调试使用
-        window.FigureLayerInsideVisible = this.FigureLayerInsideVisible
         window.view = view
-        // 监听全局事件进行定位操作
-        // 监听positioning事件实现对应河流的定位
-        bus.on('location', data => {
-          //当监听到location定位的时候,触发closePop事件关闭弹窗
-          bus.emit('closePop', false)
-          // 添加闪烁效果
-          let gLayer = new GraphicsLayer()
-          map.add(gLayer)
-          let point = new Point(data[0][0], data[0][1])
-          const markerSymbol = new SimpleMarkerSymbol({
-            color: [255, 0, 0],
-            outline: {
-              color: [255, 255, 255],
-              width: 2
-            },
-            size: 10
-          })
-          const graphic = new Graphic({
-            geometry: point,
-            symbol: markerSymbol
-          })
 
-          // 移除上一次添加的闪烁图标
-          if (lastGraphic) {
-            view.graphics.remove(lastGraphic)
-          }
-
-          // 将图形添加到地图视图中
-          view.graphics.add(graphic)
-          // 保存当前添加的闪烁图标
-          lastGraphic = graphic
-          // 创建闪烁效果
-          let flashInterval = setInterval(() => {
-            graphic.visible = !graphic.visible
-          }, 500)
-
-          // 停止闪烁效果
-          setTimeout(() => {
-            clearInterval(flashInterval)
-            graphic.visible = false
-          }, 10000)
-        })
       } catch (error) {
         console.error('地图初始化失败：', error)
-      }
-    },
-    toggleDirectLine() {
-      this.directLineVisible = !this.directLineVisible
-      if (this.directLineVisible) {
-        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display = 'block'
-        ElNotification({
-          title: '提示',
-          message: h('i', { style: 'color: teal' }, '开启距离测量'),
-          duration: 1000
-        })
-      } else {
-        document.getElementsByClassName('esri-direct-line-measurement-3d')[0].style.display = 'none'
-        ElNotification({
-          title: '提示',
-          message: h('i', { style: 'color: teal' }, '关闭距离测量'),
-          duration: 1000
-        })
-      }
-    },
-    toggleArea() {
-      this.areaVisible = !this.areaVisible
-      if (this.areaVisible) {
-        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display = 'block'
-        ElNotification({
-          title: '提示',
-          message: h('i', { style: 'color: teal' }, '开启面积测量'),
-          duration: 1000
-        })
-      } else {
-        document.getElementsByClassName('esri-area-measurement-3d')[0].style.display = 'none'
-        ElNotification({
-          title: '提示',
-          message: h('i', { style: 'color: teal' }, '关闭面积测量'),
-          duration: 1000
-        })
-      }
-    },
-    //设置点击函数
-    showFigureLayer() {
-      this.FigureLayerVisible = !this.FigureLayerVisible
-      // console.log(this);
-      // console.log(this.initializeMap());
-      console.log(this.FigureLayerVisible)
-      // console.log(layer2.sublayers._items[0].visible);
-    }
-  },
-  watch: {
-    FigureLayerInsideVisible: {
-      // immediate:true,
-      deep: true,
-      handler() {
-        for(var i=0; i<FigureLayerInsideVisible.length; i++){
-          //view.map.layers.items[0].allSublayers.items[i].visible 有没有其它办法调用这个变量
-          view.map.layers.items[0].allSublayers.items[i].visible = FigureLayerInsideVisible[i]
-        }
       }
     }
   }
 }
 </script>
 <style>
-/* *{
-  margin: 0px;
-} */
 body {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 /* 控制popupTemplate显示 */
 .esri-popup__main-container {
   display: none !important;
-}
-.esri-ui-corner .esri-component.esri-widget--panel {
-  width: 150px !important;
-}
-.esri-direct-line-measurement-3d {
-  display: none;
-}
-.esri-area-measurement-3d {
-  display: none;
-}
-.measure-tools-wrapper {
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  left: 40px;
-  top: 250px;
-  transform: translateX(-50%);
-}
-.measure-tools {
-  justify-content: center;
-}
-.measure-tools-icon {
-  background-color: #ffffff;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0;
 }
 /*图层按钮的样式*/
 .map-FigureLayer {
@@ -1137,7 +1067,6 @@ body {
   font-size: 1em;
   border-radius: 10px;
   border: 2px solid skyblue;
-  /* box-shadow:  1px 1px 3px 3px black; */
 }
 .map-FigureLayer p {
   margin: 0 auto;
@@ -1335,5 +1264,36 @@ body {
   background: #4c4c4c;
   color: #fff;
 }
-
+.water-system-button{
+  color: white;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-right: 20px;
+  background-color: #79bbff;
+  border-radius: 5px;
+  height: 30px;
+  line-height: 30px;
+}
+.water-system-button:hover{
+  animation-duration: 0.5s;
+  background-color: #0171dc;
+  cursor: pointer;
+}
+.logo-title{
+  padding-right: 100px;
+}
+.seven-function-div{
+  width: 32px;
+  height: 32px;
+}
+/*防止左边按钮变形*/
+.el-button{
+  padding: 0 9px !important;
+  background-color: white;
+  color: #6e6e6e;
+}
+.el-button:hover{
+  background-color: #f3f3f3;
+  color: #2e2e2e;
+}
 </style>

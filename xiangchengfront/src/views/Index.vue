@@ -5,10 +5,12 @@ import SearchTab from '../components/SearchTab.vue'
 
 import { ref } from 'vue'
 import { ElButton } from 'element-plus'
+import ClickInfoTab from "../components/ClickInfoTab.vue";
 
 export default {
   name: 'Index',
   components: {
+    ClickInfoTab,
     SceneView,
     ElButton,
     InformationTab
@@ -32,34 +34,26 @@ export default {
       // 场景视图已准备就绪
       console.log('场景视图已加载')
     },
-    hadleSetFid(fid) {
-      this.fid = fid.FID
-      console.log('这里是', fid)
-      const informationTab = this.$refs.informationTab
-      informationTab.openDialog()
-    },
-    hadleShorelinePlanningClick(fid) {
-      console.log('岸线规划')
-      console.log(fid)
-    },
-    hadlesearchComplete(element){
-      console.log('嘿嘿', element)
+    hadleSetAttributes(name, attrs) {
+      this.attributes = attrs
+      this.name = name
+      console.log('这里是', attrs)
+      const clickInfoTab = this.$refs.clickInfoTab
+      clickInfoTab.openDialog()
     }
   },
   setup() {
-    const fid = ref(0) // 假设当前河流信息的fid为123
-    const srname = "许曲"
+    const attributes = ref({}) // 假设当前河流信息的fid为123
+    const name = "水系"
     return {
-      fid,
-      srname
+      attributes,name
     }
   }
 }
 </script>
 <template>
-  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @searchComplete="hadlesearchComplete" @setFid="hadleSetFid" @shorelinePlanningClick="hadleShorelinePlanningClick" />
-  <information-tab :fid="fid" ref="informationTab"></information-tab>
-  <SearchTab :srname="srname" ref="searchTab"></SearchTab>
+  <SceneView :mapProperties="mapProperties" @map-ready="onMapReady" @setAttributes="hadleSetAttributes"/>
+  <ClickInfoTab :attributes="attributes" :name="name" ref="clickInfoTab"></ClickInfoTab>
 </template>
 <style scoped>
 </style>
