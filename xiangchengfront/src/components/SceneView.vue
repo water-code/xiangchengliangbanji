@@ -4,14 +4,22 @@
       <img src="/images/logo.png" alt="Avatar">
       <h1 class="logo-title">乡城县水利数字沙盘</h1>
 
-      <h4 class="water-system-button">许曲</h4>
-      <h4 class="water-system-button">定曲</h4>
-      <h4 class="water-system-button">玛曲</h4>
+      <h4 class="water-system-button" @click="layerDataLocation('水系', 27, 12)">许曲</h4>
+      <h4 class="water-system-button" @click="layerDataLocation('水系', 29, 12)">定曲</h4>
+      <h4 class="water-system-button" @click="layerDataLocation('水系', 28, 12)">玛曲</h4>
     </div>
     <div class="navbar-right">
       <img src="/images/avatar.jpg" alt="Avatar">
       <p>格桑梅朵</p>
     </div>
+  </div>
+  <div class="searchTab">
+    <div class="right-top-close" @click="searchTabClose"><el-icon><CloseBold /></el-icon></div>
+    <SearchTab></SearchTab>
+  </div>
+  <div class="detailTab">
+    <div class="right-top-close" @click="detailTabClose"><el-icon><CloseBold /></el-icon></div>
+    <DetailTab></DetailTab>
   </div>
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
   </div>
@@ -19,15 +27,18 @@
     <button class="action-button esri-icon-measure-line" id="distanceButton" type="button" title="测量两点的距离"></button>
     <button class="action-button esri-icon-measure-area" id="areaButton" type="button" title="测量面积"></button>
   </div>
-  <div class="seven-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" /></div>
-  <div class="seven-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" /></div>
-  <div class="seven-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" /></div>
-  <div class="seven-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" /></div>
-  <div class="seven-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" /></div>
-  <div class="seven-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" /></div>
-  <div class="seven-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" /></div>
-  <div class="seven-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" /></div>
-  <div class="seven-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" /></div>
+  <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" /></div>
+  <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" /></div>
+  <div class="nine-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" /></div>
+  <div class="nine-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" /></div>
+  <div class="nine-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" /></div>
+  <div class="nine-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" /></div>
+  <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" /></div>
+  <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" /></div>
+  <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" /></div>
+
+  <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
+  <div class="else-function-div" id="home"><el-button type="primary" :icon="House" title="正视角" @click="goHomeView()" /></div>
 
   <div id="sketchPanel" class="esri-widget">
     <div id="startbuttons">
@@ -121,7 +132,7 @@ import Search from "@arcgis/core/widgets/Search";
 
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
-import {Check, Close, Edit,Lock,PieChart,Flag,SortDown,SortUp,Umbrella,WarnTriangleFilled,UserFilled } from '@element-plus/icons-vue'
+import {Check,Close, Edit,Lock,PieChart,Flag,SortDown,SortUp,Umbrella,WarnTriangleFilled,UserFilled, TrendCharts, House, CloseBold } from '@element-plus/icons-vue'
 
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
@@ -130,6 +141,10 @@ import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3
 import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
 import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
 import Basemap from "@arcgis/core/Basemap.js";
+import SearchTab from "./SearchTab.vue";
+import DetailTab from "./DetailTab.vue";
+import Graphic from "@arcgis/core/Graphic";
+import axios from 'axios';
 
 
 export default {
@@ -154,14 +169,23 @@ export default {
       return WarnTriangleFilled
     },UserFilled() {
       return UserFilled
+    },TrendCharts() {
+      return TrendCharts
+    },House() {
+      return House
+    },CloseBold() {
+      return CloseBold
     }
   },
-  components: { SearchView },
+  components: {DetailTab, SearchTab, SearchView },
   data() {
     return {
       sceneView: null,
+      map: null,
       Check,
-      Close
+      Close,
+      searchTabVisible: false,
+      detailTabVisible: false
     }
   },
   created() {
@@ -171,7 +195,33 @@ export default {
     this.initializeMap()
   },
   methods: {
+    layerDataLocation(layerName, FID, zoom){
+      //点击许曲后定位到许曲的相应位置
+      const featureLayer = window.view.map.layers.find(layer => layer.title === layerName);
+      console.log('嘿嘿：', featureLayer)
+      // 构造查询条件
+      const query = {
+        where: "FID = " + (FID+1),//我不明白为什么要+1
+        returnGeometry: true
+      };
+      featureLayer.queryFeatures(query).then(result => {
+        const feature = result.features[0];
+        // 高亮显示查询结果
+        window.view.whenLayerView(featureLayer).then(layerView => {
+          layerView.highlight(feature);
+        });
+        //跳转位置
+        window.view.goTo({ target: feature.geometry, zoom: zoom });
+      });
+    },
+    async getCurrentWeather(){
+      let url = "http://api.caiyunapp.com/v2.6/NMFkcX12TkkmxzQq/99.78,29.00/weather?alert=true&dailysteps=1&hourlysteps=24"
+      const weatherInfo = await axios({ url: url, method: 'get'})
+      console.log(weatherInfo)
+    },
     async initializeMap() {
+      let now = new Date()
+      await this.getCurrentWeather()
       try {
         esriConfig.apiKey = 'AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR'
         let map = new WebScene({
@@ -190,11 +240,15 @@ export default {
           tilt: 84.3710848755085
         });
         // Create the SceneView
-        const view = new SceneView({
+        let view = new SceneView({
           map: map,
           container: 'app',
           qualityProfile: "high",
           camera:camera,
+          timeExtent:{
+            start: now,
+            end: now
+          },
           environment: {
             weather: {
               type: "cloudy",
@@ -589,6 +643,8 @@ export default {
         view.ui.add("topbar", "top-right");
 
 
+        view.ui.add("searchPane", "top-left");
+        view.ui.add("home", "top-left");
 
         view.ui.add("river", "top-left");
         view.ui.add("safety", "top-left");
@@ -599,6 +655,7 @@ export default {
         view.ui.add("health", "top-left");
         view.ui.add("disaster", "top-left");
         view.ui.add("relocation", "top-left");
+
 
         //3D绘画技术
         const extrudedPolygon = {
@@ -765,7 +822,7 @@ export default {
           }
         });
 
-        view.ui.add("sketchPanel", "top-right");
+        view.ui.add("sketchPanel", "bottom-right");
 
         // default values for edge/move operations
         let edgeType = "split";
@@ -985,6 +1042,14 @@ export default {
             selectedButton.classList.add("active");
           }
         }
+        function deactivateButtons() {
+          const elements = Array.prototype.slice.call(
+              document.getElementsByClassName("esri-button")
+          );
+          elements.forEach((element) => {
+            element.classList.remove("esri-button--secondary");
+          });
+        }
 
         //放置glb模型的代码
         const canoeBtn = document.getElementById("canoe");
@@ -1023,26 +1088,57 @@ export default {
             })
             .catch(console.error);
 
-        function deactivateButtons() {
-          const elements = Array.prototype.slice.call(
-              document.getElementsByClassName("esri-button")
-          );
-          elements.forEach((element) => {
-            element.classList.remove("esri-button--secondary");
-          });
-        }
 
         // 将 SceneView 对象保存到组件的 data 中
         this.sceneView = view
+        this.map = map
         // 触发 "map-ready" 事件
         this.$emit('map-ready', this.view)
 
         //将对象添加进入window 调试使用
         window.view = view
 
+        bus.on('shuixiCellClick', data => {
+          this.detailPaneDisplay()
+          //还要进行图层的定位
+          console.log(data)
+          this.layerDataLocation('水系', data.id, 14)
+        })
+
       } catch (error) {
         console.error('地图初始化失败：', error)
       }
+    },
+    searchPaneDisplay() {
+      if(this.searchTabVisible)
+        document.getElementsByClassName("searchTab")[0].style.display = "none"
+      else if(!this.searchTabVisible)
+        document.getElementsByClassName("searchTab")[0].style.display = "block"
+      this.searchTabVisible = !this.searchTabVisible;
+    },
+    detailPaneDisplay() {
+        document.getElementsByClassName("detailTab")[0].style.display = "block"
+    },
+    goHomeView() {
+      //回到主视图
+      let camera = new Camera({
+        position: new Point({
+          x: 99.74587169702623,
+          y: 29.074594554358285,
+          z: 234185.00685059093,
+          spatialReference: new SpatialReference({ wkid: 4326 })
+        }),
+        heading: 0,
+        tilt: 0
+      });
+      window.view.goTo(camera)
+    },
+    searchTabClose(){
+      document.getElementsByClassName("searchTab")[0].style.display = "none"
+      this.searchTabVisible = !this.searchTabVisible
+    },
+    detailTabClose(){
+      document.getElementsByClassName("detailTab")[0].style.display = "none"
     }
   }
 }
@@ -1182,32 +1278,49 @@ body {
 }
 /* 搜索功能 */
 .searchTab {
+  width: 400px;
   position: absolute;
+  background-color: rgba(255,255,255,0.6);
   left: 80px;
   top: 55px;
+  bottom: 50px;
+  border-radius: 5px;
+  box-shadow: #6e6e6e;
+  display: none;
+}
+/* 搜索功能 */
+.detailTab {
+  height: 400px;
+  position: absolute;
+  background-color: rgba(255,255,255,0.6);
+  left: 500px;
+  right: 450px;
+  bottom: 50px;
+  border-radius: 5px;
+  box-shadow: #6e6e6e;
+  display: none;
 }
 
 /*测量工具*/
 #topbar {
-  background: #fff;
-  padding: 10px;
+  background: rgba(0,0,0,0);
+  display: flex;
+  flex-direction: column;
 }
 
 .action-button {
   font-size: 16px;
-  background-color: transparent;
-  border: 1px solid #d3d3d3;
   color: #6e6e6e;
   height: 32px;
   width: 32px;
   text-align: center;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
 }
 
 .action-button:hover,
 .action-button:focus {
-  background: #0079c1;
-  color: #e4e4e4;
+  cursor: pointer;
 }
 
 .active {
@@ -1217,7 +1330,6 @@ body {
 
 /*3D绘画工具*/
 #sketchPanel {
-  width: 200px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.8);
 }
@@ -1282,9 +1394,12 @@ body {
 .logo-title{
   padding-right: 100px;
 }
-.seven-function-div{
+.nine-function-div{
   width: 32px;
   height: 32px;
+}
+.else-function-div .el-button{
+  background-color: #79bbff;
 }
 /*防止左边按钮变形*/
 .el-button{
@@ -1295,5 +1410,18 @@ body {
 .el-button:hover{
   background-color: #f3f3f3;
   color: #2e2e2e;
+}
+/* tab关闭的按钮div*/
+.right-top-close {
+  z-index: 999;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: #6e6e6e;
+}
+.right-top-close:hover{
+  cursor: pointer;
 }
 </style>

@@ -156,7 +156,7 @@
 import { reactive, toRefs, watchEffect, watch, toRaw, onMounted } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
 import axios from '../api/request'
-import Radar from './Radar.vue'
+import Radar from './GradientStackedAreaChart.vue'
 import Search from './Search.vue'
 import bus from '../utils/bus.js'
 
