@@ -27,15 +27,15 @@
     <button class="action-button esri-icon-measure-line" id="distanceButton" type="button" title="测量两点的距离"></button>
     <button class="action-button esri-icon-measure-area" id="areaButton" type="button" title="测量面积"></button>
   </div>
-  <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" /></div>
-  <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" /></div>
-  <div class="nine-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" /></div>
-  <div class="nine-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" /></div>
-  <div class="nine-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" /></div>
-  <div class="nine-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" /></div>
-  <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" /></div>
-  <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" /></div>
-  <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" /></div>
+  <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" @click="layerDisplayController('水系')"/></div>
+  <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" @click="layerDisplayController('水安全')"/></div>
+  <div class="nine-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" @click="layerDisplayController('水资源')"/></div>
+  <div class="nine-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" @click="layerDisplayController('水利工程')"/></div>
+  <div class="nine-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" @click="layerDisplayController('岸线规划功能分区')"/></div>
+  <div class="nine-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" @click="layerDisplayController('河湖划界')"/></div>
+  <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')"/></div>
+  <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')"/></div>
+  <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')"/></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
   <div class="else-function-div" id="home"><el-button type="primary" :icon="House" title="正视角" @click="goHomeView()" /></div>
@@ -132,7 +132,22 @@ import Search from "@arcgis/core/widgets/Search";
 
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
-import {Check,Close, Edit,Lock,PieChart,Flag,SortDown,SortUp,Umbrella,WarnTriangleFilled,UserFilled, TrendCharts, House, CloseBold } from '@element-plus/icons-vue'
+import {
+  Check,
+  Close,
+  CloseBold,
+  Edit,
+  Flag,
+  House,
+  Lock,
+  PieChart,
+  SortDown,
+  SortUp,
+  TrendCharts,
+  Umbrella,
+  UserFilled,
+  WarnTriangleFilled
+} from '@element-plus/icons-vue'
 
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
@@ -143,8 +158,7 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
 import Basemap from "@arcgis/core/Basemap.js";
 import SearchTab from "./SearchTab.vue";
 import DetailTab from "./DetailTab.vue";
-import Graphic from "@arcgis/core/Graphic";
-import axios from 'axios';
+import axios from "../api/request.js";
 
 
 export default {
@@ -185,7 +199,8 @@ export default {
       Check,
       Close,
       searchTabVisible: false,
-      detailTabVisible: false
+      detailTabVisible: false,
+      highlight: null
     }
   },
   created() {
@@ -206,22 +221,161 @@ export default {
       };
       featureLayer.queryFeatures(query).then(result => {
         const feature = result.features[0];
+        console.log('query到的features', feature)
         // 高亮显示查询结果
-        window.view.whenLayerView(featureLayer).then(layerView => {
-          layerView.highlight(feature);
+        if(this.highlight){
+          this.highlight.remove()
+        }
+        view.whenLayerView(featureLayer).then(layerView => {
+          this.highlight = layerView.highlight([FID + 1]);//妈的原来这里是要传入FID，老子搞了半天总算搞明白了
         });
         //跳转位置
-        window.view.goTo({ target: feature.geometry, zoom: zoom });
+        view.goTo({ target: feature.geometry, zoom: zoom });
       });
     },
     async getCurrentWeather(){
-      let url = "http://api.caiyunapp.com/v2.6/NMFkcX12TkkmxzQq/99.78,29.00/weather?alert=true&dailysteps=1&hourlysteps=24"
+      let url = "/api/weather?lat=99.78&lon=29.00"
       const weatherInfo = await axios({ url: url, method: 'get'})
-      console.log(weatherInfo)
+      return weatherInfo.data.result.realtime;
+    },
+    convertSkycon(skycon){
+      //晴天:CLEAR_DAY CLEAR_NIGHT
+      //多云 PARTLY_CLOUDY_DAY PARTLY_CLOUDY_NIGHT CLOUDY
+      //雾天 LIGHT_HAZE MODERATE_HAZE HEAVY_HAZE FOG DUST SAND WIND
+      //雨水 LIGHT_RAIN MODERATE_RAIN HEAVY_RAIN STORM_RAIN
+      //雪天 LIGHT_SNOW  MODERATE_SNOW HEAVY_SNOW STORM_SNOW
+
+      //('sunny', 'cloudy', 'rainy', 'snowy', 'foggy')
+      switch (skycon) {
+        case "CLEAR_DAY":
+        case "CLEAR_NIGHT":
+          return "sunny";
+        case "PARTLY_CLOUDY_DAY":
+        case "PARTLY_CLOUDY_NIGHT":
+        case "CLOUDY":
+          return "cloudy";
+        case "LIGHT_HAZE":
+        case "MODERATE_HAZE":
+        case "HEAVY_HAZE":
+        case "FOG":
+        case "DUST":
+        case "SAND":
+        case "WIND":
+          return "foggy";
+        case "LIGHT_RAIN":
+        case "MODERATE_RAIN":
+        case "HEAVY_RAIN":
+        case "STORM_RAIN":
+          return "rainy";
+        case "LIGHT_SNOW":
+        case "MODERATE_SNOW":
+        case "HEAVY_SNOW":
+        case "STORM_SNOW":
+          return "snowy";
+        default:
+          return "unknown";
+      }
+    },
+    layerDisplayController(element){
+      //凡是点击了功能按钮就先清除一下高亮
+      if(this.highlight){
+        this.highlight.remove()
+      }
+      let map = view.map;
+      let layers = map.layers;
+      layers.forEach(function(layer) {
+        layer.visible = false;
+      });
+      // 乡镇名称
+      let xiangzhenLayer = map.layers.find(function(layer) {
+        return layer.title === '乡镇分区图';
+      });
+      xiangzhenLayer.visible=true
+      if(element === '水系'){
+        // 接着显示水系
+        let shuixiLayer = map.layers.find(function(layer) {
+          return layer.title === '水系';
+        });
+        shuixiLayer.visible=true
+      }else if(element === '水安全'){
+        let shuixiLayer = map.layers.find(function(layer) {
+          return layer.title === '水系';
+        });
+        shuixiLayer.visible=true
+        let huan = map.layers.find(function(layer) {
+          return layer.title === '护岸';
+        });
+        huan.visible=true
+        let difang = map.layers.find(function(layer) {
+          return layer.title === '堤防';
+        });
+        difang.visible=true
+      }else if(element === '水资源'){
+        let shuiziyuan = map.layers.find(function(layer) {
+          return layer.title === '水资源';
+        });
+        shuiziyuan.visible=true
+        let guanqu = map.layers.find(function(layer) {
+          return layer.title === '灌区';
+        });
+        guanqu.visible=true
+      }else if(element === '水利工程'){
+        let shuidianzhan = map.layers.find(function(layer) {
+          return layer.title === '水电站';
+        });
+        shuidianzhan.visible=true
+        let shuiwenzhan = map.layers.find(function(layer) {
+          return layer.title === '水文站';
+        });
+        shuiwenzhan.visible=true
+        let nijianshuiku = map.layers.find(function(layer) {
+          return layer.title === '拟建水库';
+        });
+        nijianshuiku.visible=true
+      }else if(element === '岸线规划功能分区'){
+        let anxianguihua = map.layers.find(function(layer) {
+          return layer.title === '岸线规划功能分区';
+        });
+        anxianguihua.visible=true
+      }else if(element === '河湖划界'){
+        let hehuhuajie = map.layers.find(function(layer) {
+          return layer.title === '河湖划界';
+        });
+        hehuhuajie.visible=true
+      }else if(element === '健康评价'){
+        // 接着显示水系
+        let shuixiLayer = map.layers.find(function(layer) {
+          return layer.title === '水系';
+        });
+        shuixiLayer.visible=true
+      }else if(element === '灾害点'){
+        let zaihaidian = map.layers.find(function(layer) {
+          return layer.title === '灾害点';
+        });
+        zaihaidian.visible=true
+        // 接着显示水系
+        let shuixiLayer = map.layers.find(function(layer) {
+          return layer.title === '水系';
+        });
+        shuixiLayer.visible=true
+        let shuidianzhan = map.layers.find(function(layer) {
+          return layer.title === '水电站';
+        });
+        shuidianzhan.visible=true
+        let shuiwenzhan = map.layers.find(function(layer) {
+          return layer.title === '水文站';
+        });
+        shuiwenzhan.visible=true
+      }else if(element === '移民搬迁'){
+        alert('数据正在搜集中...')
+      }
+
+      //回到主视图
+      this.goHomeView()
     },
     async initializeMap() {
       let now = new Date()
-      await this.getCurrentWeather()
+      let weather = await this.getCurrentWeather();
       try {
         esriConfig.apiKey = 'AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR'
         let map = new WebScene({
@@ -251,12 +405,15 @@ export default {
           },
           environment: {
             weather: {
-              type: "cloudy",
-              cloudCover: 0.3
+              type: this.convertSkycon(weather.skycon),
+              cloudCover: weather.cloudrate
             }
           },
           zoom: 10
         })
+
+        await this.getCurrentWeather(view)
+
 
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
@@ -336,7 +493,7 @@ export default {
           url:apiUrl + "/6",
           outFields:['*'],
           visible:false,
-          title:"岸线规划",
+          title:"岸线规划功能分区",
           popupTemplate:{
             content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
@@ -348,7 +505,7 @@ export default {
           url:apiUrl + "/7",
           outFields:['*'],
           visible:false,
-          title:"岸线规划",
+          title:"岸线规划功能分区",
           popupTemplate:{
             content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
