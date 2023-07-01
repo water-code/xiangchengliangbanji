@@ -607,7 +607,6 @@ export default {
 
         //用于作图的图层
         const graphicsLayer = new GraphicsLayer();
-        map.add(graphicsLayer)
         map.add(layer15)
         map.add(layer14)
         map.add(layer13)
@@ -625,6 +624,7 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
+        map.add(graphicsLayer)
 
         let weatherExpand = new Expand({
           view: view,
