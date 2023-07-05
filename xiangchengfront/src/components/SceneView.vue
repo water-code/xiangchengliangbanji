@@ -26,6 +26,7 @@
   <div id="topbar">
     <button class="action-button esri-icon-measure-line" id="distanceButton" type="button" title="测量两点的距离"></button>
     <button class="action-button esri-icon-measure-area" id="areaButton" type="button" title="测量面积"></button>
+    <button class="action-button esri-icon-printer" id="screenShotButton" type="button" title="下载图像"></button>
   </div>
   <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" @click="layerDisplayController('水系')"/></div>
   <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" @click="layerDisplayController('水安全')"/></div>
@@ -42,10 +43,10 @@
 
   <div id="sketchPanel" class="esri-widget">
     <div id="startbuttons">
-      <button id="point" data-type="point" class="esri-button starttool">兴趣点描绘</button>
-      <button id="line" data-type="polyline" class="esri-button starttool">路线描绘</button>
-      <button id="extrudedPolygon" data-type="polygon" class="esri-button starttool">建筑物描绘</button>
-      <button id="canoe" class="esri-button">电站模型加载</button>
+      <button id="point" data-type="point" class="esri-button starttool">坐标标注</button>
+      <button id="line" data-type="polyline" class="esri-button starttool">路线绘制</button>
+      <button id="extrudedPolygon" data-type="polygon" class="esri-button starttool">建筑描绘</button>
+      <button id="canoe" class="esri-button">模型加载</button>
     </div>
     <div id="actionbuttons">
       <button id="cancel" class="esri-button">取消</button>
@@ -159,6 +160,9 @@ import Basemap from "@arcgis/core/Basemap.js";
 import SearchTab from "./SearchTab.vue";
 import DetailTab from "./DetailTab.vue";
 import axios from "../api/request.js";
+import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
+import Graphic from "@arcgis/core/Graphic";
+import {TextSymbol} from "@arcgis/core/symbols.js";
 
 
 export default {
@@ -575,7 +579,7 @@ export default {
           title:"河湖划界",
           popupTemplate:{
             content:(element)=>{
-              console.log(element.graphic.layer.title, element.graphic.attributes)
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
@@ -587,7 +591,7 @@ export default {
           title:"灌区",
           popupTemplate:{
             content:(element)=>{
-              console.log(element.graphic.layer.title, element.graphic.attributes)
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
@@ -599,12 +603,11 @@ export default {
           title:"拟建水库",
           popupTemplate:{
             content:(element)=>{
-              console.log(element.graphic.layer.title, element.graphic.attributes)
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
-
         //用于作图的图层
         const graphicsLayer = new GraphicsLayer();
         map.add(layer15)
@@ -624,7 +627,7 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
-        map.add(graphicsLayer)
+        map.add(graphicsLayer)// 这是绘画图层
 
         let weatherExpand = new Expand({
           view: view,
@@ -855,21 +858,15 @@ export default {
 
         // point symbol used for sketching points of interest
         const point = {
-          type: "point-3d",
-          symbolLayers: [
-            {
-              type: "icon",
-              size: "30px",
-              resource: { primitive: "kite" },
-              outline: {
-                color: "blue",
-                size: "3px"
-              },
-              material: {
-                color: "white"
-              }
-            }
-          ]
+          type: "text", // autocasts as new TextSymbol()
+          color: "#fff",
+          text: "\ue61e", // esri-icon-key
+          font: {
+            size: 10,
+            family: "CalciteWebCoreIcons"
+          },
+          horizontalAlignment: "left",
+          verticalAlignment: "bottom"
         };
         // Set-up event handlers for buttons and click events
         const enabledcheckbox = document.getElementById("enabledcheckbox");
@@ -926,6 +923,12 @@ export default {
           if (event.state === "cancel") {
             startbuttons.style.display = "inline";
             actionbuttons.style.display = "none";
+          }
+          //以上是设置按钮的样式
+          //接下来我们需要设置绘制后的一些处理工作
+          if (event.state === "complete" && event.tool === "point") {
+            const point = event.graphic.geometry;
+            event.graphic.symbol.text = point.longitude.toFixed(4) + "," + point.latitude.toFixed(4) + "," + point.z.toFixed(2)
           }
         });
 
@@ -1153,6 +1156,24 @@ export default {
                 setActiveButton(null);
               }
             });
+        document
+            .getElementById("screenShotButton")
+            .addEventListener("click", (event) => {
+              view.takeScreenshot({
+                format: 'png',
+                quality: '98',
+                width: 1980,
+                height: 1080,
+              }).then(screenshoot=>{
+                const link = document.createElement('a');
+                link.download = 'screenshot.png'; // Set the download filename
+                link.href = screenshoot.dataUrl; // Set the base64 data URL as the href
+                link.click(); // Trigger the download
+                setTimeout(()=>{
+                  link.remove(); // Remove the link element
+                },1000)
+              });
+            });
 
         function setActiveWidget(type) {
           switch (type) {
@@ -1244,6 +1265,12 @@ export default {
               });
             })
             .catch(console.error);
+
+        //左下角添加当前经纬度显示
+        const ccWidget = new CoordinateConversion({
+          view: view
+        })
+        view.ui.add(ccWidget, 'bottom-left')
 
 
         // 将 SceneView 对象保存到组件的 data 中
