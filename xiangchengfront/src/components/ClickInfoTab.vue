@@ -97,6 +97,13 @@
         <el-descriptions-item label="支流名称">{{ disasterInfo.srname }}</el-descriptions-item>
       </el-descriptions>
     </div>
+    <div class="disasterEscapeInfo" v-if="name == '地质灾害发生实际区域和转移路线'">
+      <img class="disasterEscapeInfo-img" src="http://xiangoos.ruankun.xyz/%E4%B9%A1%E5%9F%8E%E5%8E%BF%E9%A6%99%E5%B7%B4%E6%8B%89%E9%95%87%E5%86%B7%E9%98%BF%E5%A4%AE%E4%BB%B2%E6%9D%91.jpg">
+    </div>
+    <div class="yinshuigongchengInfo" v-if="name == '引水工程'">
+      <img class="disasterEscapeInfo-img" src="http://xiangoos.ruankun.xyz/%E6%AD%A3%E6%96%97%E4%B9%A1%E5%BC%95%E6%B0%B4%E7%94%A8%E6%B0%B4%E5%8C%BA%E5%9F%9F.jpg">
+
+    </div>
   </el-dialog>
 </template>
 <script>
@@ -177,4 +184,8 @@ export default {
 }
 </script>
 <style>
+.disasterEscapeInfo-img {
+  width: 100%;
+  height: 100%;
+}
 </style>

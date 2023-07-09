@@ -21,6 +21,10 @@
     <div class="right-top-close" @click="detailTabClose"><el-icon><CloseBold /></el-icon></div>
     <DetailTab></DetailTab>
   </div>
+  <div class="weatherTab">
+    <div class="right-top-close" @click="weatherTabClose"><el-icon><CloseBold /></el-icon></div>
+    <WeatherTab></WeatherTab>
+  </div>
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
   </div>
   <div id="topbar">
@@ -39,6 +43,7 @@
   <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')"/></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
+  <div class="else-function-div" id="weatherPane"><el-button type="primary" :icon="PartlyCloudy" title="气象预警" @click="weatherPaneDisplay()" /></div>
   <div class="else-function-div" id="home"><el-button type="primary" :icon="House" title="正视角" @click="goHomeView()" /></div>
 
   <div id="sketchPanel" class="esri-widget">
@@ -110,6 +115,41 @@
   <div id="configurationInfoDiv" class="esri-widget">
     <b>打开3D绘画设置 <span>&#8594;</span></b>
   </div>
+  <!--  洪水海平面控制图层-->
+  <div id="menu" class="esri-widget">
+    <h4>Wave direction</h4>
+    <div id="waveSlider"></div>
+    <h4>Wave strength</h4>
+    <input
+        type="radio"
+        name="waveStrengthRadio"
+        value="calm"
+        id="calm"
+    /><label for="calm">Calm</label><br />
+    <input
+        type="radio"
+        name="waveStrengthRadio"
+        value="rippled"
+        id="rippled"
+    /><label for="rippled">Rippled</label><br />
+    <input
+        type="radio"
+        name="waveStrengthRadio"
+        value="slight"
+        id="slight"
+    /><label for="slight">Slight</label><br />
+    <input
+        type="radio"
+        name="waveStrengthRadio"
+        value="moderate"
+        id="moderate"
+        checked
+    /><label for="moderate">Moderate</label><br />
+    <h4>Dominant color</h4>
+    <button id="navy" class="color-btn"></button>
+    <button id="green" class="color-btn"></button>
+    <button id="turqoise" class="color-btn"></button>
+  </div>
 </template>
 <script>
 import SceneView from '@arcgis/core/views/SceneView'
@@ -145,6 +185,7 @@ import {
   SortDown,
   SortUp,
   TrendCharts,
+  PartlyCloudy,
   Umbrella,
   UserFilled,
   WarnTriangleFilled
@@ -159,10 +200,10 @@ import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
 import Basemap from "@arcgis/core/Basemap.js";
 import SearchTab from "./SearchTab.vue";
 import DetailTab from "./DetailTab.vue";
+import WeatherTab from "./WeatherTab.vue";
 import axios from "../api/request.js";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import Graphic from "@arcgis/core/Graphic";
-import {TextSymbol} from "@arcgis/core/symbols.js";
+import Slider from "@arcgis/core/widgets/Slider.js";
 
 
 export default {
@@ -189,13 +230,17 @@ export default {
       return UserFilled
     },TrendCharts() {
       return TrendCharts
-    },House() {
+    },
+    PartlyCloudy() {
+      return PartlyCloudy
+    },
+    House() {
       return House
     },CloseBold() {
       return CloseBold
     }
   },
-  components: {DetailTab, SearchTab, SearchView },
+  components: {WeatherTab, DetailTab, SearchTab, SearchView },
   data() {
     return {
       sceneView: null,
@@ -203,6 +248,7 @@ export default {
       Check,
       Close,
       searchTabVisible: false,
+      weatherTabVisible: false,
       detailTabVisible: false,
       highlight: null
     }
@@ -217,7 +263,6 @@ export default {
     layerDataLocation(layerName, FID, zoom){
       //点击许曲后定位到许曲的相应位置
       const featureLayer = window.view.map.layers.find(layer => layer.title === layerName);
-      console.log('嘿嘿：', featureLayer)
       // 构造查询条件
       const query = {
         where: "FID = " + (FID+1),//我不明白为什么要+1
@@ -234,12 +279,30 @@ export default {
           this.highlight = layerView.highlight([FID + 1]);//妈的原来这里是要传入FID，老子搞了半天总算搞明白了
         });
         //跳转位置
-        view.goTo({ target: feature.geometry, zoom: zoom });
+        if(zoom === 12){
+          console.log('跳到这里去了:', feature.geometry.extent.center)
+          let center = feature.geometry.extent.center
+          let camera = new Camera({
+            position: new Point({
+              x: center.x,
+              y: center.y-0.5,
+              z: 20000,
+              spatialReference: new SpatialReference({ wkid: 4326 })
+            }),
+            tilt: 70
+          })
+          view.goTo(camera);
+        }else{
+          view.goTo({ target: feature.geometry, zoom: zoom });
+        }
       });
     },
     async getCurrentWeather(){
       let url = "/api/weather?lat=99.78&lon=29.00"
       const weatherInfo = await axios({ url: url, method: 'get'})
+      console.log(weatherInfo)
+      //weatherInfo.data.server_time   //服务器时间
+      //weatherInfo.data.result.forecast_keypoint  预报话
       return weatherInfo.data.result.realtime;
     },
     convertSkycon(skycon){
@@ -336,6 +399,10 @@ export default {
           return layer.title === '拟建水库';
         });
         nijianshuiku.visible=true
+        let yinshuigongcheng = map.layers.find(function(layer) {
+          return layer.title === '引水工程';
+        });
+        yinshuigongcheng.visible=true
       }else if(element === '岸线规划功能分区'){
         let anxianguihua = map.layers.find(function(layer) {
           return layer.title === '岸线规划功能分区';
@@ -370,6 +437,10 @@ export default {
           return layer.title === '水文站';
         });
         shuiwenzhan.visible=true
+        let zhuanyiluxianLayer = map.layers.find(function(layer) {
+          return layer.title === '地质灾害发生实际区域和转移路线';
+        });
+        zhuanyiluxianLayer.visible=true
       }else if(element === '移民搬迁'){
         alert('数据正在搜集中...')
       }
@@ -388,15 +459,25 @@ export default {
           }
         })
         let camera = new Camera({
-          position: new Point({
-            x: 99.82975225369145,
-            y: 28.802280667091217,
-            z: 3613.927701551467,
-            spatialReference: new SpatialReference({ wkid: 4326 })
-          }),
-          heading: 1.962013105645539,
-          tilt: 84.3710848755085
-        });
+          position: new Point(
+          //     {
+          //   x: 99.82975225369145,
+          //   y: 28.802280667091217,
+          //   z: 3613.927701551467,
+          //   spatialReference: new SpatialReference({ wkid: 4326 })
+          // }
+              {
+                x: 99.74587169702623,
+                y: 29.074594554358285,
+                z: 234185.00685059093,
+                spatialReference: new SpatialReference({ wkid: 4326 })
+              }
+          ),
+          // heading: 1.962013105645539,
+          heading: 0,
+          // tilt: 84.3710848755085
+          tilt: 0
+        })
         // Create the SceneView
         let view = new SceneView({
           map: map,
@@ -424,7 +505,7 @@ export default {
         let layer0 = new FeatureLayer({
           url:apiUrl + "/0",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"护岸",
           popupTemplate:{
             content:(element)=>{
@@ -436,7 +517,7 @@ export default {
         let layer1 = new FeatureLayer({
           url:apiUrl + "/1",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"堤防",
           popupTemplate:{
             content:(element)=>{
@@ -448,7 +529,7 @@ export default {
         let layer2 = new FeatureLayer({
           url:apiUrl + "/2",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"水资源",
           popupTemplate:{
             content:(element)=>{
@@ -460,19 +541,19 @@ export default {
         let layer3 = new FeatureLayer({
           url:apiUrl + "/3",
           outFields:['*'],
-          visible:true,
+          visible:false,
+          title:"灾害点",
           popupTemplate:{
             content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
-          },
-          title:"灾害点"
+          }
         })
         let layer4 = new FeatureLayer({
           url:apiUrl + "/4",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"水电站",
           popupTemplate:{
             content:(element)=>{
@@ -484,7 +565,7 @@ export default {
         let layer5 = new FeatureLayer({
           url:apiUrl + "/5",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"水文站",
           popupTemplate:{
             content:(element)=>{
@@ -532,7 +613,7 @@ export default {
         let layer9 = new FeatureLayer({
           url:apiUrl + "/9",
           outFields:['*'],
-          visible:false,
+          visible:true,
           title:"县（区）界",
           popupTemplate:{
             content:(element)=>{
@@ -544,7 +625,7 @@ export default {
         let layer10 = new FeatureLayer({
           url:apiUrl + "/10",
           outFields:['*'],
-          visible:false,
+          visible:true,
           title:"乡（镇）界",
           popupTemplate:{
             content:(element)=>{
@@ -556,19 +637,19 @@ export default {
         let layer12 = new FeatureLayer({
           url:apiUrl + "/12",
           outFields:['*'],
-          visible:false,
+          visible:true,
           title:"晕线"
         })
         let layer13 = new FeatureLayer({
           url:apiUrl + "/13",
           outFields:['*'],
-          visible:false,
+          visible:true,
           title:"晕线"
         })
         let layer14 = new FeatureLayer({
           url:apiUrl + "/14",
           outFields:['*'],
-          visible:false,
+          visible:true,
           title:"乡镇分区图",
           opacity:0.5
         })
@@ -587,8 +668,9 @@ export default {
         let layer16 = new FeatureLayer({
           url:apiUrl + "/16",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"灌区",
+          opacity:0.7,
           popupTemplate:{
             content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
@@ -599,7 +681,7 @@ export default {
         let layer17 = new FeatureLayer({
           url:apiUrl + "/17",
           outFields:['*'],
-          visible:true,
+          visible:false,
           title:"拟建水库",
           popupTemplate:{
             content:(element)=>{
@@ -608,8 +690,63 @@ export default {
             }
           }
         })
+
+        let waterLayer = new FeatureLayer({
+          url: apiUrl + "/18",
+          title:"洪水海平面",
+          opacity:0.9,
+          elevationInfo: {
+            mode: "absolute-height",
+            offset: 0
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: [
+                {
+                  type: "water",
+                  waveDirection: 260,
+                  color: "#25427c",
+                  waveStrength: "moderate",
+                  waterbodySize: "medium"
+                }
+              ]
+            }
+          }
+        });
+        let layer20 = new FeatureLayer({
+          url:apiUrl + "/20",
+          outFields:['*'],
+          visible:false,
+          opacity:0.8,
+          title:"地质灾害发生实际区域和转移路线",
+          popupTemplate:{
+            content:(element)=>{
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+        let layer21 = new FeatureLayer({
+          url:apiUrl + "/21",
+          outFields:['*'],
+          visible:false,
+          title:"引水工程",
+          opacity:0.7,
+          popupTemplate:{
+            content:(element)=>{
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+
         //用于作图的图层
         const graphicsLayer = new GraphicsLayer();
+        map.add(waterLayer)
+        map.add(layer21)
+        map.add(layer20)
         map.add(layer15)
         map.add(layer14)
         map.add(layer13)
@@ -627,6 +764,7 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
+
         map.add(graphicsLayer)// 这是绘画图层
 
         let weatherExpand = new Expand({
@@ -798,12 +936,18 @@ export default {
           }),
           group: "top-right"
         })
+        let floodExpand = new Expand({
+          view:view,
+          content: "menu",
+          group: "top-right"
+        })
+
         view.ui.add([legendExpand], "bottom-left");
         view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand, sketchExpand], "top-right");
         view.ui.add("topbar", "top-right");
 
-
         view.ui.add("searchPane", "top-left");
+        view.ui.add("weatherPane", "top-right");
         view.ui.add("home", "top-left");
 
         view.ui.add("river", "top-left");
@@ -816,6 +960,56 @@ export default {
         view.ui.add("disaster", "top-left");
         view.ui.add("relocation", "top-left");
 
+        // 控制洪水得
+        view.ui.add("menu", "bottom-right");
+
+        //以下是设置睡眠调整得东西
+        const slider = new Slider({
+          container: "waveSlider",
+          min: 2000,
+          max: 4000,
+          visibleElements: {
+            labels: true
+          },
+          precision: 0,
+          values: [2000]
+        });
+
+        slider.on("thumb-drag", (event) => {
+          const value = parseInt(event.value);
+          const renderer = waterLayer.renderer.clone();
+          renderer.symbol.symbolLayers.getItemAt(0).waveDirection = value;
+          waterLayer.elevationInfo.offset = value;
+          waterLayer.renderer = renderer;
+        });
+
+        const waveStrengthRadio =
+            document.getElementsByName("waveStrengthRadio");
+
+        for (let i = 0; i < waveStrengthRadio.length; i++) {
+          const element = waveStrengthRadio[i];
+          element.addEventListener("change", (event) => {
+            const renderer = waterLayer.renderer.clone();
+            renderer.symbol.symbolLayers.getItemAt(0).waveStrength =
+                event.target.value;
+            waterLayer.renderer = renderer;
+          });
+        }
+
+        function setWaterColor(color) {
+          const renderer = waterLayer.renderer.clone();
+          renderer.symbol.symbolLayers.getItemAt(0).color = color;
+          waterLayer.renderer = renderer;
+        }
+        document.getElementById("navy").addEventListener("click", () => {
+          setWaterColor("#25427c");
+        });
+        document.getElementById("green").addEventListener("click", () => {
+          setWaterColor("#039962");
+        });
+        document.getElementById("turqoise").addEventListener("click", () => {
+          setWaterColor("#a2f9f5");
+        });
 
         //3D绘画技术
         const extrudedPolygon = {
@@ -835,6 +1029,7 @@ export default {
             }
           ]
         };
+
         // polyline symbol used for sketching routes
         const route = {
           type: "line-3d",
@@ -1300,6 +1495,13 @@ export default {
         document.getElementsByClassName("searchTab")[0].style.display = "block"
       this.searchTabVisible = !this.searchTabVisible;
     },
+    weatherPaneDisplay() {
+      if(this.weatherTabVisible)
+        document.getElementsByClassName("weatherTab")[0].style.display = "none"
+      else if(!this.searchTabVisible)
+        document.getElementsByClassName("weatherTab")[0].style.display = "block"
+      this.weatherTabVisible = !this.weatherTabVisible;
+    },
     detailPaneDisplay() {
         document.getElementsByClassName("detailTab")[0].style.display = "block"
     },
@@ -1323,6 +1525,9 @@ export default {
     },
     detailTabClose(){
       document.getElementsByClassName("detailTab")[0].style.display = "none"
+    },
+    weatherTabClose(){
+      document.getElementsByClassName("weatherTab")[0].style.display = "none"
     }
   }
 }
@@ -1484,6 +1689,17 @@ body {
   box-shadow: #6e6e6e;
   display: none;
 }
+.weatherTab {
+  height: 200px;
+  width: 300px;
+  position: absolute;
+  background-color: rgba(255,255,255,0.6);
+  right: 100px;
+  top: 50px;
+  border-radius: 5px;
+  box-shadow: #6e6e6e;
+  display: none;
+}
 
 /*测量工具*/
 #topbar {
@@ -1608,4 +1824,35 @@ body {
 .right-top-close:hover{
   cursor: pointer;
 }
+
+/*洪水海平面控制*/
+#menu {
+  padding: 1em;
+}
+
+#waveSlider {
+  height: 50px;
+  margin-top: 2em;
+}
+
+.color-btn {
+  border: 1px solid rgb(173, 172, 172);
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+}
+
+#navy {
+  background-color: #25427c;
+}
+
+#green {
+  background-color: #039962;
+}
+
+#turqoise {
+  background-color: #a2f9f5;
+}
+/*洪水海平面控制↑*/
+
 </style>
