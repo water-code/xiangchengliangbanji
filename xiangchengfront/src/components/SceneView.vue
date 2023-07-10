@@ -112,40 +112,39 @@
       </tbody>
     </table>
   </div>
-  <div id="configurationInfoDiv" class="esri-widget">
-    <b>打开3D绘画设置 <span>&#8594;</span></b>
+  <div id="configurationInfoDiv" class="esri-widget" title="绘画参数设置">
   </div>
   <!--  洪水海平面控制图层-->
-  <div id="menu" class="esri-widget">
-    <h4>Wave direction</h4>
+  <div id="menu" class="esri-widget" title="海平面模拟">
+    <h4>水浪方向</h4>
     <div id="waveSlider"></div>
-    <h4>Wave strength</h4>
+    <h4>水浪强度</h4>
     <input
         type="radio"
         name="waveStrengthRadio"
         value="calm"
         id="calm"
-    /><label for="calm">Calm</label><br />
+    /><label for="calm">平静</label><br />
     <input
         type="radio"
         name="waveStrengthRadio"
         value="rippled"
         id="rippled"
-    /><label for="rippled">Rippled</label><br />
+    /><label for="rippled">细微</label><br />
     <input
         type="radio"
         name="waveStrengthRadio"
         value="slight"
         id="slight"
-    /><label for="slight">Slight</label><br />
+    /><label for="slight">轻微</label><br />
     <input
         type="radio"
         name="waveStrengthRadio"
         value="moderate"
         id="moderate"
         checked
-    /><label for="moderate">Moderate</label><br />
-    <h4>Dominant color</h4>
+    /><label for="moderate">激流</label><br />
+    <h4>水面颜色</h4>
     <button id="navy" class="color-btn"></button>
     <button id="green" class="color-btn"></button>
     <button id="turqoise" class="color-btn"></button>
@@ -938,7 +937,7 @@ export default {
         })
         let floodExpand = new Expand({
           view:view,
-          content: "menu",
+          content: document.getElementById("menu"),
           group: "top-right"
         })
 
@@ -961,7 +960,8 @@ export default {
         view.ui.add("relocation", "top-left");
 
         // 控制洪水得
-        view.ui.add("menu", "bottom-right");
+
+        view.ui.add(floodExpand, "bottom-right");
 
         //以下是设置睡眠调整得东西
         const slider = new Slider({
@@ -1008,7 +1008,7 @@ export default {
           setWaterColor("#039962");
         });
         document.getElementById("turqoise").addEventListener("click", () => {
-          setWaterColor("#a2f9f5");
+          setWaterColor("rgb(119,89,37)");
         });
 
         //3D绘画技术
@@ -1851,8 +1851,12 @@ body {
 }
 
 #turqoise {
-  background-color: #a2f9f5;
+  background-color: rgb(119,89,37);
 }
 /*洪水海平面控制↑*/
+
+.esri-expand__content--expanded {
+  width: 300px !important;
+}
 
 </style>
