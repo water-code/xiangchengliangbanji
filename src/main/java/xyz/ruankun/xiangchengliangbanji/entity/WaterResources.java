@@ -64,12 +64,16 @@ public class WaterResources {
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "extra_json", nullable = true, columnDefinition = "text")
     private String extraJson;
+
+    @Column(name = "location")
+    private String location;
+
+
 }
 
 enum ResourceType {
-    地表水,
-    地下水,
-    再生水
+    取水点,
+    灌溉点
 }
 
 enum ResourceUsage {

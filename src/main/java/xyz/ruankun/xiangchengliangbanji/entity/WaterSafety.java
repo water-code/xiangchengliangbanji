@@ -69,23 +69,4 @@ public class WaterSafety {
     private String extraJson;
 
 }
-enum WaterSafetyType {
-    DI_FANG("堤防"),
-    HU_AN("护岸");
-
-    private String value;
-
-    WaterSafetyType(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
-}
 
