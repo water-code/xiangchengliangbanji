@@ -87,6 +87,10 @@
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="支流名称">{{ disasterInfo.rname }}</el-descriptions-item>
         <el-descriptions-item label="干流名称">{{ disasterInfo.srname }}</el-descriptions-item>
+        <el-descriptions-item label="流域总水量">{{ disasterInfo.basinvol }}</el-descriptions-item>
+        <el-descriptions-item label="径流">{{ disasterInfo.runoff }}</el-descriptions-item>
+        <el-descriptions-item label="已用水量">{{ disasterInfo.consum }}</el-descriptions-item>
+        <el-descriptions-item label="可用水量">{{ disasterInfo.available }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '河湖划界'">

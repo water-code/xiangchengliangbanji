@@ -46,7 +46,8 @@ export default {
       console.log('嘿嘿', weatherInfo)
       //weatherInfo.data.server_time   //服务器时间
       //weatherInfo.data.result.forecast_keypoint  预报话
-      state.weatherDate = new Date(weatherInfo.data.server_time)
+      let date = new Date()
+      state.weatherDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + date.getMinutes()
       state.weatherKeyPoint = weatherInfo.data.result.forecast_keypoint
       state.cloudrate = weatherInfo.data.result.realtime.cloudrate
       state.humidity = weatherInfo.data.result.realtime.humidity
@@ -78,7 +79,13 @@ export default {
   align-items: center;
 }
 .weather-date {
+  padding-left: 10px;
+  padding-top: 5px;
   height: 30%;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
 }
 .weather-content {
   height: 70%;
