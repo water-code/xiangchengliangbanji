@@ -89,6 +89,18 @@ public class WaterSystems {
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "extra_json", nullable = true, columnDefinition = "text")
     private String extraJson;
+
+    @Column(name = "basinvol")
+    private Float basinvol;
+
+    @Column(name = "runoff")
+    private Float runoff;
+
+    @Column(name = "consum")
+    private Float consum;
+
+    @Column(name = "available")
+    private Float available;
 }
 
 enum Bank {
