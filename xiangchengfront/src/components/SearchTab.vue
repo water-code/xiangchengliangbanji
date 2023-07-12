@@ -14,8 +14,8 @@
       </div>
     </el-tab-pane>
     <el-tab-pane label="水系相关资源" name="safe">
-      <p style="font-size: 16px">1.选择水利工程类型</p>
-      <el-select v-model="typevalue" class="m-2" placeholder="选择水利工程类型" size="large">
+      <p style="font-size: 16px">1.选择水利数据类型</p>
+      <el-select v-model="typevalue" class="m-2" placeholder="选择水利数据类型" size="large">
         <el-option
             v-for="item in typeOptions"
             :key="item.value"
@@ -202,26 +202,50 @@ export default {
       ],
       typeOptions:[
         {
-          value:"水安全",
-          label:"水安全"
+          value:"护岸",
+          label:"护岸"
+        },{
+          value:"堤防",
+          label:"堤防"
         },{
           value:"水资源",
           label:"水资源"
         },{
-          value:"水利工程",
-          label:"水利工程"
+          value:"地质灾害点信息",
+          label:"地质灾害点信息"
         },{
-          value:"岸线规划",
-          label:"岸线规划"
+          value:"水电站",
+          label:"水电站"
+        },{
+          value:"水文站",
+          label:"水文站"
+        },{
+          value:"岸线规划功能分区",
+          label:"岸线规划功能分区"
         },{
           value:"河湖划界",
           label:"河湖划界"
         },{
-          value:"灾害转移",
-          label:"灾害转移"
+          value:"灌区",
+          label:"灌区"
         },{
-          value:"健康评价",
-          label:"健康评价"
+          value:"拟建水库",
+          label:"拟建水库"
+        },{
+          value:"地质灾害发生实际区域和转移路线",
+          label:"地质灾害发生实际区域和转移路线"
+        },{
+          value:"引水工程",
+          label:"引水工程"
+        },{
+          value:"水网管线",
+          label:"水网管线"
+        },{
+          value:"涉河建筑物",
+          label:"涉河建筑物"
+        },{
+          value:"采砂点位",
+          label:"采砂点位"
         }
       ]
     }

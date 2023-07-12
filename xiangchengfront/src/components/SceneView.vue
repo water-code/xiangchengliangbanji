@@ -41,6 +41,7 @@
   <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')"/></div>
   <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')"/></div>
   <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')"/></div>
+  <div class="nine-function-div" id="waternet"><el-button type="primary" :icon="UserFilled" title="水网规划" @click="layerDisplayController('水网规划')"/></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
   <div class="else-function-div" id="weatherPane"><el-button type="primary" :icon="PartlyCloudy" title="气象预警" @click="weatherPaneDisplay()" /></div>
@@ -442,8 +443,37 @@ export default {
         zhuanyiluxianLayer.visible=true
       }else if(element === '移民搬迁'){
         alert('数据正在搜集中...')
+      }else if(element === '水网规划'){
+        // 水系 (8) 拟建水库 (25) 护岸 (0) 堤防 (1) 水资源 (2) 水电站 (4) 水文站 (5) 灌区 (16)  地质灾害发生实际区域和转移路线 (20) 引水工程 (21) 水网管线 (24) 涉河建筑物 (26)
+        let shuixi = map.layers.find(function(layer) {
+          return layer.title === '水系';
+        })
+        shuixi.visible=true
+        let shuiku = map.layers.find(function(layer) {
+          return layer.title === '拟建水库';
+        })
+        shuiku.visible=true
+        let yinshui = map.layers.find(function(layer) {
+          return layer.title === '引水工程';
+        })
+        yinshui.visible=true
+        let shuiwang = map.layers.find(function(layer) {
+          return layer.title === '水网管线';
+        })
+        shuiwang.visible=true
+        let shehe = map.layers.find(function(layer) {
+          return layer.title === '涉河建筑物';
+        })
+        shehe.visible=true
+        let dizhizaihai = map.layers.find(function(layer) {
+          return layer.title === '地质灾害发生实际区域和转移路线';
+        })
+        dizhizaihai.visible=true
+        let caisha = map.layers.find(function(layer) {
+          return layer.title === '采砂点位';
+        })
+        caisha.visible=true
       }
-
       //回到主视图
       this.goHomeView()
     },
@@ -677,8 +707,8 @@ export default {
             }
           }
         })
-        let layer17 = new FeatureLayer({
-          url:apiUrl + "/17",
+        let layer25 = new FeatureLayer({
+          url:apiUrl + "/25",
           outFields:['*'],
           visible:false,
           title:"拟建水库",
@@ -740,12 +770,50 @@ export default {
             }
           }
         })
+        let layer24 = new FeatureLayer({
+          url:apiUrl + "/24",
+          outFields:['*'],
+          visible:false,
+          title:"水网管线",
+          popupTemplate:{
+            content:(element)=>{
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+
+        let layer26 = new FeatureLayer({
+          url:apiUrl + "/26",
+          outFields:['*'],
+          visible:false,
+          title:"涉河建筑物",
+          popupTemplate:{
+            content:(element)=>{
+              // console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+
+        let layer17 = new FeatureLayer({
+          url:apiUrl + "/17",
+          outFields:['*'],
+          visible:false,
+          title:"采砂点位",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
 
         //用于作图的图层
         const graphicsLayer = new GraphicsLayer();
+        graphicsLayer.title = "模型加载"
         map.add(waterLayer)
         map.add(layer21)
-        map.add(layer20)
         map.add(layer15)
         map.add(layer14)
         map.add(layer13)
@@ -756,6 +824,7 @@ export default {
         map.add(layer7)
         map.add(layer17)
         map.add(layer16)
+        map.add(layer20)   //灾害区域
         map.add(layer6)
         map.add(layer5)
         map.add(layer4)
@@ -763,6 +832,10 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
+        map.add(layer17)   //采砂点位
+        map.add(layer26)   //涉河建筑物
+        map.add(layer24)   //水网管线
+        map.add(layer25)   //拟建水库
 
         map.add(graphicsLayer)// 这是绘画图层
 
@@ -808,52 +881,7 @@ export default {
         })
         const legendExpand = new Expand({
           content: new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layer0,
-                title: "护岸"
-              },{
-                layer: layer1,
-                title: "堤防"
-              },{
-                layer: layer2,
-                title: "水资源"
-              },{
-                layer: layer3,
-                title: "地质灾害点"
-              },{
-                layer: layer4,
-                title: "水电站 "
-              },{
-                layer: layer5,
-                title: "水文站"
-              },{
-                layer: layer6,
-                title: "岸线规划"
-              },{
-                layer: layer7,
-                title: "岸线规划"
-              },{
-                layer: layer8,
-                title: "水系"
-              },{
-                layer: layer9,
-                title: "县（区）界 "
-              },{
-                layer: layer10,
-                title: "乡（镇）界"
-              },{
-                layer: layer15,
-                title: "河湖划界"
-              },{
-                layer: layer16,
-                title: "灌区"
-              },{
-                layer: layer17,
-                title: "拟建水库"
-              }
-            ]
+            view: view
           }),
           view: view,
           expanded: false
@@ -958,6 +986,7 @@ export default {
         view.ui.add("health", "top-left");
         view.ui.add("disaster", "top-left");
         view.ui.add("relocation", "top-left");
+        view.ui.add("waternet", "top-left");
 
         // 控制洪水得
 

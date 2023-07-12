@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="name" width="50%" @close="restore">
-    <div class="disasterInfo" v-if="name == '灾害点'">
+    <div class="disasterInfo" v-if="name === '灾害点'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="ID">{{ disasterInfo.Id }}</el-descriptions-item>
@@ -17,40 +17,40 @@
         <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '护岸'">
+    <div class="disasterInfo" v-if="name === '护岸'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="ID">{{ disasterInfo.Id }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '堤防'">
+    <div class="disasterInfo" v-if="name === '堤防'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="长度">{{ disasterInfo.length }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '水资源'">
+    <div class="disasterInfo" v-if="name === '水资源'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
         <el-descriptions-item label="ID">{{ disasterInfo.Id }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '水电站'">
+    <div class="disasterInfo" v-if="name === '水电站'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '水文站'">
+    <div class="disasterInfo" v-if="name === '水文站'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.stnm }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '岸线规划'">
+    <div class="disasterInfo" v-if="name === '岸线规划'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.area }}</el-descriptions-item>
         <el-descriptions-item label="基本需求">{{ disasterInfo.basis }}</el-descriptions-item>
@@ -65,7 +65,7 @@
         <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '灌区'">
+    <div class="disasterInfo" v-if="name === '灌区'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="面积">{{ disasterInfo.BM_Area }}</el-descriptions-item>
@@ -76,33 +76,53 @@
         <el-descriptions-item label="名称">{{ disasterInfo.Name }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '拟建水库'">
+    <div class="disasterInfo" v-if="name === '拟建水库'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
-        <el-descriptions-item label="信息">{{ disasterInfo.info }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '水系'">
+    <div class="disasterInfo" v-if="name === '水系'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="支流名称">{{ disasterInfo.rname }}</el-descriptions-item>
         <el-descriptions-item label="干流名称">{{ disasterInfo.srname }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name == '河湖划界'">
+    <div class="disasterInfo" v-if="name === '河湖划界'">
       <el-descriptions :border="true" :column="2">
         <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="干流名称">{{ disasterInfo.rname }}</el-descriptions-item>
         <el-descriptions-item label="支流名称">{{ disasterInfo.srname }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterEscapeInfo" v-if="name == '地质灾害发生实际区域和转移路线'">
+    <div class="disasterInfo" v-if="name === '地质灾害发生实际区域和转移路线'">
       <img class="disasterEscapeInfo-img" src="http://xiangoos.ruankun.xyz/%E4%B9%A1%E5%9F%8E%E5%8E%BF%E9%A6%99%E5%B7%B4%E6%8B%89%E9%95%87%E5%86%B7%E9%98%BF%E5%A4%AE%E4%BB%B2%E6%9D%91.jpg">
     </div>
-    <div class="yinshuigongchengInfo" v-if="name == '引水工程'">
+    <div class="disasterInfo" v-if="name === '引水工程'">
       <img class="disasterEscapeInfo-img" src="http://xiangoos.ruankun.xyz/%E6%AD%A3%E6%96%97%E4%B9%A1%E5%BC%95%E6%B0%B4%E7%94%A8%E6%B0%B4%E5%8C%BA%E5%9F%9F.jpg">
-
+    </div>
+    <div class="disasterInfo" v-if="name === '水网管线'">
+      <el-descriptions :border="true" :column="2">
+        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
+      </el-descriptions>
+    </div>
+    <div class="disasterInfo" v-if="name === '涉河建筑物'">
+      <el-descriptions :border="true" :column="2">
+        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="干流">{{ disasterInfo.river }}</el-descriptions-item>
+        <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
+        <el-descriptions-item label="介绍">{{ disasterInfo.intro }}</el-descriptions-item>
+      </el-descriptions>
+    </div>
+    <div class="disasterInfo" v-if="name === '采砂点位'">
+      <el-descriptions :border="true" :column="2">
+        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
+        <el-descriptions-item label="介绍">{{ disasterInfo.intro }}</el-descriptions-item>
+      </el-descriptions>
     </div>
   </el-dialog>
 </template>
