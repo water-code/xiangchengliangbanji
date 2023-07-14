@@ -282,8 +282,6 @@ export default {
       const result = await axios({ url: `/api/water-systems/by-keyword`, method: 'get', data: { keyword: row.riverName } }) //水系基本信息
       console.log('点击后查询到的数据：', result)
       bus.emit('shuixiCellClick', result.data[0])
-      // 关闭SearchTab
-      this.$emit('closeSearchTab', { value: 'none' })
     }
   },
   computed: {

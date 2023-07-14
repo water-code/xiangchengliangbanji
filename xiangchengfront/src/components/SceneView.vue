@@ -18,15 +18,16 @@
     <div class="right-top-close" @click="searchTabClose"><el-icon>
         <CloseBold />
       </el-icon></div>
-    <SearchTab @closeSearchTab="searchTabClose"></SearchTab>
+    <SearchTab></SearchTab>
   </div>=
-  <div class="detailTab">
-    <!-- <div class="right-top-close" @click="detailTabClose">
+  <div class="detailTab" @mousedown="moveBox">
+    <div class="right-top-close" @click="detailTabClose">
       <el-icon>
         <CloseBold />
       </el-icon>
-    </div> -->
+    </div>
     <DetailTab></DetailTab>
+
   </div>
   <div class="weatherTab">
     <div class="right-top-close" @click="weatherTabClose"><el-icon>
@@ -779,7 +780,7 @@ export default {
           }
         })
 
-        let layer17 = new FeatureLayer({
+        let layer27 = new FeatureLayer({
           url: apiUrl + '/17',
           outFields: ['*'],
           visible: false,
@@ -792,7 +793,7 @@ export default {
           }
         })
 
-        let layer27 = new FeatureLayer({
+        let layer28 = new FeatureLayer({
           url: apiUrl + '/27',
           outFields: ['*'],
           visible: false,
@@ -1546,9 +1547,9 @@ export default {
       })
       window.view.goTo(camera)
     },
-    searchTabClose(e) {
+    searchTabClose() {
       // console.log(e.value)
-      document.getElementsByClassName('searchTab')[0].style.display = e.value || 'none'
+      document.getElementsByClassName('searchTab')[0].style.display = 'none'
       this.searchTabVisible = !this.searchTabVisible
     },
     detailTabClose() {
@@ -1556,6 +1557,21 @@ export default {
     },
     weatherTabClose() {
       document.getElementsByClassName('weatherTab')[0].style.display = 'none'
+    },
+    // 移动盒子
+    moveBox(e) {
+      console.log('按下鼠标')
+      let box = document.querySelector('.detailTab')
+      let x = e.pageX - box.offsetLeft //    鼠标距离页面位置 - 盒子距离左边的位置 =   鼠标点击位置到盒子边缘的距离
+      let y = e.pageY - box.offsetTop
+      document.addEventListener('mousemove', moveS)
+      function moveS(e) {
+        box.style.left = e.pageX - x + 'px' //鼠标所在位置  -   鼠标到盒子边缘的距离 =  盒子距离左边的距离
+        box.style.top = e.pageY - y + 'px'
+      }
+      document.addEventListener('mouseup', function (e) {
+        document.removeEventListener('mousemove', moveS)
+      })
     }
   }
 }
@@ -1746,19 +1762,21 @@ ul {
   min-width: 300px;
 }
 /* 河流信息 */
-/* .detailTab {
-  width: 4.6857rem;
-  height: 2.46rem;
-  overflow: auto;
+.detailTab {
+  width: 50%;
+  height: 50%;
+  // overflow: auto;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
-  left: 50%;
+  left: 60%;
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
-} */
+  min-width: 800px;
+  min-height: 480px;
+}
 
 /* 天气预警 */
 .weatherTab {
