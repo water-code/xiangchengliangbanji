@@ -80,7 +80,7 @@ storageAllRiverData()
 </script>
 
 <style scoped>
-/* 搜索板块 */
+/* 搜索功能板块 */
 .el-input__wrapper {
   width: 350px;
 }
