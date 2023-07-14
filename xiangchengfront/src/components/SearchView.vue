@@ -79,7 +79,7 @@ function getAllRiverData() {
 storageAllRiverData()
 </script>
 
-<style>
+<style scoped>
 /* 搜索板块 */
 .el-input__wrapper {
   width: 350px;

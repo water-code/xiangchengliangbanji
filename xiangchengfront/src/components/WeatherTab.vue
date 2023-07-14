@@ -13,24 +13,19 @@
   </div>
 </template>
 <script>
-import { reactive, toRefs, ref} from 'vue'
+import { reactive, toRefs, ref } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
-import axios from "../api/request.js";
+import axios from '../api/request.js'
 
 export default {
   components: { ElDialog, ElTabs, ElTabPane },
   data() {
-    return {
-    }
+    return {}
   },
-  methods: {
-  },
-  computed: {
-  },
-  props: {
-  },
-  mounted() {
-  },
+  methods: {},
+  computed: {},
+  props: {},
+  mounted() {},
   setup(props) {
     const state = reactive({
       weatherDate: ref(''),
@@ -38,16 +33,16 @@ export default {
       cloudrate: ref(''),
       humidity: ref(''),
       temperature: ref(''),
-      visibility: ref(''),
+      visibility: ref('')
     })
 
-    let url = "/api/weather?lat=99.78&lon=29.00"
-    const weatherInfo = axios({url: url, method: 'get'}).then(weatherInfo=>{
+    let url = '/api/weather?lat=99.78&lon=29.00'
+    const weatherInfo = axios({ url: url, method: 'get' }).then(weatherInfo => {
       console.log('嘿嘿', weatherInfo)
       //weatherInfo.data.server_time   //服务器时间
       //weatherInfo.data.result.forecast_keypoint  预报话
       let date = new Date()
-      state.weatherDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + " " + date.getHours() + ":" + date.getMinutes()
+      state.weatherDate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
       state.weatherKeyPoint = weatherInfo.data.result.forecast_keypoint
       state.cloudrate = weatherInfo.data.result.realtime.cloudrate
       state.humidity = weatherInfo.data.result.realtime.humidity
@@ -62,40 +57,28 @@ export default {
       console.log(state.weatherKeyPoint)
     })
     return {
-      ...toRefs(state),
+      ...toRefs(state)
     }
-
   }
 }
 </script>
-<style>
-.weather-container{
+<style scoped>
+.weather-container {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-.weather-date {
-  padding-left: 10px;
-  padding-top: 5px;
-  height: 30%;
-  width: 100%;
-  text-align: left;
-  font-size: 20px;
-  font-weight: bold;
+  align-items: left;
+  justify-content: space-around;
 }
 .weather-content {
-  height: 70%;
-  font-size: 16px;
+  font-size: 15px;
   color: blue;
   display: flex;
   flex-direction: column;
-}
-.weather-content-row {
-  padding-left: 50px;
-  text-align: left;
+  justify-content: space-around;
+  align-items: left;
 }
 </style>

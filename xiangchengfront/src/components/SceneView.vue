@@ -3,26 +3,35 @@
     <div class="navbar-left">
       <img src="/images/logo.png" alt="Avatar">
       <h1 class="logo-title">乡城县水利数字沙盘</h1>
-
-      <h4 class="water-system-button" @click="layerDataLocation('水系', 27, 12)">许曲</h4>
-      <h4 class="water-system-button" @click="layerDataLocation('水系', 29, 12)">定曲</h4>
-      <h4 class="water-system-button" @click="layerDataLocation('水系', 28, 12)">玛曲</h4>
     </div>
+    <ul class="river-system">
+      <li class="water-system-button" @click="layerDataLocation('水系', 27, 12)">许曲</li>
+      <li class="water-system-button" @click="layerDataLocation('水系', 29, 12)">定曲</li>
+      <li class="water-system-button" @click="layerDataLocation('水系', 28, 12)">玛曲</li>
+    </ul>
     <div class="navbar-right">
       <img src="/images/avatar.jpg" alt="Avatar">
       <p>格桑梅朵</p>
     </div>
   </div>
   <div class="searchTab">
-    <div class="right-top-close" @click="searchTabClose"><el-icon><CloseBold /></el-icon></div>
-    <SearchTab></SearchTab>
-  </div>
+    <div class="right-top-close" @click="searchTabClose"><el-icon>
+        <CloseBold />
+      </el-icon></div>
+    <SearchTab @closeSearchTab="searchTabClose"></SearchTab>
+  </div>=
   <div class="detailTab">
-    <div class="right-top-close" @click="detailTabClose"><el-icon><CloseBold /></el-icon></div>
+    <!-- <div class="right-top-close" @click="detailTabClose">
+      <el-icon>
+        <CloseBold />
+      </el-icon>
+    </div> -->
     <DetailTab></DetailTab>
   </div>
   <div class="weatherTab">
-    <div class="right-top-close" @click="weatherTabClose"><el-icon><CloseBold /></el-icon></div>
+    <div class="right-top-close" @click="weatherTabClose"><el-icon>
+        <CloseBold />
+      </el-icon></div>
     <WeatherTab></WeatherTab>
   </div>
   <div ref="mapViewNode" style="height: calc(100vh - 40px);">
@@ -32,16 +41,15 @@
     <button class="action-button esri-icon-measure-area" id="areaButton" type="button" title="测量面积"></button>
     <button class="action-button esri-icon-printer" id="screenShotButton" type="button" title="下载图像"></button>
   </div>
-  <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" @click="layerDisplayController('水系')"/></div>
-  <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" @click="layerDisplayController('水安全')"/></div>
-  <div class="nine-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" @click="layerDisplayController('水资源')"/></div>
-  <div class="nine-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" @click="layerDisplayController('水利工程')"/></div>
-  <div class="nine-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" @click="layerDisplayController('岸线规划功能分区')"/></div>
-  <div class="nine-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" @click="layerDisplayController('河湖划界')"/></div>
-  <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')"/></div>
-  <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')"/></div>
-  <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')"/></div>
-  <div class="nine-function-div" id="waternet"><el-button type="primary" :icon="Grid" title="水网规划" @click="layerDisplayController('水网规划')"/></div>
+  <div class="nine-function-div" id="river"><el-button type="primary" :icon="Edit" title="水系" @click="layerDisplayController('水系')" /></div>
+  <div class="nine-function-div" id="safety"><el-button type="primary" :icon="Lock" title="水安全" @click="layerDisplayController('水安全')" /></div>
+  <div class="nine-function-div" id="resource"><el-button type="primary" :icon="PieChart" title="水资源" @click="layerDisplayController('水资源')" /></div>
+  <div class="nine-function-div" id="project"><el-button type="primary" :icon="Flag" title="水利工程" @click="layerDisplayController('水利工程')" /></div>
+  <div class="nine-function-div" id="shoreline"><el-button type="primary" :icon="SortDown" title="岸线规划" @click="layerDisplayController('岸线规划功能分区')" /></div>
+  <div class="nine-function-div" id="boundary"><el-button type="primary" :icon="SortUp" title="河湖划界" @click="layerDisplayController('河湖划界')" /></div>
+  <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')" /></div>
+  <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')" /></div>
+  <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')" /></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
   <div class="else-function-div" id="weatherPane"><el-button type="primary" :icon="PartlyCloudy" title="气象预警" @click="weatherPaneDisplay()" /></div>
@@ -75,41 +83,41 @@
   <div id="configurationDiv" class="esri-widget">
     <table id="configurationTable">
       <tbody>
-      <tr>
-        <td>
-          <label><b>提示/标签 </b></label>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label for="tooltipOptionscheckbox" id="tooltipOptionscheckboxlabel">- 提示</label>
-        </td>
-        <td><input type="checkbox" id="tooltipOptionsheckbox" /></td>
-      </tr>
-      <tr>
-        <td>
-          <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel">- 标签</label>
-        </td>
-        <td><input type="checkbox" id="labelOptionscheckbox" /></td>
-      </tr>
-      <tr>
-        <td>
-          <label for="enabledcheckbox" id="enabledcheckboxlabel"><b>捕捉开启 (<div id="snappingctrlkey">CTRL-键</div>)</b></label>
-        </td>
-        <td><input type="checkbox" id="enabledcheckbox" checked /></td>
-      </tr>
-      <tr>
-        <td>
-          <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel">- 自动捕捉</label>
-        </td>
-        <td><input type="checkbox" id="selfsnappingcheckbox" /></td>
-      </tr>
-      <tr>
-        <td>
-          <label for="featuresnappingcheckbox" id="featuresnappingcheckboxlabel">- 特征捕捉</label>
-        </td>
-        <td><input type="checkbox" id="featuresnappingcheckbox" /></td>
-      </tr>
+        <tr>
+          <td>
+            <label><b>提示/标签 </b></label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="tooltipOptionscheckbox" id="tooltipOptionscheckboxlabel">- 提示</label>
+          </td>
+          <td><input type="checkbox" id="tooltipOptionsheckbox" /></td>
+        </tr>
+        <tr>
+          <td>
+            <label for="labelOptionscheckbox" id="labelOptionscheckboxlabel">- 标签</label>
+          </td>
+          <td><input type="checkbox" id="labelOptionscheckbox" /></td>
+        </tr>
+        <tr>
+          <td>
+            <label for="enabledcheckbox" id="enabledcheckboxlabel"><b>捕捉开启 (<div id="snappingctrlkey">CTRL-键</div>)</b></label>
+          </td>
+          <td><input type="checkbox" id="enabledcheckbox" checked /></td>
+        </tr>
+        <tr>
+          <td>
+            <label for="selfsnappingcheckbox" id="selfsnappingcheckboxlabel">- 自动捕捉</label>
+          </td>
+          <td><input type="checkbox" id="selfsnappingcheckbox" /></td>
+        </tr>
+        <tr>
+          <td>
+            <label for="featuresnappingcheckbox" id="featuresnappingcheckboxlabel">- 特征捕捉</label>
+          </td>
+          <td><input type="checkbox" id="featuresnappingcheckbox" /></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -120,31 +128,10 @@
     <h4>水浪方向</h4>
     <div id="waveSlider"></div>
     <h4>水浪强度</h4>
-    <input
-        type="radio"
-        name="waveStrengthRadio"
-        value="calm"
-        id="calm"
-    /><label for="calm">平静</label><br />
-    <input
-        type="radio"
-        name="waveStrengthRadio"
-        value="rippled"
-        id="rippled"
-    /><label for="rippled">细微</label><br />
-    <input
-        type="radio"
-        name="waveStrengthRadio"
-        value="slight"
-        id="slight"
-    /><label for="slight">轻微</label><br />
-    <input
-        type="radio"
-        name="waveStrengthRadio"
-        value="moderate"
-        id="moderate"
-        checked
-    /><label for="moderate">激流</label><br />
+    <input type="radio" name="waveStrengthRadio" value="calm" id="calm" /><label for="calm">平静</label><br />
+    <input type="radio" name="waveStrengthRadio" value="rippled" id="rippled" /><label for="rippled">细微</label><br />
+    <input type="radio" name="waveStrengthRadio" value="slight" id="slight" /><label for="slight">轻微</label><br />
+    <input type="radio" name="waveStrengthRadio" value="moderate" id="moderate" checked /><label for="moderate">激流</label><br />
     <h4>水面颜色</h4>
     <button id="navy" class="color-btn"></button>
     <button id="green" class="color-btn"></button>
@@ -164,48 +151,30 @@ import esriConfig from '@arcgis/core/config'
 import Legend from '@arcgis/core/widgets/Legend'
 
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
-import Camera from "@arcgis/core/Camera";
-import SpatialReference from "@arcgis/core/geometry/SpatialReference";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import LayerList from "@arcgis/core/widgets/LayerList";
+import Camera from '@arcgis/core/Camera'
+import SpatialReference from '@arcgis/core/geometry/SpatialReference'
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer'
+import LayerList from '@arcgis/core/widgets/LayerList'
 
-import Search from "@arcgis/core/widgets/Search";
+import Search from '@arcgis/core/widgets/Search'
 
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
-import {
-  Check,
-  Close,
-  CloseBold,
-  Edit,
-  Flag,
-  House,
-  Lock,
-  PieChart,
-  SortDown,
-  SortUp,
-  TrendCharts,
-  PartlyCloudy,
-  Umbrella,
-  UserFilled,
-    Grid,
-  WarnTriangleFilled
-} from '@element-plus/icons-vue'
+import { Check, Close, CloseBold, Edit, Flag, House, Lock, PieChart, SortDown, SortUp, TrendCharts, PartlyCloudy, Umbrella, UserFilled, WarnTriangleFilled } from '@element-plus/icons-vue'
 
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
-import Sketch from "@arcgis/core/widgets/Sketch.js";
-import DirectLineMeasurement3D from "@arcgis/core/widgets/DirectLineMeasurement3D";
-import AreaMeasurement3D from "@arcgis/core/widgets/AreaMeasurement3D";
-import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel.js";
-import Basemap from "@arcgis/core/Basemap.js";
-import SearchTab from "./SearchTab.vue";
-import DetailTab from "./DetailTab.vue";
-import WeatherTab from "./WeatherTab.vue";
-import axios from "../api/request.js";
-import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion";
-import Slider from "@arcgis/core/widgets/Slider.js";
-
+import Sketch from '@arcgis/core/widgets/Sketch.js'
+import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
+import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
+import SketchViewModel from '@arcgis/core/widgets/Sketch/SketchViewModel.js'
+import Basemap from '@arcgis/core/Basemap.js'
+import SearchTab from './SearchTab.vue'
+import DetailTab from './DetailTab.vue'
+import WeatherTab from './WeatherTab.vue'
+import axios from '../api/request.js'
+import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion'
+import Slider from '@arcgis/core/widgets/Slider.js'
 
 export default {
   name: 'SceneView',
@@ -215,23 +184,29 @@ export default {
     },
     Lock() {
       return Lock
-    },PieChart() {
+    },
+    PieChart() {
       return PieChart
-    },Flag() {
+    },
+    Flag() {
       return Flag
-    },SortDown() {
+    },
+    SortDown() {
       return SortDown
-    },SortUp() {
+    },
+    SortUp() {
       return SortUp
-    },Umbrella() {
+    },
+    Umbrella() {
       return Umbrella
-    },WarnTriangleFilled() {
+    },
+    WarnTriangleFilled() {
       return WarnTriangleFilled
-    },UserFilled() {
+    },
+    UserFilled() {
       return UserFilled
-    },Grid() {
-      return Grid
-    },TrendCharts() {
+    },
+    TrendCharts() {
       return TrendCharts
     },
     PartlyCloudy() {
@@ -239,11 +214,12 @@ export default {
     },
     House() {
       return House
-    },CloseBold() {
+    },
+    CloseBold() {
       return CloseBold
     }
   },
-  components: {WeatherTab, DetailTab, SearchTab, SearchView },
+  components: { WeatherTab, DetailTab, SearchTab, SearchView },
   data() {
     return {
       sceneView: null,
@@ -258,57 +234,58 @@ export default {
   },
   created() {
     document.body.style.marginTop = '40px'
+    document.body.style.width = '100%'
   },
   mounted() {
     this.initializeMap()
   },
   methods: {
-    layerDataLocation(layerName, FID, zoom){
+    layerDataLocation(layerName, FID, zoom) {
       //点击许曲后定位到许曲的相应位置
-      const featureLayer = window.view.map.layers.find(layer => layer.title === layerName);
+      const featureLayer = window.view.map.layers.find(layer => layer.title === layerName)
       // 构造查询条件
       const query = {
-        where: "FID = " + (FID+1),//我不明白为什么要+1
+        where: 'FID = ' + (FID + 1), //我不明白为什么要+1
         returnGeometry: true
-      };
+      }
       featureLayer.queryFeatures(query).then(result => {
-        const feature = result.features[0];
+        const feature = result.features[0]
         console.log('query到的features', feature)
         // 高亮显示查询结果
-        if(this.highlight){
+        if (this.highlight) {
           this.highlight.remove()
         }
         view.whenLayerView(featureLayer).then(layerView => {
-          this.highlight = layerView.highlight([FID + 1]);//妈的原来这里是要传入FID，老子搞了半天总算搞明白了
-        });
+          this.highlight = layerView.highlight([FID + 1]) //妈的原来这里是要传入FID，老子搞了半天总算搞明白了
+        })
         //跳转位置
-        if(zoom === 12){
+        if (zoom === 12) {
           console.log('跳到这里去了:', feature.geometry.extent.center)
           let center = feature.geometry.extent.center
           let camera = new Camera({
             position: new Point({
               x: center.x,
-              y: center.y-0.5,
+              y: center.y - 0.5,
               z: 20000,
               spatialReference: new SpatialReference({ wkid: 4326 })
             }),
             tilt: 70
           })
-          view.goTo(camera);
-        }else{
-          view.goTo({ target: feature.geometry, zoom: zoom });
+          view.goTo(camera)
+        } else {
+          view.goTo({ target: feature.geometry, zoom: zoom })
         }
-      });
+      })
     },
-    async getCurrentWeather(){
-      let url = "/api/weather?lat=99.78&lon=29.00"
-      const weatherInfo = await axios({ url: url, method: 'get'})
+    async getCurrentWeather() {
+      let url = '/api/weather?lat=99.78&lon=29.00'
+      const weatherInfo = await axios({ url: url, method: 'get' })
       console.log(weatherInfo)
       //weatherInfo.data.server_time   //服务器时间
       //weatherInfo.data.result.forecast_keypoint  预报话
-      return weatherInfo.data.result.realtime;
+      return weatherInfo.data.result.realtime
     },
-    convertSkycon(skycon){
+    convertSkycon(skycon) {
       //晴天:CLEAR_DAY CLEAR_NIGHT
       //多云 PARTLY_CLOUDY_DAY PARTLY_CLOUDY_NIGHT CLOUDY
       //雾天 LIGHT_HAZE MODERATE_HAZE HEAVY_HAZE FOG DUST SAND WIND
@@ -317,176 +294,176 @@ export default {
 
       //('sunny', 'cloudy', 'rainy', 'snowy', 'foggy')
       switch (skycon) {
-        case "CLEAR_DAY":
-        case "CLEAR_NIGHT":
-          return "sunny";
-        case "PARTLY_CLOUDY_DAY":
-        case "PARTLY_CLOUDY_NIGHT":
-        case "CLOUDY":
-          return "cloudy";
-        case "LIGHT_HAZE":
-        case "MODERATE_HAZE":
-        case "HEAVY_HAZE":
-        case "FOG":
-        case "DUST":
-        case "SAND":
-        case "WIND":
-          return "foggy";
-        case "LIGHT_RAIN":
-        case "MODERATE_RAIN":
-        case "HEAVY_RAIN":
-        case "STORM_RAIN":
-          return "rainy";
-        case "LIGHT_SNOW":
-        case "MODERATE_SNOW":
-        case "HEAVY_SNOW":
-        case "STORM_SNOW":
-          return "snowy";
+        case 'CLEAR_DAY':
+        case 'CLEAR_NIGHT':
+          return 'sunny'
+        case 'PARTLY_CLOUDY_DAY':
+        case 'PARTLY_CLOUDY_NIGHT':
+        case 'CLOUDY':
+          return 'cloudy'
+        case 'LIGHT_HAZE':
+        case 'MODERATE_HAZE':
+        case 'HEAVY_HAZE':
+        case 'FOG':
+        case 'DUST':
+        case 'SAND':
+        case 'WIND':
+          return 'foggy'
+        case 'LIGHT_RAIN':
+        case 'MODERATE_RAIN':
+        case 'HEAVY_RAIN':
+        case 'STORM_RAIN':
+          return 'rainy'
+        case 'LIGHT_SNOW':
+        case 'MODERATE_SNOW':
+        case 'HEAVY_SNOW':
+        case 'STORM_SNOW':
+          return 'snowy'
         default:
-          return "unknown";
+          return 'unknown'
       }
     },
-    layerDisplayController(element){
+    layerDisplayController(element) {
       //凡是点击了功能按钮就先清除一下高亮
-      if(this.highlight){
+      if (this.highlight) {
         this.highlight.remove()
       }
-      let map = view.map;
-      let layers = map.layers;
-      layers.forEach(function(layer) {
-        layer.visible = false;
-      });
+      let map = view.map
+      let layers = map.layers
+      layers.forEach(function (layer) {
+        layer.visible = false
+      })
       // 乡镇名称
-      let xiangzhenLayer = map.layers.find(function(layer) {
-        return layer.title === '乡镇分区图';
-      });
-      xiangzhenLayer.visible=true
-      if(element === '水系'){
+      let xiangzhenLayer = map.layers.find(function (layer) {
+        return layer.title === '乡镇分区图'
+      })
+      xiangzhenLayer.visible = true
+      if (element === '水系') {
         // 接着显示水系
-        let shuixiLayer = map.layers.find(function(layer) {
-          return layer.title === '水系';
-        });
-        shuixiLayer.visible=true
-      }else if(element === '水安全'){
-        let shuixiLayer = map.layers.find(function(layer) {
-          return layer.title === '水系';
-        });
-        shuixiLayer.visible=true
-        let huan = map.layers.find(function(layer) {
-          return layer.title === '护岸';
-        });
-        huan.visible=true
-        let difang = map.layers.find(function(layer) {
-          return layer.title === '堤防';
-        });
-        difang.visible=true
-      }else if(element === '水资源'){
-        let shuiziyuan = map.layers.find(function(layer) {
-          return layer.title === '水资源';
-        });
-        shuiziyuan.visible=true
-        let guanqu = map.layers.find(function(layer) {
-          return layer.title === '灌区';
-        });
-        guanqu.visible=true
-      }else if(element === '水利工程'){
-        let shuidianzhan = map.layers.find(function(layer) {
-          return layer.title === '水电站';
-        });
-        shuidianzhan.visible=true
-        let shuiwenzhan = map.layers.find(function(layer) {
-          return layer.title === '水文站';
-        });
-        shuiwenzhan.visible=true
-        let nijianshuiku = map.layers.find(function(layer) {
-          return layer.title === '拟建水库';
-        });
-        nijianshuiku.visible=true
-        let yinshuigongcheng = map.layers.find(function(layer) {
-          return layer.title === '引水工程';
-        });
-        yinshuigongcheng.visible=true
-      }else if(element === '岸线规划功能分区'){
-        let anxianguihua = map.layers.find(function(layer) {
-          return layer.title === '岸线规划功能分区';
-        });
-        anxianguihua.visible=true
-      }else if(element === '河湖划界'){
-        let hehuhuajie = map.layers.find(function(layer) {
-          return layer.title === '河湖划界';
-        });
-        hehuhuajie.visible=true
-      }else if(element === '健康评价'){
+        let shuixiLayer = map.layers.find(function (layer) {
+          return layer.title === '水系'
+        })
+        shuixiLayer.visible = true
+      } else if (element === '水安全') {
+        let shuixiLayer = map.layers.find(function (layer) {
+          return layer.title === '水系'
+        })
+        shuixiLayer.visible = true
+        let huan = map.layers.find(function (layer) {
+          return layer.title === '护岸'
+        })
+        huan.visible = true
+        let difang = map.layers.find(function (layer) {
+          return layer.title === '堤防'
+        })
+        difang.visible = true
+      } else if (element === '水资源') {
+        let shuiziyuan = map.layers.find(function (layer) {
+          return layer.title === '水资源'
+        })
+        shuiziyuan.visible = true
+        let guanqu = map.layers.find(function (layer) {
+          return layer.title === '灌区'
+        })
+        guanqu.visible = true
+      } else if (element === '水利工程') {
+        let shuidianzhan = map.layers.find(function (layer) {
+          return layer.title === '水电站'
+        })
+        shuidianzhan.visible = true
+        let shuiwenzhan = map.layers.find(function (layer) {
+          return layer.title === '水文站'
+        })
+        shuiwenzhan.visible = true
+        let nijianshuiku = map.layers.find(function (layer) {
+          return layer.title === '拟建水库'
+        })
+        nijianshuiku.visible = true
+        let yinshuigongcheng = map.layers.find(function (layer) {
+          return layer.title === '引水工程'
+        })
+        yinshuigongcheng.visible = true
+      } else if (element === '岸线规划功能分区') {
+        let anxianguihua = map.layers.find(function (layer) {
+          return layer.title === '岸线规划功能分区'
+        })
+        anxianguihua.visible = true
+      } else if (element === '河湖划界') {
+        let hehuhuajie = map.layers.find(function (layer) {
+          return layer.title === '河湖划界'
+        })
+        hehuhuajie.visible = true
+      } else if (element === '健康评价') {
         // 接着显示水系
-        let shuixiLayer = map.layers.find(function(layer) {
-          return layer.title === '水系';
-        });
-        shuixiLayer.visible=true
-      }else if(element === '灾害点'){
-        let zaihaidian = map.layers.find(function(layer) {
-          return layer.title === '灾害点';
-        });
-        zaihaidian.visible=true
+        let shuixiLayer = map.layers.find(function (layer) {
+          return layer.title === '水系'
+        })
+        shuixiLayer.visible = true
+      } else if (element === '灾害点') {
+        let zaihaidian = map.layers.find(function (layer) {
+          return layer.title === '灾害点'
+        })
+        zaihaidian.visible = true
         // 接着显示水系
-        let shuixiLayer = map.layers.find(function(layer) {
-          return layer.title === '水系';
-        });
-        shuixiLayer.visible=true
-        let shuidianzhan = map.layers.find(function(layer) {
-          return layer.title === '水电站';
-        });
-        shuidianzhan.visible=true
-        let shuiwenzhan = map.layers.find(function(layer) {
-          return layer.title === '水文站';
-        });
-        shuiwenzhan.visible=true
-        let zhuanyiluxianLayer = map.layers.find(function(layer) {
-          return layer.title === '地质灾害发生实际区域和转移路线';
-        });
-        zhuanyiluxianLayer.visible=true
-      }else if(element === '移民搬迁'){
+        let shuixiLayer = map.layers.find(function (layer) {
+          return layer.title === '水系'
+        })
+        shuixiLayer.visible = true
+        let shuidianzhan = map.layers.find(function (layer) {
+          return layer.title === '水电站'
+        })
+        shuidianzhan.visible = true
+        let shuiwenzhan = map.layers.find(function (layer) {
+          return layer.title === '水文站'
+        })
+        shuiwenzhan.visible = true
+        let zhuanyiluxianLayer = map.layers.find(function (layer) {
+          return layer.title === '地质灾害发生实际区域和转移路线'
+        })
+        zhuanyiluxianLayer.visible = true
+      } else if (element === '移民搬迁') {
         alert('数据正在搜集中...')
-      }else if(element === '水网规划'){
+      } else if (element === '水网规划') {
         // 水系 (8) 拟建水库 (25) 护岸 (0) 堤防 (1) 水资源 (2) 水电站 (4) 水文站 (5) 灌区 (16)  地质灾害发生实际区域和转移路线 (20) 引水工程 (21) 水网管线 (24) 涉河建筑物 (26)
-        let shuixi = map.layers.find(function(layer) {
-          return layer.title === '水系';
+        let shuixi = map.layers.find(function (layer) {
+          return layer.title === '水系'
         })
-        shuixi.visible=true
-        let shuiku = map.layers.find(function(layer) {
-          return layer.title === '拟建水库';
+        shuixi.visible = true
+        let shuiku = map.layers.find(function (layer) {
+          return layer.title === '拟建水库'
         })
-        shuiku.visible=true
-        let yinshui = map.layers.find(function(layer) {
-          return layer.title === '引水工程';
+        shuiku.visible = true
+        let yinshui = map.layers.find(function (layer) {
+          return layer.title === '引水工程'
         })
-        yinshui.visible=true
-        let shuiwang = map.layers.find(function(layer) {
-          return layer.title === '水网管线';
+        yinshui.visible = true
+        let shuiwang = map.layers.find(function (layer) {
+          return layer.title === '水网管线'
         })
-        shuiwang.visible=true
-        let shehe = map.layers.find(function(layer) {
-          return layer.title === '涉河建筑物';
+        shuiwang.visible = true
+        let shehe = map.layers.find(function (layer) {
+          return layer.title === '涉河建筑物'
         })
-        shehe.visible=true
-        let dizhizaihai = map.layers.find(function(layer) {
-          return layer.title === '地质灾害发生实际区域和转移路线';
+        shehe.visible = true
+        let dizhizaihai = map.layers.find(function (layer) {
+          return layer.title === '地质灾害发生实际区域和转移路线'
         })
-        dizhizaihai.visible=true
-        let caisha = map.layers.find(function(layer) {
-          return layer.title === '采砂点位';
+        dizhizaihai.visible = true
+        let caisha = map.layers.find(function (layer) {
+          return layer.title === '采砂点位'
         })
-        caisha.visible=true
-        let taiyangneng = map.layers.find(function(layer) {
-          return layer.title === '太阳能提灌站';
+        caisha.visible = true
+        let taiyangneng = map.layers.find(function (layer) {
+          return layer.title === '太阳能提灌站'
         })
-        taiyangneng.visible=true
+        taiyangneng.visible = true
       }
       //回到主视图
       this.goHomeView()
     },
     async initializeMap() {
       let now = new Date()
-      let weather = await this.getCurrentWeather();
+      let weather = await this.getCurrentWeather()
       try {
         esriConfig.apiKey = 'AAPKfcfab4769ecd4082a0983c91ddb91a10qY1wTLqICXuld4YQGysCEGlH46-8nmNBS517S_kHqDUwYvk9P02AdG8B_gtG2UcR'
         let map = new WebScene({
@@ -496,18 +473,18 @@ export default {
         })
         let camera = new Camera({
           position: new Point(
-          //     {
-          //   x: 99.82975225369145,
-          //   y: 28.802280667091217,
-          //   z: 3613.927701551467,
-          //   spatialReference: new SpatialReference({ wkid: 4326 })
-          // }
-              {
-                x: 99.74587169702623,
-                y: 29.074594554358285,
-                z: 234185.00685059093,
-                spatialReference: new SpatialReference({ wkid: 4326 })
-              }
+            //     {
+            //   x: 99.82975225369145,
+            //   y: 28.802280667091217,
+            //   z: 3613.927701551467,
+            //   spatialReference: new SpatialReference({ wkid: 4326 })
+            // }
+            {
+              x: 99.74587169702623,
+              y: 29.074594554358285,
+              z: 234185.00685059093,
+              spatialReference: new SpatialReference({ wkid: 4326 })
+            }
           ),
           // heading: 1.962013105645539,
           heading: 0,
@@ -518,9 +495,9 @@ export default {
         let view = new SceneView({
           map: map,
           container: 'app',
-          qualityProfile: "high",
-          camera:camera,
-          timeExtent:{
+          qualityProfile: 'high',
+          camera: camera,
+          timeExtent: {
             start: now,
             end: now
           },
@@ -535,192 +512,191 @@ export default {
 
         await this.getCurrentWeather(view)
 
-
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
         let layer0 = new FeatureLayer({
-          url:apiUrl + "/0",
-          outFields:['*'],
-          visible:false,
-          title:"护岸",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/0',
+          outFields: ['*'],
+          visible: false,
+          title: '护岸',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer1 = new FeatureLayer({
-          url:apiUrl + "/1",
-          outFields:['*'],
-          visible:false,
-          title:"堤防",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/1',
+          outFields: ['*'],
+          visible: false,
+          title: '堤防',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer2 = new FeatureLayer({
-          url:apiUrl + "/2",
-          outFields:['*'],
-          visible:false,
-          title:"水资源",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/2',
+          outFields: ['*'],
+          visible: false,
+          title: '水资源',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer3 = new FeatureLayer({
-          url:apiUrl + "/3",
-          outFields:['*'],
-          visible:false,
-          title:"灾害点",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/3',
+          outFields: ['*'],
+          visible: false,
+          title: '灾害点',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer4 = new FeatureLayer({
-          url:apiUrl + "/4",
-          outFields:['*'],
-          visible:false,
-          title:"水电站",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/4',
+          outFields: ['*'],
+          visible: false,
+          title: '水电站',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer5 = new FeatureLayer({
-          url:apiUrl + "/5",
-          outFields:['*'],
-          visible:false,
-          title:"水文站",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/5',
+          outFields: ['*'],
+          visible: false,
+          title: '水文站',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer6 = new FeatureLayer({
-          url:apiUrl + "/6",
-          outFields:['*'],
-          visible:false,
-          title:"岸线规划功能分区",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/6',
+          outFields: ['*'],
+          visible: false,
+          title: '岸线规划功能分区',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer7 = new FeatureLayer({
-          url:apiUrl + "/7",
-          outFields:['*'],
-          visible:false,
-          title:"岸线规划功能分区",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/7',
+          outFields: ['*'],
+          visible: false,
+          title: '岸线规划功能分区',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer8 = new FeatureLayer({
-          url:apiUrl + "/8",
-          outFields:['*'],
-          visible:true,
-          title:"水系",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/8',
+          outFields: ['*'],
+          visible: true,
+          title: '水系',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer9 = new FeatureLayer({
-          url:apiUrl + "/9",
-          outFields:['*'],
-          visible:true,
-          title:"县（区）界",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/9',
+          outFields: ['*'],
+          visible: true,
+          title: '县（区）界',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer10 = new FeatureLayer({
-          url:apiUrl + "/10",
-          outFields:['*'],
-          visible:true,
-          title:"乡（镇）界",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/10',
+          outFields: ['*'],
+          visible: true,
+          title: '乡（镇）界',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer12 = new FeatureLayer({
-          url:apiUrl + "/12",
-          outFields:['*'],
-          visible:true,
-          title:"晕线"
+          url: apiUrl + '/12',
+          outFields: ['*'],
+          visible: true,
+          title: '晕线'
         })
         let layer13 = new FeatureLayer({
-          url:apiUrl + "/13",
-          outFields:['*'],
-          visible:true,
-          title:"晕线"
+          url: apiUrl + '/13',
+          outFields: ['*'],
+          visible: true,
+          title: '晕线'
         })
         let layer14 = new FeatureLayer({
-          url:apiUrl + "/14",
-          outFields:['*'],
-          visible:true,
-          title:"乡镇分区图",
-          opacity:0.5
+          url: apiUrl + '/14',
+          outFields: ['*'],
+          visible: true,
+          title: '乡镇分区图',
+          opacity: 0.5
         })
         let layer15 = new FeatureLayer({
-          url:apiUrl + "/15",
-          outFields:['*'],
-          visible:false,
-          title:"河湖划界",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/15',
+          outFields: ['*'],
+          visible: false,
+          title: '河湖划界',
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer16 = new FeatureLayer({
-          url:apiUrl + "/16",
-          outFields:['*'],
-          visible:false,
-          title:"灌区",
-          opacity:0.7,
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/16',
+          outFields: ['*'],
+          visible: false,
+          title: '灌区',
+          opacity: 0.7,
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
-        let layer25 = new FeatureLayer({
-          url:apiUrl + "/25",
-          outFields:['*'],
-          visible:false,
-          title:"拟建水库",
-          popupTemplate:{
-            content:(element)=>{
+        let layer17 = new FeatureLayer({
+          url: apiUrl + '/17',
+          outFields: ['*'],
+          visible: false,
+          title: '拟建水库',
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -728,62 +704,62 @@ export default {
         })
 
         let waterLayer = new FeatureLayer({
-          url: apiUrl + "/18",
-          title:"洪水海平面",
-          opacity:0.9,
+          url: apiUrl + '/18',
+          title: '洪水海平面',
+          opacity: 0.9,
           elevationInfo: {
-            mode: "absolute-height",
+            mode: 'absolute-height',
             offset: 0
           },
           renderer: {
-            type: "simple",
+            type: 'simple',
             symbol: {
-              type: "polygon-3d",
+              type: 'polygon-3d',
               symbolLayers: [
                 {
-                  type: "water",
+                  type: 'water',
                   waveDirection: 260,
-                  color: "#25427c",
-                  waveStrength: "moderate",
-                  waterbodySize: "medium"
+                  color: '#25427c',
+                  waveStrength: 'moderate',
+                  waterbodySize: 'medium'
                 }
               ]
             }
           }
-        });
+        })
         let layer20 = new FeatureLayer({
-          url:apiUrl + "/20",
-          outFields:['*'],
-          visible:false,
-          opacity:0.8,
-          title:"地质灾害发生实际区域和转移路线",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/20',
+          outFields: ['*'],
+          visible: false,
+          opacity: 0.8,
+          title: '地质灾害发生实际区域和转移路线',
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer21 = new FeatureLayer({
-          url:apiUrl + "/21",
-          outFields:['*'],
-          visible:false,
-          title:"引水工程",
-          opacity:0.7,
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/21',
+          outFields: ['*'],
+          visible: false,
+          title: '引水工程',
+          opacity: 0.7,
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer24 = new FeatureLayer({
-          url:apiUrl + "/24",
-          outFields:['*'],
-          visible:false,
-          title:"水网管线",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/24',
+          outFields: ['*'],
+          visible: false,
+          title: '水网管线',
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -791,12 +767,12 @@ export default {
         })
 
         let layer26 = new FeatureLayer({
-          url:apiUrl + "/26",
-          outFields:['*'],
-          visible:false,
-          title:"涉河建筑物",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/26',
+          outFields: ['*'],
+          visible: false,
+          title: '涉河建筑物',
+          popupTemplate: {
+            content: element => {
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -804,12 +780,12 @@ export default {
         })
 
         let layer17 = new FeatureLayer({
-          url:apiUrl + "/17",
-          outFields:['*'],
-          visible:false,
-          title:"采砂点位",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/17',
+          outFields: ['*'],
+          visible: false,
+          title: '采砂点位',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -817,12 +793,12 @@ export default {
         })
 
         let layer27 = new FeatureLayer({
-          url:apiUrl + "/27",
-          outFields:['*'],
-          visible:false,
-          title:"太阳能提灌站",
-          popupTemplate:{
-            content:(element)=>{
+          url: apiUrl + '/27',
+          outFields: ['*'],
+          visible: false,
+          title: '太阳能提灌站',
+          popupTemplate: {
+            content: element => {
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -830,8 +806,7 @@ export default {
         })
 
         //用于作图的图层
-        const graphicsLayer = new GraphicsLayer();
-        graphicsLayer.title = "模型加载"
+        const graphicsLayer = new GraphicsLayer()
         map.add(waterLayer)
         map.add(layer21)
         map.add(layer15)
@@ -844,7 +819,7 @@ export default {
         map.add(layer7)
         map.add(layer17)
         map.add(layer16)
-        map.add(layer20)   //灾害区域
+        map.add(layer20) //灾害区域
         map.add(layer6)
         map.add(layer5)
         map.add(layer4)
@@ -852,169 +827,222 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
-        map.add(layer17)   //采砂点位
-        map.add(layer26)   //涉河建筑物
-        map.add(layer24)   //水网管线
-        map.add(layer25)   //拟建水库
-        map.add(layer27)   //太阳能提灌站
-        map.add(graphicsLayer)// 这是绘画图层
+
+        map.add(graphicsLayer) // 这是绘画图层
 
         let weatherExpand = new Expand({
           view: view,
           content: new Weather({
             view: view
           }),
-          group: "top-right",
+          group: 'top-right',
           expanded: false
-        });
+        })
 
         let daylightExpand = new Expand({
           view: view,
           content: new Daylight({
             view: view
           }),
-          group: "top-right"
-        });
+          group: 'top-right'
+        })
 
         let elevationProfileExpand = new Expand({
-          view:view,
-          content:new ElevationProfile({
+          view: view,
+          content: new ElevationProfile({
             view: view,
-            profiles: [
-              {type: "ground"},
-              {type: "view"}
-            ],
+            profiles: [{ type: 'ground' }, { type: 'view' }],
             visibleElements: {
               selectButton: true
             }
           }),
-          group: "top-right",
+          group: 'top-right'
         })
 
         let basemapGalleryExpand = new Expand({
-          view:view,
-          content:new BasemapGallery({
+          view: view,
+          content: new BasemapGallery({
             view: view,
-            source: [Basemap.fromId("hybrid"), Basemap.fromId("streets"),Basemap.fromId("satellite") ]
+            source: [Basemap.fromId('hybrid'), Basemap.fromId('streets'), Basemap.fromId('satellite')]
           }),
-          group: "top-right"
+          group: 'top-right'
         })
         const legendExpand = new Expand({
           content: new Legend({
-            view: view
+            view: view,
+            layerInfos: [
+              {
+                layer: layer0,
+                title: '护岸'
+              },
+              {
+                layer: layer1,
+                title: '堤防'
+              },
+              {
+                layer: layer2,
+                title: '水资源'
+              },
+              {
+                layer: layer3,
+                title: '地质灾害点'
+              },
+              {
+                layer: layer4,
+                title: '水电站 '
+              },
+              {
+                layer: layer5,
+                title: '水文站'
+              },
+              {
+                layer: layer6,
+                title: '岸线规划'
+              },
+              {
+                layer: layer7,
+                title: '岸线规划'
+              },
+              {
+                layer: layer8,
+                title: '水系'
+              },
+              {
+                layer: layer9,
+                title: '县（区）界 '
+              },
+              {
+                layer: layer10,
+                title: '乡（镇）界'
+              },
+              {
+                layer: layer15,
+                title: '河湖划界'
+              },
+              {
+                layer: layer16,
+                title: '灌区'
+              },
+              {
+                layer: layer17,
+                title: '拟建水库'
+              }
+            ]
           }),
           view: view,
           expanded: false
-        });
+        })
         const dizhizaihai = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/3",
+          url: 'https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/3',
           popupTemplate: {
-            title: "地质灾害点: {town}{county}{goudaoming}{name} </br>{type}, ({suggestion})",
+            title: '地质灾害点: {town}{county}{goudaoming}{name} </br>{type}, ({suggestion})',
             overwriteActions: true
           }
-        });
+        })
         const shuidianzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/4"
-        });
+          url: 'https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/4'
+        })
         const shuiwenzhan = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5"
-        });
+          url: 'https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/5'
+        })
         const shuixi = new FeatureLayer({
-          url: "https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/8"
-        });
+          url: 'https://services8.arcgis.com/zjhyM0J5lo3dhx9k/arcgis/rest/services/xiangchengliangbanji/FeatureServer/8'
+        })
 
         let searchExpand = new Expand({
-          view:view,
-          content:new Search({
+          view: view,
+          content: new Search({
             view: view,
-            allPlaceholder: "定位搜索,下拉选择搜索图层",
+            allPlaceholder: '定位搜索,下拉选择搜索图层',
             includeDefaultSources: false,
             sources: [
               {
                 layer: shuidianzhan,
-                searchFields: ["name"],
-                displayField: "name",
+                searchFields: ['name'],
+                displayField: 'name',
                 exactMatch: false,
-                outFields: ["*"],
-                name: "水电站",
-                placeholder: "水电站名称"
-              },{
+                outFields: ['*'],
+                name: '水电站',
+                placeholder: '水电站名称'
+              },
+              {
                 layer: shuiwenzhan,
-                searchFields: ["stnm"],
-                displayField: "stnm",
+                searchFields: ['stnm'],
+                displayField: 'stnm',
                 exactMatch: false,
-                outFields: ["*"],
-                name: "水文站",
-                placeholder: "水文站名称"
-              },{
+                outFields: ['*'],
+                name: '水文站',
+                placeholder: '水文站名称'
+              },
+              {
                 layer: shuixi,
-                searchFields: ["rname"],
-                displayField: "rname",
+                searchFields: ['rname'],
+                displayField: 'rname',
                 exactMatch: false,
-                outFields: ["*"],
-                name: "水系",
-                placeholder: "水系名称"
-              },{
+                outFields: ['*'],
+                name: '水系',
+                placeholder: '水系名称'
+              },
+              {
                 layer: dizhizaihai,
-                searchFields: ["town", "county", "name", "code", "type", "people", "goudaoming", "danger", "tip"],
-                displayField: "name",
+                searchFields: ['town', 'county', 'name', 'code', 'type', 'people', 'goudaoming', 'danger', 'tip'],
+                displayField: 'name',
                 exactMatch: false,
-                outFields: ["*"],
-                name: "地质灾害点位",
-                placeholder: "地质灾害相关信息"
+                outFields: ['*'],
+                name: '地质灾害点位',
+                placeholder: '地质灾害相关信息'
               }
             ]
           }),
-          group: "top-right"
+          group: 'top-right'
         })
 
         let layerListExpand = new Expand({
-          view:view,
-          content: new LayerList({view: view}),
-          group: "top-right"
+          view: view,
+          content: new LayerList({ view: view }),
+          group: 'top-right'
         })
 
         let sketchExpand = new Expand({
-          view:view,
+          view: view,
           content: new Sketch({
             view,
             layer: graphicsLayer,
-            creationMode: "update"
+            creationMode: 'update'
           }),
-          group: "top-right"
+          group: 'top-right'
         })
         let floodExpand = new Expand({
-          view:view,
-          content: document.getElementById("menu"),
-          group: "top-right"
+          view: view,
+          content: document.getElementById('menu'),
+          group: 'top-right'
         })
 
-        view.ui.add([legendExpand], "bottom-left");
-        view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand, sketchExpand], "top-right");
-        view.ui.add("topbar", "top-right");
+        view.ui.add([legendExpand], 'bottom-left')
+        view.ui.add([weatherExpand, daylightExpand, elevationProfileExpand, basemapGalleryExpand, searchExpand, layerListExpand, sketchExpand], 'top-right')
+        view.ui.add('topbar', 'top-right')
 
-        view.ui.add("searchPane", "top-left");
-        view.ui.add("weatherPane", "top-right");
-        view.ui.add("home", "top-left");
+        view.ui.add('searchPane', 'top-left')
+        view.ui.add('weatherPane', 'top-right')
+        view.ui.add('home', 'top-left')
 
-        view.ui.add("river", "top-left");
-        view.ui.add("safety", "top-left");
-        view.ui.add("resource", "top-left");
-        view.ui.add("project", "top-left");
-        view.ui.add("shoreline", "top-left");
-        view.ui.add("boundary", "top-left");
-        view.ui.add("health", "top-left");
-        view.ui.add("disaster", "top-left");
-        view.ui.add("relocation", "top-left");
-        view.ui.add("waternet", "top-left");
+        view.ui.add('river', 'top-left')
+        view.ui.add('safety', 'top-left')
+        view.ui.add('resource', 'top-left')
+        view.ui.add('project', 'top-left')
+        view.ui.add('shoreline', 'top-left')
+        view.ui.add('boundary', 'top-left')
+        view.ui.add('health', 'top-left')
+        view.ui.add('disaster', 'top-left')
+        view.ui.add('relocation', 'top-left')
 
         // 控制洪水得
 
-        view.ui.add(floodExpand, "bottom-right");
+        view.ui.add(floodExpand, 'bottom-right')
 
         //以下是设置睡眠调整得东西
         const slider = new Slider({
-          container: "waveSlider",
+          container: 'waveSlider',
           min: 2000,
           max: 4000,
           visibleElements: {
@@ -1022,121 +1050,107 @@ export default {
           },
           precision: 0,
           values: [2000]
-        });
+        })
 
-        slider.on("thumb-drag", (event) => {
-          const value = parseInt(event.value);
-          const renderer = waterLayer.renderer.clone();
-          renderer.symbol.symbolLayers.getItemAt(0).waveDirection = value;
-          waterLayer.elevationInfo.offset = value;
-          waterLayer.renderer = renderer;
-        });
+        slider.on('thumb-drag', event => {
+          const value = parseInt(event.value)
+          const renderer = waterLayer.renderer.clone()
+          renderer.symbol.symbolLayers.getItemAt(0).waveDirection = value
+          waterLayer.elevationInfo.offset = value
+          waterLayer.renderer = renderer
+        })
 
-        const waveStrengthRadio =
-            document.getElementsByName("waveStrengthRadio");
+        const waveStrengthRadio = document.getElementsByName('waveStrengthRadio')
 
         for (let i = 0; i < waveStrengthRadio.length; i++) {
-          const element = waveStrengthRadio[i];
-          element.addEventListener("change", (event) => {
-            const renderer = waterLayer.renderer.clone();
-            renderer.symbol.symbolLayers.getItemAt(0).waveStrength =
-                event.target.value;
-            waterLayer.renderer = renderer;
-          });
+          const element = waveStrengthRadio[i]
+          element.addEventListener('change', event => {
+            const renderer = waterLayer.renderer.clone()
+            renderer.symbol.symbolLayers.getItemAt(0).waveStrength = event.target.value
+            waterLayer.renderer = renderer
+          })
         }
 
         function setWaterColor(color) {
-          const renderer = waterLayer.renderer.clone();
-          renderer.symbol.symbolLayers.getItemAt(0).color = color;
-          waterLayer.renderer = renderer;
+          const renderer = waterLayer.renderer.clone()
+          renderer.symbol.symbolLayers.getItemAt(0).color = color
+          waterLayer.renderer = renderer
         }
-        document.getElementById("navy").addEventListener("click", () => {
-          setWaterColor("#25427c");
-        });
-        document.getElementById("green").addEventListener("click", () => {
-          setWaterColor("#039962");
-        });
-        document.getElementById("turqoise").addEventListener("click", () => {
-          setWaterColor("rgb(119,89,37)");
-        });
+        document.getElementById('navy').addEventListener('click', () => {
+          setWaterColor('#25427c')
+        })
+        document.getElementById('green').addEventListener('click', () => {
+          setWaterColor('#039962')
+        })
+        document.getElementById('turqoise').addEventListener('click', () => {
+          setWaterColor('rgb(119,89,37)')
+        })
 
         //3D绘画技术
         const extrudedPolygon = {
-          type: "polygon-3d",
+          type: 'polygon-3d',
           symbolLayers: [
             {
-              type: "extrude",
+              type: 'extrude',
               size: 50, // extrude by 10 meters
               material: {
-                color: "gray"
+                color: 'gray'
               },
               edges: {
-                type: "solid",
-                size: "3px",
-                color: "blue"
+                type: 'solid',
+                size: '3px',
+                color: 'blue'
               }
             }
           ]
-        };
+        }
 
         // polyline symbol used for sketching routes
         const route = {
-          type: "line-3d",
+          type: 'line-3d',
           symbolLayers: [
             {
-              type: "line",
-              size: "10px",
+              type: 'line',
+              size: '10px',
               material: {
-                color: "white"
+                color: 'white'
               }
             },
             {
-              type: "line",
-              size: "3px",
+              type: 'line',
+              size: '3px',
               material: {
-                color: "blue"
+                color: 'blue'
               }
             }
           ]
-        };
+        }
 
         // point symbol used for sketching points of interest
         const point = {
-          type: "text", // autocasts as new TextSymbol()
-          color: "#fff",
-          text: "\ue61e", // esri-icon-key
+          type: 'text', // autocasts as new TextSymbol()
+          color: '#fff',
+          text: '\ue61e', // esri-icon-key
           font: {
             size: 10,
-            family: "CalciteWebCoreIcons"
+            family: 'CalciteWebCoreIcons'
           },
-          horizontalAlignment: "left",
-          verticalAlignment: "bottom"
-        };
+          horizontalAlignment: 'left',
+          verticalAlignment: 'bottom'
+        }
         // Set-up event handlers for buttons and click events
-        const enabledcheckbox = document.getElementById("enabledcheckbox");
-        const startbuttons = document.getElementById("startbuttons");
-        const actionbuttons = document.getElementById("actionbuttons");
-        const edgeoperationbuttons = document.getElementById(
-            "edgeoperationbuttons"
-        );
-        const tooltipOptionsheckbox = document.getElementById(
-            "tooltipOptionsheckbox"
-        );
-        const configurationInfoDiv = document.getElementById(
-            "configurationInfoDiv"
-        );
-        const labelOptionscheckbox = document.getElementById(
-            "labelOptionscheckbox"
-        );
-        const selfsnappingcheckbox = document.getElementById(
-            "selfsnappingcheckbox"
-        );
-        const snappingctrlkey = document.getElementById("snappingctrlkey");
-        const featuresnappingcheckbox = document.getElementById(
-            "featuresnappingcheckbox"
-        );
+        const enabledcheckbox = document.getElementById('enabledcheckbox')
+        const startbuttons = document.getElementById('startbuttons')
+        const actionbuttons = document.getElementById('actionbuttons')
+        const edgeoperationbuttons = document.getElementById('edgeoperationbuttons')
+        const tooltipOptionsheckbox = document.getElementById('tooltipOptionsheckbox')
+        const configurationInfoDiv = document.getElementById('configurationInfoDiv')
+        const labelOptionscheckbox = document.getElementById('labelOptionscheckbox')
+        const selfsnappingcheckbox = document.getElementById('selfsnappingcheckbox')
+        const snappingctrlkey = document.getElementById('snappingctrlkey')
+        const featuresnappingcheckbox = document.getElementById('featuresnappingcheckbox')
         // load the default value from the snapping checkbox
-        let snappingcheckboxsavedstate = enabledcheckbox.checked ? true : false;
+        let snappingcheckboxsavedstate = enabledcheckbox.checked ? true : false
 
         // define the SketchViewModel and pass in the symbols for each geometry type
         // set the snappingOptions.selfEnabled to the default state
@@ -1153,150 +1167,138 @@ export default {
           tooltipOptions: { enabled: true },
           labelOptions: { enabled: true },
           defaultUpdateOptions: {
-            tool: "reshape"
+            tool: 'reshape'
           }
-        });
+        })
         // after drawing the geometry, enter the update mode to update the geometry
         // and the deactivate the buttons
-        sketchViewModel.on("create", (event) => {
-          if (event.state === "complete") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
-            sketchViewModel.update(event.graphic);
+        sketchViewModel.on('create', event => {
+          if (event.state === 'complete') {
+            startbuttons.style.display = 'inline'
+            actionbuttons.style.display = 'none'
+            sketchViewModel.update(event.graphic)
           }
-          if (event.state === "cancel") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
+          if (event.state === 'cancel') {
+            startbuttons.style.display = 'inline'
+            actionbuttons.style.display = 'none'
           }
           //以上是设置按钮的样式
           //接下来我们需要设置绘制后的一些处理工作
-          if (event.state === "complete" && event.tool === "point") {
-            const point = event.graphic.geometry;
-            event.graphic.symbol.text = point.longitude.toFixed(4) + "," + point.latitude.toFixed(4) + "," + point.z.toFixed(2)
+          if (event.state === 'complete' && event.tool === 'point') {
+            const point = event.graphic.geometry
+            event.graphic.symbol.text = point.longitude.toFixed(4) + ',' + point.latitude.toFixed(4) + ',' + point.z.toFixed(2)
           }
-        });
+        })
 
-        sketchViewModel.on("update", (event) => {
-          if (event.state === "start") {
-            startbuttons.style.display = "none";
-            actionbuttons.style.display = "inline";
-            if (
-                event.graphics[0].geometry.type === "polygon" ||
-                event.graphics[0].geometry.type === "polyline"
-            ) {
-              edgeoperationbuttons.style.display = "inline";
+        sketchViewModel.on('update', event => {
+          if (event.state === 'start') {
+            startbuttons.style.display = 'none'
+            actionbuttons.style.display = 'inline'
+            if (event.graphics[0].geometry.type === 'polygon' || event.graphics[0].geometry.type === 'polyline') {
+              edgeoperationbuttons.style.display = 'inline'
             }
           }
-          if (event.state === "complete") {
-            startbuttons.style.display = "inline";
-            actionbuttons.style.display = "none";
-            edgeoperationbuttons.style.display = "none";
+          if (event.state === 'complete') {
+            startbuttons.style.display = 'inline'
+            actionbuttons.style.display = 'none'
+            edgeoperationbuttons.style.display = 'none'
           }
-        });
+        })
 
         /**********************************************
          * Drawing UI with configuration
          *********************************************/
 
-        const drawButtons = Array.prototype.slice.call(
-            document.getElementsByClassName("starttool")
-        );
-        const cancelBtn = document.getElementById("cancel");
-        const doneBtn = document.getElementById("done");
+        const drawButtons = Array.prototype.slice.call(document.getElementsByClassName('starttool'))
+        const cancelBtn = document.getElementById('cancel')
+        const doneBtn = document.getElementById('done')
 
         // set event listeners to activate sketching graphics
-        drawButtons.forEach((btn) => {
-          btn.addEventListener("click", (event) => {
+        drawButtons.forEach(btn => {
+          btn.addEventListener('click', event => {
             // to activate sketching the create method is called passing in the geometry type
             // from the data-type attribute of the html element
-            sketchViewModel.create(event.target.getAttribute("data-type"));
-            startbuttons.style.display = "none";
-            actionbuttons.style.display = "inline";
-          });
-        });
+            sketchViewModel.create(event.target.getAttribute('data-type'))
+            startbuttons.style.display = 'none'
+            actionbuttons.style.display = 'inline'
+          })
+        })
 
-        cancelBtn.addEventListener("click", (event) => {
-          sketchViewModel.cancel();
-        });
-        doneBtn.addEventListener("click", (event) => {
+        cancelBtn.addEventListener('click', event => {
+          sketchViewModel.cancel()
+        })
+        doneBtn.addEventListener('click', event => {
           if (sketchViewModel.updateGraphics.length !== 0) {
-            sketchViewModel.complete();
+            sketchViewModel.complete()
           } else {
-            sketchViewModel.cancel();
+            sketchViewModel.cancel()
           }
-        });
+        })
 
-        view.ui.add("sketchPanel", "bottom-right");
+        view.ui.add('sketchPanel', 'bottom-right')
 
         // default values for edge/move operations
-        let edgeType = "split";
-        let shapeType = "move";
+        let edgeType = 'split'
+        let shapeType = 'move'
 
         // Handling the configuration for edge operation
-        const noneEdgeBtn = document.getElementById("none-edge-button");
-        const splitEdgeBtn = document.getElementById("split-edge-button");
-        const offsetEdgeBtn = document.getElementById("offset-edge-button");
-        noneEdgeBtn.onclick = edgeChangedClickHandler;
-        splitEdgeBtn.onclick = edgeChangedClickHandler;
-        offsetEdgeBtn.onclick = edgeChangedClickHandler;
+        const noneEdgeBtn = document.getElementById('none-edge-button')
+        const splitEdgeBtn = document.getElementById('split-edge-button')
+        const offsetEdgeBtn = document.getElementById('offset-edge-button')
+        noneEdgeBtn.onclick = edgeChangedClickHandler
+        splitEdgeBtn.onclick = edgeChangedClickHandler
+        offsetEdgeBtn.onclick = edgeChangedClickHandler
 
         function edgeChangedClickHandler(event) {
-          edgeType = event.target.value;
+          edgeType = event.target.value
 
           // handle the buttons
-          const buttons = document.getElementsByClassName("edge-button");
+          const buttons = document.getElementsByClassName('edge-button')
           for (const button of buttons) {
-            button.classList.remove("edge-button-selected");
+            button.classList.remove('edge-button-selected')
           }
-          this.classList.add("edge-button-selected");
+          this.classList.add('edge-button-selected')
           restartUpdateMode({
             reshapeOptions: {
               edgeOperation: edgeType,
               shapeOperation: shapeType
             }
-          });
+          })
         }
 
         // Handling the configuration for move operation
-        const noneShapeButton = document.getElementById("none-shape-button");
-        const moveShapeButton = document.getElementById("move-shape-button");
-        noneShapeButton.onclick = shapeChangedClickHandler;
-        moveShapeButton.onclick = shapeChangedClickHandler;
+        const noneShapeButton = document.getElementById('none-shape-button')
+        const moveShapeButton = document.getElementById('move-shape-button')
+        noneShapeButton.onclick = shapeChangedClickHandler
+        moveShapeButton.onclick = shapeChangedClickHandler
 
         function shapeChangedClickHandler(event) {
-          shapeType = event.target.value;
+          shapeType = event.target.value
 
           // handle the buttons
-          const buttons = document.getElementsByClassName("shape-button");
+          const buttons = document.getElementsByClassName('shape-button')
           for (const button of buttons) {
-            button.classList.remove("shape-button-selected");
+            button.classList.remove('shape-button-selected')
           }
-          this.classList.add("shape-button-selected");
+          this.classList.add('shape-button-selected')
           restartUpdateMode({
             reshapeOptions: {
               edgeOperation: edgeType,
               shapeOperation: shapeType
             }
-          });
+          })
         }
 
         function restartUpdateMode(updateOptions) {
           sketchViewModel.defaultUpdateOptions = {
             ...sketchViewModel.defaultUpdateOptions,
             ...updateOptions
-          };
+          }
 
           if (sketchViewModel.activeTool) {
-            if (
-                sketchViewModel.activeTool === "transform" ||
-                sketchViewModel.activeTool === "move" ||
-                sketchViewModel.activeTool === "reshape"
-            ) {
-              updateOptions.tool = sketchViewModel.activeTool;
-              sketchViewModel.update(
-                  sketchViewModel.updateGraphics.toArray(),
-                  updateOptions
-              );
+            if (sketchViewModel.activeTool === 'transform' || sketchViewModel.activeTool === 'move' || sketchViewModel.activeTool === 'reshape') {
+              updateOptions.tool = sketchViewModel.activeTool
+              sketchViewModel.update(sketchViewModel.updateGraphics.toArray(), updateOptions)
             }
           }
         }
@@ -1305,217 +1307,198 @@ export default {
          * Configuration UI for snapping
          *********************************************/
 
-        sketchViewModel.watch("snappingOptions.enabled", (newValue) => {
-          enabledcheckbox.checked = newValue;
-        });
+        sketchViewModel.watch('snappingOptions.enabled', newValue => {
+          enabledcheckbox.checked = newValue
+        })
 
-        enabledcheckbox.checked = sketchViewModel.snappingOptions.enabled;
-        enabledcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.enabled = event.target.checked
-              ? true
-              : false;
-        });
+        enabledcheckbox.checked = sketchViewModel.snappingOptions.enabled
+        enabledcheckbox.addEventListener('change', event => {
+          sketchViewModel.snappingOptions.enabled = event.target.checked ? true : false
+        })
 
-        tooltipOptionsheckbox.checked = sketchViewModel.tooltipOptions.enabled;
-        tooltipOptionsheckbox.addEventListener("change", (event) => {
-          sketchViewModel.tooltipOptions.enabled = event.target.checked
-              ? true
-              : false;
-        });
+        tooltipOptionsheckbox.checked = sketchViewModel.tooltipOptions.enabled
+        tooltipOptionsheckbox.addEventListener('change', event => {
+          sketchViewModel.tooltipOptions.enabled = event.target.checked ? true : false
+        })
 
-        labelOptionscheckbox.checked = sketchViewModel.labelOptions.enabled;
-        labelOptionscheckbox.addEventListener("change", (event) => {
-          sketchViewModel.labelOptions.enabled = event.target.checked
-              ? true
-              : false;
-        });
+        labelOptionscheckbox.checked = sketchViewModel.labelOptions.enabled
+        labelOptionscheckbox.addEventListener('change', event => {
+          sketchViewModel.labelOptions.enabled = event.target.checked ? true : false
+        })
 
-        selfsnappingcheckbox.checked =
-            sketchViewModel.snappingOptions.selfEnabled;
-        selfsnappingcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.selfEnabled = event.target.checked
-              ? true
-              : false;
-        });
+        selfsnappingcheckbox.checked = sketchViewModel.snappingOptions.selfEnabled
+        selfsnappingcheckbox.addEventListener('change', event => {
+          sketchViewModel.snappingOptions.selfEnabled = event.target.checked ? true : false
+        })
 
-        featuresnappingcheckbox.checked =
-            sketchViewModel.snappingOptions.featureEnabled;
-        featuresnappingcheckbox.addEventListener("change", (event) => {
-          sketchViewModel.snappingOptions.featureEnabled = event.target.checked
-              ? true
-              : false;
-        });
+        featuresnappingcheckbox.checked = sketchViewModel.snappingOptions.featureEnabled
+        featuresnappingcheckbox.addEventListener('change', event => {
+          sketchViewModel.snappingOptions.featureEnabled = event.target.checked ? true : false
+        })
 
         const configurationExpand = new Expand({
-          expandIcon: "gear",
-          expandTooltip: "Show configuration",
+          expandIcon: 'gear',
+          expandTooltip: 'Show configuration',
           expanded: false,
           view: view,
-          content: document.getElementById("configurationDiv")
-        });
+          content: document.getElementById('configurationDiv')
+        })
 
         // observe the if the CTRL-key got pressed to give the user a visual feedback
         // the logic itself for toggling snapping is in the SketchViewModel
-        view.on(["key-down"], (ev) => {
-          if (ev.key === "Control") {
-            snappingctrlkey.style.fontWeight = "bold";
-            snappingctrlkey.style.color = "royalblue";
+        view.on(['key-down'], ev => {
+          if (ev.key === 'Control') {
+            snappingctrlkey.style.fontWeight = 'bold'
+            snappingctrlkey.style.color = 'royalblue'
           }
-        });
-        view.on(["key-up"], (ev) => {
-          if (ev.key === "Control") {
-            snappingctrlkey.style.fontWeight = "normal";
-            snappingctrlkey.style.color = "black";
+        })
+        view.on(['key-up'], ev => {
+          if (ev.key === 'Control') {
+            snappingctrlkey.style.fontWeight = 'normal'
+            snappingctrlkey.style.color = 'black'
           }
-        });
+        })
 
-        view.ui.add(configurationExpand, "bottom-right");
+        view.ui.add(configurationExpand, 'bottom-right')
 
-        configurationInfoDiv.addEventListener("click", (event) => {
-          configurationExpand.expand();
-        });
-        view.ui.add("configurationInfoDiv", "bottom-right");
-
+        configurationInfoDiv.addEventListener('click', event => {
+          configurationExpand.expand()
+        })
+        view.ui.add('configurationInfoDiv', 'bottom-right')
 
         //距离面积测量
-        let activeWidget = null;
-        document
-            .getElementById("distanceButton")
-            .addEventListener("click", (event) => {
-              setActiveWidget(null);
-              if (!event.target.classList.contains("active")) {
-                setActiveWidget("distance");
-              } else {
-                setActiveButton(null);
-              }
-            });
+        let activeWidget = null
+        document.getElementById('distanceButton').addEventListener('click', event => {
+          setActiveWidget(null)
+          if (!event.target.classList.contains('active')) {
+            setActiveWidget('distance')
+          } else {
+            setActiveButton(null)
+          }
+        })
 
-        document
-            .getElementById("areaButton")
-            .addEventListener("click", (event) => {
-              setActiveWidget(null);
-              if (!event.target.classList.contains("active")) {
-                setActiveWidget("area");
-              } else {
-                setActiveButton(null);
-              }
-            });
-        document
-            .getElementById("screenShotButton")
-            .addEventListener("click", (event) => {
-              view.takeScreenshot({
-                format: 'png',
-                quality: '98',
-                width: 1980,
-                height: 1080,
-              }).then(screenshoot=>{
-                const link = document.createElement('a');
-                link.download = 'screenshot.png'; // Set the download filename
-                link.href = screenshoot.dataUrl; // Set the base64 data URL as the href
-                link.click(); // Trigger the download
-                setTimeout(()=>{
-                  link.remove(); // Remove the link element
-                },1000)
-              });
-            });
+        document.getElementById('areaButton').addEventListener('click', event => {
+          setActiveWidget(null)
+          if (!event.target.classList.contains('active')) {
+            setActiveWidget('area')
+          } else {
+            setActiveButton(null)
+          }
+        })
+        document.getElementById('screenShotButton').addEventListener('click', event => {
+          view
+            .takeScreenshot({
+              format: 'png',
+              quality: '98',
+              width: 1980,
+              height: 1080
+            })
+            .then(screenshoot => {
+              const link = document.createElement('a')
+              link.download = 'screenshot.png' // Set the download filename
+              link.href = screenshoot.dataUrl // Set the base64 data URL as the href
+              link.click() // Trigger the download
+              setTimeout(() => {
+                link.remove() // Remove the link element
+              }, 1000)
+            })
+        })
 
         function setActiveWidget(type) {
           switch (type) {
-            case "distance":
+            case 'distance':
               activeWidget = new DirectLineMeasurement3D({
                 view: view
-              });
+              })
 
               // skip the initial 'new measurement' button
-              activeWidget.viewModel.start();
+              activeWidget.viewModel.start()
 
-              view.ui.add(activeWidget, "top-right");
-              setActiveButton(document.getElementById("distanceButton"));
-              break;
-            case "area":
+              view.ui.add(activeWidget, 'top-right')
+              setActiveButton(document.getElementById('distanceButton'))
+              break
+            case 'area':
               activeWidget = new AreaMeasurement3D({
                 view: view
-              });
+              })
 
               // skip the initial 'new measurement' button
-              activeWidget.viewModel.start();
+              activeWidget.viewModel.start()
 
-              view.ui.add(activeWidget, "top-right");
-              setActiveButton(document.getElementById("areaButton"));
-              break;
+              view.ui.add(activeWidget, 'top-right')
+              setActiveButton(document.getElementById('areaButton'))
+              break
             case null:
               if (activeWidget) {
-                view.ui.remove(activeWidget);
-                activeWidget.destroy();
-                activeWidget = null;
+                view.ui.remove(activeWidget)
+                activeWidget.destroy()
+                activeWidget = null
               }
-              break;
+              break
           }
         }
 
         function setActiveButton(selectedButton) {
           // focus the view to activate keyboard shortcuts for sketching
-          view.focus();
-          const elements = document.getElementsByClassName("active");
+          view.focus()
+          const elements = document.getElementsByClassName('active')
           for (let i = 0; i < elements.length; i++) {
-            elements[i].classList.remove("active");
+            elements[i].classList.remove('active')
           }
           if (selectedButton) {
-            selectedButton.classList.add("active");
+            selectedButton.classList.add('active')
           }
         }
         function deactivateButtons() {
-          const elements = Array.prototype.slice.call(
-              document.getElementsByClassName("esri-button")
-          );
-          elements.forEach((element) => {
-            element.classList.remove("esri-button--secondary");
-          });
+          const elements = Array.prototype.slice.call(document.getElementsByClassName('esri-button'))
+          elements.forEach(element => {
+            element.classList.remove('esri-button--secondary')
+          })
         }
 
         //放置glb模型的代码
-        const canoeBtn = document.getElementById("canoe");
-        view.when(() => {
-              // This sample uses the SketchViewModel to add points to a
-              // GraphicsLayer. The points have 3D glTF models as symbols.
-              const sketchVM = new SketchViewModel({
-                layer: graphicsLayer,
-                view: view
-              });
-              canoeBtn.addEventListener("click", () => {
-                // reference the relative path to the glTF model
-                // in the resource of an ObjectSymbol3DLayer
-                sketchVM.pointSymbol = {
-                  type: "point-3d",
-                  symbolLayers: [
-                    {
-                      type: "object",
-                      resource: {
-                        href: "/glb/sjg.glb"
-                      }
-                    }
-                  ]
-                };
-                deactivateButtons();
-                sketchVM.create("point");
-                canoeBtn.classList.add("esri-button--secondary");
-              });
-
-              sketchVM.on("create", (event) => {
-                if (event.state === "complete") {
-                  sketchVM.update(event.graphic);
-                  deactivateButtons();
-                }
-              });
+        const canoeBtn = document.getElementById('canoe')
+        view
+          .when(() => {
+            // This sample uses the SketchViewModel to add points to a
+            // GraphicsLayer. The points have 3D glTF models as symbols.
+            const sketchVM = new SketchViewModel({
+              layer: graphicsLayer,
+              view: view
             })
-            .catch(console.error);
+            canoeBtn.addEventListener('click', () => {
+              // reference the relative path to the glTF model
+              // in the resource of an ObjectSymbol3DLayer
+              sketchVM.pointSymbol = {
+                type: 'point-3d',
+                symbolLayers: [
+                  {
+                    type: 'object',
+                    resource: {
+                      href: '/glb/sjg.glb'
+                    }
+                  }
+                ]
+              }
+              deactivateButtons()
+              sketchVM.create('point')
+              canoeBtn.classList.add('esri-button--secondary')
+            })
+
+            sketchVM.on('create', event => {
+              if (event.state === 'complete') {
+                sketchVM.update(event.graphic)
+                deactivateButtons()
+              }
+            })
+          })
+          .catch(console.error)
 
         //左下角添加当前经纬度显示
-        const ccWidget = new CoordinateConversion({
-          view: view
-        })
-        view.ui.add(ccWidget, 'bottom-left')
-
+        // const ccWidget = new CoordinateConversion({
+        //   view: view
+        // })
+        // view.ui.add(ccWidget, 'bottom-left')
 
         // 将 SceneView 对象保存到组件的 data 中
         this.sceneView = view
@@ -1532,27 +1515,22 @@ export default {
           console.log(data)
           this.layerDataLocation('水系', data.id, 14)
         })
-
       } catch (error) {
         console.error('地图初始化失败：', error)
       }
     },
     searchPaneDisplay() {
-      if(this.searchTabVisible)
-        document.getElementsByClassName("searchTab")[0].style.display = "none"
-      else if(!this.searchTabVisible)
-        document.getElementsByClassName("searchTab")[0].style.display = "block"
-      this.searchTabVisible = !this.searchTabVisible;
+      if (this.searchTabVisible) document.getElementsByClassName('searchTab')[0].style.display = 'none'
+      else if (!this.searchTabVisible) document.getElementsByClassName('searchTab')[0].style.display = 'block'
+      this.searchTabVisible = !this.searchTabVisible
     },
     weatherPaneDisplay() {
-      if(this.weatherTabVisible)
-        document.getElementsByClassName("weatherTab")[0].style.display = "none"
-      else if(!this.searchTabVisible)
-        document.getElementsByClassName("weatherTab")[0].style.display = "block"
-      this.weatherTabVisible = !this.weatherTabVisible;
+      if (this.weatherTabVisible) document.getElementsByClassName('weatherTab')[0].style.display = 'none'
+      else if (!this.searchTabVisible) document.getElementsByClassName('weatherTab')[0].style.display = 'block'
+      this.weatherTabVisible = !this.weatherTabVisible
     },
     detailPaneDisplay() {
-        document.getElementsByClassName("detailTab")[0].style.display = "block"
+      document.getElementsByClassName('detailTab')[0].style.display = 'block'
     },
     goHomeView() {
       //回到主视图
@@ -1565,25 +1543,30 @@ export default {
         }),
         heading: 0,
         tilt: 0
-      });
+      })
       window.view.goTo(camera)
     },
-    searchTabClose(){
-      document.getElementsByClassName("searchTab")[0].style.display = "none"
+    searchTabClose(e) {
+      // console.log(e.value)
+      document.getElementsByClassName('searchTab')[0].style.display = e.value || 'none'
       this.searchTabVisible = !this.searchTabVisible
     },
-    detailTabClose(){
-      document.getElementsByClassName("detailTab")[0].style.display = "none"
+    detailTabClose() {
+      document.getElementsByClassName('detailTab')[0].style.display = 'none'
     },
-    weatherTabClose(){
-      document.getElementsByClassName("weatherTab")[0].style.display = "none"
+    weatherTabClose() {
+      document.getElementsByClassName('weatherTab')[0].style.display = 'none'
     }
   }
 }
 </script>
-<style>
+<style lang="less">
 body {
   margin-bottom: 0;
+  // margin-top: 50px;
+}
+ul {
+  list-style: none;
 }
 /* 控制popupTemplate显示 */
 .esri-popup__main-container {
@@ -1671,6 +1654,7 @@ body {
   margin-left: 20px;
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 
 .navbar-left h1 {
@@ -1678,6 +1662,34 @@ body {
   font-weight: bold;
   color: #ffffff;
   margin: 0;
+  // 不换行
+  white-space: nowrap;
+  width: 70%;
+}
+.river-system {
+  display: flex;
+  justify-content: space-around;
+  // justify-content: ;
+  width: 20%;
+}
+
+.water-system-button {
+  color: white;
+  background-color: #79bbff;
+  border-radius: 5px;
+  height: 30px;
+  line-height: 30px;
+  width: 20%;
+  text-align: center;
+  // 超出盒子显示省略号
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.water-system-button:hover {
+  animation-duration: 0.5s;
+  background-color: #0171dc;
+  cursor: pointer;
 }
 
 .navbar-right {
@@ -1698,6 +1710,11 @@ body {
   font-size: 14px;
   color: #ffffff;
   margin: 0;
+  width: 80%;
+  // 超出盒子显示省略号
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .navbar-right p:hover {
   cursor: pointer;
@@ -1716,43 +1733,50 @@ body {
 }
 /* 搜索功能 */
 .searchTab {
-  width: 400px;
+  width: 24%;
   position: absolute;
-  background-color: rgba(255,255,255,0.6);
+  background-color: rgba(255, 255, 255, 0.6);
   left: 80px;
-  top: 55px;
-  bottom: 50px;
+  top: 60px;
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
+  height: 80%;
+  overflow: auto;
+  min-width: 300px;
 }
-/* 搜索功能 */
-.detailTab {
-  height: 400px;
+/* 河流信息 */
+/* .detailTab {
+  width: 4.6857rem;
+  height: 2.46rem;
+  overflow: auto;
   position: absolute;
-  background-color: rgba(255,255,255,0.6);
-  left: 500px;
-  right: 450px;
-  bottom: 50px;
+  background-color: rgba(255, 255, 255, 0.6);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
-}
+} */
+
+/* 天气预警 */
 .weatherTab {
-  height: 200px;
-  width: 300px;
+  height: 20%;
+  width: 20%;
   position: absolute;
-  background-color: rgba(255,255,255,0.6);
+  background-color: rgba(255, 255, 255, 0.6);
   right: 100px;
   top: 50px;
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
+  padding: 0.5%;
 }
 
 /*测量工具*/
 #topbar {
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   flex-direction: column;
 }
@@ -1825,38 +1849,24 @@ body {
   background: #4c4c4c;
   color: #fff;
 }
-.water-system-button{
-  color: white;
-  padding-right: 10px;
-  padding-left: 10px;
-  margin-right: 20px;
-  background-color: #79bbff;
-  border-radius: 5px;
-  height: 30px;
-  line-height: 30px;
-}
-.water-system-button:hover{
-  animation-duration: 0.5s;
-  background-color: #0171dc;
-  cursor: pointer;
-}
-.logo-title{
-  padding-right: 100px;
-}
-.nine-function-div{
+
+// .logo-title {
+//   padding-right: 100px;
+// }
+.nine-function-div {
   width: 32px;
   height: 32px;
 }
-.else-function-div .el-button{
+.else-function-div .el-button {
   background-color: #79bbff;
 }
 /*防止左边按钮变形*/
-.el-button{
+.el-button {
   padding: 0 9px !important;
   background-color: white;
   color: #6e6e6e;
 }
-.el-button:hover{
+.el-button:hover {
   background-color: #f3f3f3;
   color: #2e2e2e;
 }
@@ -1870,7 +1880,7 @@ body {
   top: 5px;
   color: #6e6e6e;
 }
-.right-top-close:hover{
+.right-top-close:hover {
   cursor: pointer;
 }
 
@@ -1900,12 +1910,7 @@ body {
 }
 
 #turqoise {
-  background-color: rgb(119,89,37);
+  background-color: rgb(119, 89, 37);
 }
 /*洪水海平面控制↑*/
-
-.esri-expand__content--expanded {
-  width: 300px !important;
-}
-
 </style>

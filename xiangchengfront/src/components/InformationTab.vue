@@ -319,7 +319,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .el-form-item__label {
   color: #333; /* 设置标签颜色 */
 }
@@ -341,8 +341,10 @@ export default {
   color: red;
 }
 .el-tabs__content {
-  height: 420px;
+  width: 2.46rem;
+  height: 2.46rem;
   overflow: auto;
+  display: flex;
 }
 .el-collapse-item__content {
   padding: 0;
