@@ -41,7 +41,7 @@
   <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')"/></div>
   <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')"/></div>
   <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')"/></div>
-  <div class="nine-function-div" id="waternet"><el-button type="primary" :icon="UserFilled" title="水网规划" @click="layerDisplayController('水网规划')"/></div>
+  <div class="nine-function-div" id="waternet"><el-button type="primary" :icon="Grid" title="水网规划" @click="layerDisplayController('水网规划')"/></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
   <div class="else-function-div" id="weatherPane"><el-button type="primary" :icon="PartlyCloudy" title="气象预警" @click="weatherPaneDisplay()" /></div>
@@ -188,6 +188,7 @@ import {
   PartlyCloudy,
   Umbrella,
   UserFilled,
+    Grid,
   WarnTriangleFilled
 } from '@element-plus/icons-vue'
 
@@ -228,6 +229,8 @@ export default {
       return WarnTriangleFilled
     },UserFilled() {
       return UserFilled
+    },Grid() {
+      return Grid
     },TrendCharts() {
       return TrendCharts
     },
@@ -473,6 +476,10 @@ export default {
           return layer.title === '采砂点位';
         })
         caisha.visible=true
+        let taiyangneng = map.layers.find(function(layer) {
+          return layer.title === '太阳能提灌站';
+        })
+        taiyangneng.visible=true
       }
       //回到主视图
       this.goHomeView()
@@ -809,6 +816,19 @@ export default {
           }
         })
 
+        let layer27 = new FeatureLayer({
+          url:apiUrl + "/27",
+          outFields:['*'],
+          visible:false,
+          title:"太阳能提灌站",
+          popupTemplate:{
+            content:(element)=>{
+              console.log(element.graphic.layer.title, element.graphic.attributes)
+              this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
+            }
+          }
+        })
+
         //用于作图的图层
         const graphicsLayer = new GraphicsLayer();
         graphicsLayer.title = "模型加载"
@@ -836,7 +856,7 @@ export default {
         map.add(layer26)   //涉河建筑物
         map.add(layer24)   //水网管线
         map.add(layer25)   //拟建水库
-
+        map.add(layer27)   //太阳能提灌站
         map.add(graphicsLayer)// 这是绘画图层
 
         let weatherExpand = new Expand({

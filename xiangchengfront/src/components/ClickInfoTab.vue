@@ -128,6 +128,13 @@
         <el-descriptions-item label="介绍">{{ disasterInfo.intro }}</el-descriptions-item>
       </el-descriptions>
     </div>
+    <div class="disasterInfo" v-if="name === '太阳能提灌站'">
+      <el-descriptions :border="true" :column="2">
+        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
+        <el-descriptions-item label="介绍">{{ disasterInfo.O_Comment }}</el-descriptions-item>
+      </el-descriptions>
+    </div>
   </el-dialog>
 </template>
 <script>
