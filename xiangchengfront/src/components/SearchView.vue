@@ -79,8 +79,8 @@ function getAllRiverData() {
 storageAllRiverData()
 </script>
 
-<style>
-/* 搜索板块 */
+<style scoped>
+/* 搜索功能板块 */
 .el-input__wrapper {
   width: 350px;
 }

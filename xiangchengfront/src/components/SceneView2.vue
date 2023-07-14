@@ -19,11 +19,11 @@ VITE_MAP_SERVER_URL=http://xiangcheng.natapp1.cc/arcgis/rest/services/xiangcheng
     <div class="measure-tools-wrapper">
       <div class="measure-tools">
         <div class="measure-tools-icon" @click="toggleDirectLine()"><el-icon color="rgb(110,110,110)" :size="20">
-          <EditPen />
-        </el-icon></div>
+            <EditPen />
+          </el-icon></div>
         <div class="measure-tools-icon" @click="toggleArea()"><el-icon color="rgb(110,110,110)" :size="20">
-          <Edit />
-        </el-icon></div>
+            <Edit />
+          </el-icon></div>
       </div>
     </div>
     <div class="map-FigureLayer">
@@ -52,9 +52,9 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer'
 import DirectLineMeasurement3D from '@arcgis/core/widgets/DirectLineMeasurement3D'
 import AreaMeasurement3D from '@arcgis/core/widgets/AreaMeasurement3D'
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery'
-import Camera from "@arcgis/core/Camera";
-import SpatialReference from "@arcgis/core/geometry/SpatialReference";
-import Search from "@arcgis/core/widgets/Search.js";
+import Camera from '@arcgis/core/Camera'
+import SpatialReference from '@arcgis/core/geometry/SpatialReference'
+import Search from '@arcgis/core/widgets/Search.js'
 
 import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion'
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
@@ -66,7 +66,7 @@ import { h } from 'vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
-import Basemap from "@arcgis/core/Basemap.js";
+import Basemap from '@arcgis/core/Basemap.js'
 
 export default {
   name: 'SceneView',
@@ -96,19 +96,19 @@ export default {
         let map = new WebScene({
           portalItem: {
             id: '5a392557cffb485f8fe004e668e9edc0'
-          },
+          }
           // basemap: 'arcgis-oceans'
         })
         let camera = new Camera({
           position: new Point({
             x: 99.738,
-            y: 27.420,
+            y: 27.42,
             z: 66574.05307454057,
             spatialReference: new SpatialReference({ wkid: 4326 })
           }),
           heading: 0,
           tilt: 68.60544723556448
-        });
+        })
         // Create the SceneView
         let view = new SceneView({
           // map：指定需要渲染的 Web 地图或场景实例。
@@ -117,7 +117,7 @@ export default {
           container: 'app',
           // center：指定地图视角的中心点坐标， [99.8, 29.1] 表示经度为 99.8，纬度为 29.1。
           // center: [99.8, 29.1],
-          camera:camera,
+          camera: camera,
           // zoom：指定地图的缩放级别,表示缩放级别为 10。
           zoom: 10,
           // environment：指定地图的环境设置，{ lighting: null } 表示使用默认的光照环境。
@@ -250,7 +250,7 @@ export default {
 
         let basemapGallery = new BasemapGallery({
           view: view,
-          source: [Basemap.fromId("hybrid"), Basemap.fromId("streets"),Basemap.fromId("satellite") ]
+          source: [Basemap.fromId('hybrid'), Basemap.fromId('streets'), Basemap.fromId('satellite')]
         })
         view.ui.add(basemapGallery, {
           position: 'bottom-right'
@@ -312,12 +312,12 @@ export default {
           }, 10000)
 
           view
-              .when(function () {
-                view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1]})
-              })
-              .catch(function (err) {
-                console.error('SceneView rejected:', err)
-              })
+            .when(function () {
+              view.goTo({ center: [data[0][0], data[0][1]], zoom: data[1] })
+            })
+            .catch(function (err) {
+              console.error('SceneView rejected:', err)
+            })
         })
       } catch (error) {
         console.error('地图初始化失败：', error)
@@ -379,7 +379,7 @@ export default {
       handler() {
         // console.log("1111");
         // this.initializeMap()
-        for(var i=0; i<FigureLayerInsideVisible.length; i++){
+        for (var i = 0; i < FigureLayerInsideVisible.length; i++) {
           //view.map.layers.items[0].allSublayers.items[i].visible 有没有其它办法调用这个变量
           view.map.layers.items[0].allSublayers.items[i].visible = FigureLayerInsideVisible[i]
         }
@@ -388,7 +388,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 /* *{
   margin: 0px;
 } */
@@ -405,10 +405,10 @@ body {
 .esri-basemap-gallery {
   max-width: 80px !important;
   max-height: 150px !important;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
 }
-.esri-basemap-gallery li{
-  background-color: rgba(0,0,0,0);
+.esri-basemap-gallery li {
+  background-color: rgba(0, 0, 0, 0);
 }
 .esri-direct-line-measurement-3d {
   display: none;

@@ -138,7 +138,6 @@
   </el-dialog>
 </template>
 <script>
-
 import { reactive, toRefs, watchEffect, watch, toRaw, onMounted } from 'vue'
 import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
 import axios from '../api/request'
@@ -149,8 +148,7 @@ import bus from '../utils/bus.js'
 export default {
   components: { ElDialog, ElTabs, ElTabPane, Radar, Search },
 
-  methods: {
-  },
+  methods: {},
   props: {
     attributes: {
       type: Object,
@@ -166,27 +164,27 @@ export default {
       dialogVisible: false,
       activeTab: 'disaster',
       disasterInfo: {},
-      name:""
+      name: ''
     })
 
     const fetchData = async () => {
       //监听 fid 的变化,因为父传过来的props可能产生异步,所以要监听props的变化
       watch(
-          () => props.attributes,
-          async newattributes => {
-            console.log(props.attributes, newattributes)
-            try {
-              // const disasterInfoRes = await axios({ url: `/api/water-systems/${newattributes.FID}`, method: 'get' }) //水系基本信息
-              // state.disasterInfo = disasterInfoRes.data
+        () => props.attributes,
+        async newattributes => {
+          console.log(props.attributes, newattributes)
+          try {
+            // const disasterInfoRes = await axios({ url: `/api/water-systems/${newattributes.FID}`, method: 'get' }) //水系基本信息
+            // state.disasterInfo = disasterInfoRes.data
 
-              state.disasterInfo = props.attributes
-              state.name = props.name
-              console.log('在这里请求数据', state.disasterInfo)
-            } catch (error) {
-              console.error(error)
-            }
-          },
-          { immediate: true }
+            state.disasterInfo = props.attributes
+            state.name = props.name
+            console.log('在这里请求数据', state.disasterInfo)
+          } catch (error) {
+            console.error(error)
+          }
+        },
+        { immediate: true }
       ) // 立即执行一次
     }
 
@@ -214,7 +212,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .disasterEscapeInfo-img {
   width: 100%;
   height: 100%;

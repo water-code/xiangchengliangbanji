@@ -61,7 +61,7 @@ function getAllRiverData() {
 storageAllRiverData()
 </script>
 
-<style>
+<style scoped>
 /* 搜索板块 */
 .search {
   width: 100%;
