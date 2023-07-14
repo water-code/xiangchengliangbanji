@@ -19,7 +19,7 @@
         <CloseBold />
       </el-icon></div>
     <SearchTab></SearchTab>
-  </div>=
+  </div>
   <div class="detailTab" @mousedown="moveBox">
     <div class="right-top-close" @click="detailTabClose">
       <el-icon>
@@ -51,10 +51,11 @@
   <div class="nine-function-div" id="health"><el-button type="primary" :icon="Umbrella" title="健康评价" @click="layerDisplayController('健康评价')" /></div>
   <div class="nine-function-div" id="disaster"><el-button type="primary" :icon="WarnTriangleFilled" title="灾害点" @click="layerDisplayController('灾害点')" /></div>
   <div class="nine-function-div" id="relocation"><el-button type="primary" :icon="UserFilled" title="移民搬迁" @click="layerDisplayController('移民搬迁')" /></div>
+  <div class="nine-function-div" id="waternet"><el-button type="primary" :icon="Grid" title="水网规划" @click="layerDisplayController('水网规划')" /></div>
 
   <div class="else-function-div" id="searchPane"><el-button type="primary" :icon="TrendCharts" title="搜索数据" @click="searchPaneDisplay()" /></div>
   <div class="else-function-div" id="weatherPane"><el-button type="primary" :icon="PartlyCloudy" title="气象预警" @click="weatherPaneDisplay()" /></div>
-  <div class="else-function-div" id="home"><el-button type="primary" :icon="House" title="正视角" @click="goHomeView()" /></div>
+  <div class="else-function-div" id="home"><el-button type="primary" :icon="House" title="正视角" @click="goHomeView(true)" /></div>
 
   <div id="sketchPanel" class="esri-widget">
     <div id="startbuttons">
@@ -161,7 +162,24 @@ import Search from '@arcgis/core/widgets/Search'
 
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer'
 import Point from '@arcgis/core/geometry/Point'
-import { Check, Close, CloseBold, Edit, Flag, House, Lock, PieChart, SortDown, SortUp, TrendCharts, PartlyCloudy, Umbrella, UserFilled, WarnTriangleFilled } from '@element-plus/icons-vue'
+import {
+  Check,
+  Close,
+  CloseBold,
+  Edit,
+  Flag,
+  House,
+  Lock,
+  PieChart,
+  SortDown,
+  SortUp,
+  TrendCharts,
+  PartlyCloudy,
+  Umbrella,
+  UserFilled,
+  WarnTriangleFilled,
+  Grid
+} from '@element-plus/icons-vue'
 
 import bus from '../utils/bus.js'
 import SearchView from './SearchView.vue'
@@ -180,6 +198,9 @@ import Slider from '@arcgis/core/widgets/Slider.js'
 export default {
   name: 'SceneView',
   computed: {
+    Grid() {
+      return Grid
+    },
     Edit() {
       return Edit
     },
@@ -234,8 +255,8 @@ export default {
     }
   },
   created() {
-    document.body.style.marginTop = '40px'
-    document.body.style.width = '100%'
+    document.body.style.marginTop = '32px'
+    // document.body.style.width = '100%'
   },
   mounted() {
     this.initializeMap()
@@ -334,6 +355,16 @@ export default {
       layers.forEach(function (layer) {
         layer.visible = false
       })
+      //但是模型加载的图层和海平面的图层必须一直开启
+      let  haipingmian= map.layers.find(function (layer) {
+        return layer.title === '洪水海平面'
+      })
+      haipingmian.visible = true
+      let moxing = map.layers.find(function (layer) {
+        return layer.title === '模型加载'
+      })
+      moxing.visible = true
+
       // 乡镇名称
       let xiangzhenLayer = map.layers.find(function (layer) {
         return layer.title === '乡镇分区图'
@@ -385,10 +416,14 @@ export default {
         })
         yinshuigongcheng.visible = true
       } else if (element === '岸线规划功能分区') {
-        let anxianguihua = map.layers.find(function (layer) {
-          return layer.title === '岸线规划功能分区'
+        let xuquanxianguihua = map.layers.find(function (layer) {
+          return layer.title === '许曲岸线规划功能分区'
         })
-        anxianguihua.visible = true
+        xuquanxianguihua.visible = true
+        let dingquanxianguihua = map.layers.find(function (layer) {
+          return layer.title === '定曲岸线规划功能分区'
+        })
+        dingquanxianguihua.visible = true
       } else if (element === '河湖划界') {
         let hehuhuajie = map.layers.find(function (layer) {
           return layer.title === '河湖划界'
@@ -516,188 +551,188 @@ export default {
         //加载map service
         let apiUrl = import.meta.env.VITE_MAP_SERVER_URL
         let layer0 = new FeatureLayer({
-          url: apiUrl + '/0',
-          outFields: ['*'],
-          visible: false,
-          title: '护岸',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/0",
+          outFields:['*'],
+          visible:false,
+          title:"护岸",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer1 = new FeatureLayer({
-          url: apiUrl + '/1',
-          outFields: ['*'],
-          visible: false,
-          title: '堤防',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/1",
+          outFields:['*'],
+          visible:false,
+          title:"堤防",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer2 = new FeatureLayer({
-          url: apiUrl + '/2',
-          outFields: ['*'],
-          visible: false,
-          title: '水资源',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/2",
+          outFields:['*'],
+          visible:false,
+          title:"水资源",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer3 = new FeatureLayer({
-          url: apiUrl + '/3',
-          outFields: ['*'],
-          visible: false,
-          title: '灾害点',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/3",
+          outFields:['*'],
+          visible:false,
+          title:"灾害点",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer4 = new FeatureLayer({
-          url: apiUrl + '/4',
-          outFields: ['*'],
-          visible: false,
-          title: '水电站',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/4",
+          outFields:['*'],
+          visible:false,
+          title:"水电站",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer5 = new FeatureLayer({
-          url: apiUrl + '/5',
-          outFields: ['*'],
-          visible: false,
-          title: '水文站',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/5",
+          outFields:['*'],
+          visible:false,
+          title:"水文站",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer6 = new FeatureLayer({
-          url: apiUrl + '/6',
-          outFields: ['*'],
-          visible: false,
-          title: '岸线规划功能分区',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/6",
+          outFields:['*'],
+          visible:false,
+          title:"定曲岸线规划功能分区",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer7 = new FeatureLayer({
-          url: apiUrl + '/7',
-          outFields: ['*'],
-          visible: false,
-          title: '岸线规划功能分区',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/7",
+          outFields:['*'],
+          visible:false,
+          title:"许曲岸线规划功能分区",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer8 = new FeatureLayer({
-          url: apiUrl + '/8',
-          outFields: ['*'],
-          visible: true,
-          title: '水系',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/8",
+          outFields:['*'],
+          visible:true,
+          title:"水系",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer9 = new FeatureLayer({
-          url: apiUrl + '/9',
-          outFields: ['*'],
-          visible: true,
-          title: '县（区）界',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/9",
+          outFields:['*'],
+          visible:true,
+          title:"县（区）界",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer10 = new FeatureLayer({
-          url: apiUrl + '/10',
-          outFields: ['*'],
-          visible: true,
-          title: '乡（镇）界',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/10",
+          outFields:['*'],
+          visible:true,
+          title:"乡（镇）界",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer12 = new FeatureLayer({
-          url: apiUrl + '/12',
-          outFields: ['*'],
-          visible: true,
-          title: '晕线'
+          url:apiUrl + "/12",
+          outFields:['*'],
+          visible:true,
+          title:"晕线"
         })
         let layer13 = new FeatureLayer({
-          url: apiUrl + '/13',
-          outFields: ['*'],
-          visible: true,
-          title: '晕线'
+          url:apiUrl + "/13",
+          outFields:['*'],
+          visible:true,
+          title:"晕线"
         })
         let layer14 = new FeatureLayer({
-          url: apiUrl + '/14',
-          outFields: ['*'],
-          visible: true,
-          title: '乡镇分区图',
-          opacity: 0.5
+          url:apiUrl + "/14",
+          outFields:['*'],
+          visible:true,
+          title:"乡镇分区图",
+          opacity:0.5
         })
         let layer15 = new FeatureLayer({
-          url: apiUrl + '/15',
-          outFields: ['*'],
-          visible: false,
-          title: '河湖划界',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/15",
+          outFields:['*'],
+          visible:false,
+          title:"河湖划界",
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer16 = new FeatureLayer({
-          url: apiUrl + '/16',
-          outFields: ['*'],
-          visible: false,
-          title: '灌区',
-          opacity: 0.7,
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/16",
+          outFields:['*'],
+          visible:false,
+          title:"灌区",
+          opacity:0.7,
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
-        let layer17 = new FeatureLayer({
-          url: apiUrl + '/17',
-          outFields: ['*'],
-          visible: false,
-          title: '拟建水库',
-          popupTemplate: {
-            content: element => {
+        let layer25 = new FeatureLayer({
+          url:apiUrl + "/25",
+          outFields:['*'],
+          visible:false,
+          title:"拟建水库",
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -705,62 +740,62 @@ export default {
         })
 
         let waterLayer = new FeatureLayer({
-          url: apiUrl + '/18',
-          title: '洪水海平面',
-          opacity: 0.9,
+          url: apiUrl + "/18",
+          title:"洪水海平面",
+          opacity:0.9,
           elevationInfo: {
-            mode: 'absolute-height',
+            mode: "absolute-height",
             offset: 0
           },
           renderer: {
-            type: 'simple',
+            type: "simple",
             symbol: {
-              type: 'polygon-3d',
+              type: "polygon-3d",
               symbolLayers: [
                 {
-                  type: 'water',
+                  type: "water",
                   waveDirection: 260,
-                  color: '#25427c',
-                  waveStrength: 'moderate',
-                  waterbodySize: 'medium'
+                  color: "#25427c",
+                  waveStrength: "moderate",
+                  waterbodySize: "medium"
                 }
               ]
             }
           }
-        })
+        });
         let layer20 = new FeatureLayer({
-          url: apiUrl + '/20',
-          outFields: ['*'],
-          visible: false,
-          opacity: 0.8,
-          title: '地质灾害发生实际区域和转移路线',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/20",
+          outFields:['*'],
+          visible:false,
+          opacity:0.8,
+          title:"地质灾害发生实际区域和转移路线",
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer21 = new FeatureLayer({
-          url: apiUrl + '/21',
-          outFields: ['*'],
-          visible: false,
-          title: '引水工程',
-          opacity: 0.7,
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/21",
+          outFields:['*'],
+          visible:false,
+          title:"引水工程",
+          opacity:0.7,
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
         let layer24 = new FeatureLayer({
-          url: apiUrl + '/24',
-          outFields: ['*'],
-          visible: false,
-          title: '水网管线',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/24",
+          outFields:['*'],
+          visible:false,
+          title:"水网管线",
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -768,38 +803,38 @@ export default {
         })
 
         let layer26 = new FeatureLayer({
-          url: apiUrl + '/26',
-          outFields: ['*'],
-          visible: false,
-          title: '涉河建筑物',
-          popupTemplate: {
-            content: element => {
+          url:apiUrl + "/26",
+          outFields:['*'],
+          visible:false,
+          title:"涉河建筑物",
+          popupTemplate:{
+            content:(element)=>{
               // console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
 
-        let layer27 = new FeatureLayer({
-          url: apiUrl + '/17',
-          outFields: ['*'],
-          visible: false,
-          title: '采砂点位',
-          popupTemplate: {
-            content: element => {
+        let layer17 = new FeatureLayer({
+          url:apiUrl + "/17",
+          outFields:['*'],
+          visible:false,
+          title:"采砂点位",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
         })
 
-        let layer28 = new FeatureLayer({
-          url: apiUrl + '/27',
-          outFields: ['*'],
-          visible: false,
-          title: '太阳能提灌站',
-          popupTemplate: {
-            content: element => {
+        let layer27 = new FeatureLayer({
+          url:apiUrl + "/27",
+          outFields:['*'],
+          visible:false,
+          title:"太阳能提灌站",
+          popupTemplate:{
+            content:(element)=>{
               console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
@@ -807,7 +842,8 @@ export default {
         })
 
         //用于作图的图层
-        const graphicsLayer = new GraphicsLayer()
+        const graphicsLayer = new GraphicsLayer();
+        graphicsLayer.title = "模型加载"
         map.add(waterLayer)
         map.add(layer21)
         map.add(layer15)
@@ -820,7 +856,7 @@ export default {
         map.add(layer7)
         map.add(layer17)
         map.add(layer16)
-        map.add(layer20) //灾害区域
+        map.add(layer20)   //灾害区域
         map.add(layer6)
         map.add(layer5)
         map.add(layer4)
@@ -828,6 +864,11 @@ export default {
         map.add(layer2)
         map.add(layer1)
         map.add(layer0)
+        map.add(layer17)   //采砂点位
+        map.add(layer26)   //涉河建筑物
+        map.add(layer24)   //水网管线
+        map.add(layer25)   //拟建水库
+        map.add(layer27)   //太阳能提灌站
 
         map.add(graphicsLayer) // 这是绘画图层
 
@@ -870,65 +911,7 @@ export default {
         })
         const legendExpand = new Expand({
           content: new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layer0,
-                title: '护岸'
-              },
-              {
-                layer: layer1,
-                title: '堤防'
-              },
-              {
-                layer: layer2,
-                title: '水资源'
-              },
-              {
-                layer: layer3,
-                title: '地质灾害点'
-              },
-              {
-                layer: layer4,
-                title: '水电站 '
-              },
-              {
-                layer: layer5,
-                title: '水文站'
-              },
-              {
-                layer: layer6,
-                title: '岸线规划'
-              },
-              {
-                layer: layer7,
-                title: '岸线规划'
-              },
-              {
-                layer: layer8,
-                title: '水系'
-              },
-              {
-                layer: layer9,
-                title: '县（区）界 '
-              },
-              {
-                layer: layer10,
-                title: '乡（镇）界'
-              },
-              {
-                layer: layer15,
-                title: '河湖划界'
-              },
-              {
-                layer: layer16,
-                title: '灌区'
-              },
-              {
-                layer: layer17,
-                title: '拟建水库'
-              }
-            ]
+            view: view
           }),
           view: view,
           expanded: false
@@ -1036,6 +1019,7 @@ export default {
         view.ui.add('health', 'top-left')
         view.ui.add('disaster', 'top-left')
         view.ui.add('relocation', 'top-left')
+        view.ui.add('waternet', 'top-left')
 
         // 控制洪水得
 
@@ -1533,7 +1517,14 @@ export default {
     detailPaneDisplay() {
       document.getElementsByClassName('detailTab')[0].style.display = 'block'
     },
-    goHomeView() {
+    goHomeView(layerDis=false) {
+      if(layerDis){
+        let map = view.map
+        let layers = map.layers
+        layers.forEach(function (layer) {
+          layer.visible = true
+        })
+      }
       //回到主视图
       let camera = new Camera({
         position: new Point({
@@ -1904,6 +1895,7 @@ ul {
 
 /*洪水海平面控制*/
 #menu {
+  min-width: 200px !important;
   padding: 1em;
 }
 

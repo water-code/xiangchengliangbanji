@@ -50,18 +50,18 @@
         <el-descriptions-item label="名称">{{ disasterInfo.stnm }}</el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="disasterInfo" v-if="name === '岸线规划'">
+    <div class="disasterInfo" v-if="name === '许曲岸线规划功能分区' || name === '定曲岸线规划功能分区'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.area }}</el-descriptions-item>
+        <el-descriptions-item label="面积">{{ disasterInfo.area }}</el-descriptions-item>
         <el-descriptions-item label="基本需求">{{ disasterInfo.basis }}</el-descriptions-item>
-        <el-descriptions-item label="市">{{ disasterInfo.city }}</el-descriptions-item>
-        <el-descriptions-item label="县">{{ disasterInfo.county }}</el-descriptions-item>
+        <el-descriptions-item label="所属市州">{{ disasterInfo.city }}</el-descriptions-item>
+        <el-descriptions-item label="所属县">{{ disasterInfo.county }}</el-descriptions-item>
         <el-descriptions-item label="GID">{{ disasterInfo.gid }}</el-descriptions-item>
         <el-descriptions-item label="长度">{{ disasterInfo.len }}</el-descriptions-item>
-        <el-descriptions-item label="地区ID">{{ disasterInfo.regionid }}</el-descriptions-item>
+        <el-descriptions-item label="区域ID">{{ disasterInfo.regionid }}</el-descriptions-item>
         <el-descriptions-item label="限制">{{ disasterInfo.restraints }}</el-descriptions-item>
         <el-descriptions-item label="河流名称">{{ disasterInfo.rname }}</el-descriptions-item>
-        <el-descriptions-item label="岸别(右1)">{{ disasterInfo.side }}</el-descriptions-item>
+        <el-descriptions-item label="岸别">{{ disasterInfo.side === 1?"右":"左" }}</el-descriptions-item>
         <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
       </el-descriptions>
     </div>
