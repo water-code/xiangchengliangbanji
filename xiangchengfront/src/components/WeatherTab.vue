@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-container">
+  <!-- <div class="weather-container">
     <div class="weather-date">
       {{ weatherDate }}
     </div>
@@ -10,60 +10,112 @@
       <div class="weather-content-row">温 度：{{ temperature }}</div>
       <div class="weather-content-row">能见度：{{ visibility }}</div>
     </div>
-  </div>
+  </div> -->
+  <div id="he-plugin-standard"></div>
 </template>
 <script>
-import { reactive, toRefs, ref } from 'vue'
-import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
-import axios from '../api/request.js'
+// import { reactive, toRefs, ref } from 'vue'
+// import { ElDialog, ElTabs, ElTabPane } from 'element-plus'
+// import axios from '../api/request.js'
 
+import { onMounted } from 'vue'
+
+// export default {
+//   components: { ElDialog, ElTabs, ElTabPane },
+//   data() {
+//     return {}
+//   },
+//   methods: {},
+//   computed: {},
+//   props: {},
+//   mounted() {},
+//   setup(props) {
+//     const state = reactive({
+//       weatherDate: ref(''),
+//       weatherKeyPoint: ref(''),
+//       cloudrate: ref(''),
+//       humidity: ref(''),
+//       temperature: ref(''),
+//       visibility: ref('')
+//     })
+
+//     let url = '/api/weather?lat=99.78&lon=29.00'
+//     const weatherInfo = axios({ url: url, method: 'get' }).then(weatherInfo => {
+//       console.log('嘿嘿', weatherInfo)
+//       //weatherInfo.data.server_time   //服务器时间
+//       //weatherInfo.data.result.forecast_keypoint  预报话
+//       let date = new Date()
+//       state.weatherDate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+//       state.weatherKeyPoint = weatherInfo.data.result.forecast_keypoint
+//       state.cloudrate = weatherInfo.data.result.realtime.cloudrate
+//       state.humidity = weatherInfo.data.result.realtime.humidity
+//       state.temperature = weatherInfo.data.result.realtime.temperature
+//       state.visibility = weatherInfo.data.result.realtime.visibility
+//       //weatherInfo.data.result.realtime.cloudrate
+//       //weatherInfo.data.result.realtime.humidity
+//       //weatherInfo.data.result.realtime.temperature
+//       //weatherInfo.data.result.realtime.visibility
+
+//       console.log(state.weatherDate)
+//       console.log(state.weatherKeyPoint)
+//     })
+//     return {
+//       ...toRefs(state)
+//     }
+//   }
+// }
 export default {
-  components: { ElDialog, ElTabs, ElTabPane },
-  data() {
-    return {}
-  },
-  methods: {},
-  computed: {},
-  props: {},
-  mounted() {},
-  setup(props) {
-    const state = reactive({
-      weatherDate: ref(''),
-      weatherKeyPoint: ref(''),
-      cloudrate: ref(''),
-      humidity: ref(''),
-      temperature: ref(''),
-      visibility: ref('')
+  setup() {
+    onMounted(() => {
+      // document.getElementById('he-plugin-standard').style.width = '100%'
+      // console.log(document.getElementById('he-plugin-standard').style.width)
+      // document.getElementById('he-plugin-standard').style.heigth = '100%'
+      // document.getElementById('he-plugin-standard').style.backgroundSize = 'auto'
+      window.WIDGET = {
+        CONFIG: {
+          layout: '2',
+          width: 230,
+          height: 270,
+          background: '1',
+          dataColor: 'FFFFFF',
+          language: 'zh',
+          borderRadius: '10',
+          key: '32e91b858a734585a1948daa59381138',
+          horizontal: 'left',
+          city: '雅安'
+        }
+      }
+      // let script = document.createElement('script')
+      // script.type = 'text/javascript'
+      // script.src = 'https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0'
+      // document.getElementsByTagName('head')[0].appendChild(script)
+      ;(function (d) {
+        var c = d.createElement('link')
+        c.rel = 'stylesheet'
+        c.href = '../../static/css/he-standard.css'
+        // c.href = 'https://widget.qweather.net/standard/static/css/he-standard.css?v=1.4.0'
+        var s = d.createElement('script')
+        s.src = '../../static/js/he-standard.js'
+        s.type = 'text/javascript'
+        // s.src = 'https://widget.qweather.net/standard/static/js/he-standard.js?v=1.4.0'
+        var sn = d.getElementsByTagName('script')[0]
+        sn.parentNode.insertBefore(c, sn)
+        sn.parentNode.insertBefore(s, sn)
+        // s.onload = () => {
+        //   //自动宽度
+        //   setTimeout(() => {
+        //     document.getElementById('he-plugin-standard').style.width = '100%'
+        //     document.getElementById('he-plugin-standard').style.heigth = '100%'
+        //   }, 0)
+        // }
+      })(document)
     })
-
-    let url = '/api/weather?lat=99.78&lon=29.00'
-    const weatherInfo = axios({ url: url, method: 'get' }).then(weatherInfo => {
-      console.log('嘿嘿', weatherInfo)
-      //weatherInfo.data.server_time   //服务器时间
-      //weatherInfo.data.result.forecast_keypoint  预报话
-      let date = new Date()
-      state.weatherDate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
-      state.weatherKeyPoint = weatherInfo.data.result.forecast_keypoint
-      state.cloudrate = weatherInfo.data.result.realtime.cloudrate
-      state.humidity = weatherInfo.data.result.realtime.humidity
-      state.temperature = weatherInfo.data.result.realtime.temperature
-      state.visibility = weatherInfo.data.result.realtime.visibility
-      //weatherInfo.data.result.realtime.cloudrate
-      //weatherInfo.data.result.realtime.humidity
-      //weatherInfo.data.result.realtime.temperature
-      //weatherInfo.data.result.realtime.visibility
-
-      console.log(state.weatherDate)
-      console.log(state.weatherKeyPoint)
-    })
-    return {
-      ...toRefs(state)
-    }
   }
 }
 </script>
-<style scoped>
-.weather-container {
+<!-- <script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script> -->
+<style scoped lang="less">
+/* .weather-container {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -80,5 +132,10 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: left;
+} */
+#he-plugin-standard[data-v-75e43ed3] {
+  width: 100% !important;
+  height: 100% !important;
+  background-size: auto !important;
 }
 </style>

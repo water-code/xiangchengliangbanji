@@ -112,4 +112,12 @@ export default {
   overflow: auto;
   // margin-top: 50px;
 }
+
+// 背景色调制透明
+/deep/.el-descriptions__body {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+/deep/.el-descriptions__label.el-descriptions__cell.is-bordered-label {
+  background-color: rgba(255, 255, 255, 0);
+}
 </style>
