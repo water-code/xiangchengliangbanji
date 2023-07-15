@@ -67,10 +67,6 @@ import { onMounted } from 'vue'
 export default {
   setup() {
     onMounted(() => {
-      // document.getElementById('he-plugin-standard').style.width = '100%'
-      // console.log(document.getElementById('he-plugin-standard').style.width)
-      // document.getElementById('he-plugin-standard').style.heigth = '100%'
-      // document.getElementById('he-plugin-standard').style.backgroundSize = 'auto'
       window.WIDGET = {
         CONFIG: {
           layout: '2',
@@ -101,15 +97,14 @@ export default {
         var sn = d.getElementsByTagName('script')[0]
         sn.parentNode.insertBefore(c, sn)
         sn.parentNode.insertBefore(s, sn)
-        // s.onload = () => {
-        //   //自动宽度
-        //   setTimeout(() => {
-        //     document.getElementById('he-plugin-standard').style.width = '100%'
-        //     document.getElementById('he-plugin-standard').style.heigth = '100%'
-        //   }, 0)
-        // }
       })(document)
     })
+    window.onload = function () {
+      // 在这里放置你的代码
+      document.getElementById('he-plugin-standard').style.width = '100%'
+      document.getElementById('he-plugin-standard').style.heigth = '100%'
+      document.getElementById('he-plugin-standard').style.backgroundSize = 'auto'
+    }
   }
 }
 </script>
@@ -133,9 +128,12 @@ export default {
   justify-content: space-around;
   align-items: left;
 } */
-#he-plugin-standard[data-v-75e43ed3] {
-  width: 100% !important;
-  height: 100% !important;
-  background-size: auto !important;
+#he-plugin-standard {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

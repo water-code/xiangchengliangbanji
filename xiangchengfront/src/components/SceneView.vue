@@ -1761,10 +1761,12 @@ ul {
 
 /* 天气预警 */
 .weatherTab {
-  // height: 40%;
-  // width: 20%;
-  width: 230px;
-  height: 270px;
+  // height: 20%;
+  width: 14%;
+  min-height: 250px;
+  min-width: 200px;
+  // width: 230px;
+  // height: 270px;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
   right: 100px;
@@ -1772,7 +1774,7 @@ ul {
   border-radius: 10px;
   box-shadow: #6e6e6e;
   display: none;
-  padding: 0.5%;
+  padding: 0.8%;
 }
 
 /*测量工具*/
