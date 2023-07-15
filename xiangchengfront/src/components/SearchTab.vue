@@ -339,6 +339,6 @@ export default {
 /deep/.el-table tr,
 /deep/.el-table td.el-table__cell,
 /deep/.el-table th.el-table__cell.is-leaf {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 </style>
