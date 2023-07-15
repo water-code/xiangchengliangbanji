@@ -239,7 +239,8 @@ export default {
   },
   created() {
     document.body.style.marginTop = '32px'
-    // document.body.style.width = '100%'
+    document.body.style.height = '100%'
+    document.body.style.overflow = 'hidden'
   },
   mounted() {
     this.initializeMap()
@@ -981,6 +982,7 @@ export default {
         })
         let floodExpand = new Expand({
           view: view,
+          expandTooltip: '洪水海平面设置面板展开',
           content: document.getElementById('menu'),
           group: 'top-right'
         })
@@ -1004,8 +1006,14 @@ export default {
         view.ui.add('relocation', 'top-left')
         view.ui.add('waternet', 'top-left')
 
-        // 控制洪水得
+        let ccWidget = new CoordinateConversion({
+          view: view
+        });
 
+        // 坐标显示插件
+        view.ui.add(ccWidget, "bottom-left");
+
+        // 控制洪水得
         view.ui.add(floodExpand, 'bottom-right')
 
         //以下是设置睡眠调整得东西
@@ -1306,7 +1314,7 @@ export default {
 
         const configurationExpand = new Expand({
           expandIcon: 'gear',
-          expandTooltip: 'Show configuration',
+          expandTooltip: '模型绘制参数设置',
           expanded: false,
           view: view,
           content: document.getElementById('configurationDiv')
@@ -1723,6 +1731,7 @@ ul {
 }
 /* 搜索功能 */
 .searchTab {
+  overflow: auto;
   width: 24%;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
@@ -1738,8 +1747,7 @@ ul {
 /* 河流信息 */
 .detailTab {
   width: 50%;
-  height: 50%;
-  // overflow: auto;
+  max-width: 1452px;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
   left: 60%;
