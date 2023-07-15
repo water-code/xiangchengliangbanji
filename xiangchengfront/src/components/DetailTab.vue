@@ -13,6 +13,10 @@
             <el-descriptions-item label="结束位置">{{ shuixiData.endLocation }}</el-descriptions-item>
             <el-descriptions-item label="级别">{{ shuixiData.riverLevel }}</el-descriptions-item>
             <el-descriptions-item label="河口流量">{{ shuixiData.estuaryFlow }}</el-descriptions-item>
+            <el-descriptions-item label="流域总水量">{{ shuixiData.basinvol }}</el-descriptions-item>
+            <el-descriptions-item label="径流">{{ shuixiData.runoff }}</el-descriptions-item>
+            <el-descriptions-item label="可用水量">{{ shuixiData.available }}</el-descriptions-item>
+            <el-descriptions-item label="已用水量">{{ shuixiData.consum }}</el-descriptions-item>
             <el-descriptions-item label="健康评价"><img class="charts-img" src="http://xiangoos.ruankun.xyz/%E5%81%A5%E5%BA%B7%E8%AF%84%E4%BB%B7.jpg"></el-descriptions-item>
           </el-descriptions>
         </div>

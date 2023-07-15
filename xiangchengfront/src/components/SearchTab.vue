@@ -310,6 +310,7 @@ export default {
 }
 </script>
 <style scoped lang="less">
+
 .search-tab > .el-tabs__content {
   /* padding: 5px; */
   color: #6b778c;
