@@ -78,7 +78,7 @@ export default {
           borderRadius: '10',
           key: '32e91b858a734585a1948daa59381138',
           horizontal: 'left',
-          city: '乡城'
+          city: '乡城县'
         }
       }
       // let script = document.createElement('script')
