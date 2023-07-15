@@ -56,4 +56,5 @@ export default {
   <ClickInfoTab :attributes="attributes" :name="name" ref="clickInfoTab"></ClickInfoTab>
 </template>
 <style scoped>
+
 </style>

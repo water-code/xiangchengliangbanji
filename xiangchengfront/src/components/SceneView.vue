@@ -239,7 +239,8 @@ export default {
   },
   created() {
     document.body.style.marginTop = '32px'
-    // document.body.style.width = '100%'
+    document.body.style.height = '100%'
+    document.body.style.overflow = 'hidden'
   },
   mounted() {
     this.initializeMap()
@@ -1730,6 +1731,7 @@ ul {
 }
 /* 搜索功能 */
 .searchTab {
+  overflow: auto;
   width: 24%;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
@@ -1745,8 +1747,7 @@ ul {
 /* 河流信息 */
 .detailTab {
   width: 50%;
-  height: 50%;
-  // overflow: auto;
+  max-width: 1452px;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
   left: 60%;
