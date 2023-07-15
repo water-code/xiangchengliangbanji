@@ -58,22 +58,10 @@ public class DisasterPreventionPoint {
 
 }
 enum DisasterPreventionPointType {
-    SHELTER("避难所"),
-    CAUTION_ZONE("警戒区"),
-    HIGH_RISK_AREA("易发地区");
-
-    private String value;
-
-    DisasterPreventionPointType(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
+    村落,
+    乡镇,
+    其他,
+    厂矿,
+    企业,
+    景区,
 }

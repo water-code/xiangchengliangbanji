@@ -1488,8 +1488,7 @@ export default {
         bus.on('shuixiCellClick', data => {
           this.detailPaneDisplay()
           //还要进行图层的定位
-          console.log(data)
-          this.layerDataLocation('水系', data.id, 14)
+          this.layerDataLocation('水系', data[0].id, 14)
         })
       } catch (error) {
         console.error('地图初始化失败：', error)
@@ -1746,7 +1745,7 @@ ul {
 }
 /* 河流信息 */
 .detailTab {
-  width: 50%;
+  //width: 50%;
   max-width: 1452px;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.6);
@@ -1756,7 +1755,7 @@ ul {
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
-  min-width: 800px;
+  min-width: 990px;
   min-height: 480px;
 }
 

@@ -63,6 +63,7 @@ public class WaterProjects {
 
 enum WaterProjectType {
     水电站,
+    水文站,
     水库,
     取水工程
 }

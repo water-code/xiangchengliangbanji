@@ -87,6 +87,13 @@ public class GenericController {
         return new ResponseEntity<>(waterSafeties, HttpStatus.OK);
     }
 
+    @GetMapping("/disasterpoint")
+    @ApiOperation("通过表名获取所有数据")
+    public ResponseEntity<List<DisasterPreventionPoint>> getAllDisasterPreventionPoint() {
+        List<DisasterPreventionPoint> disasterPreventionPoints = generalService.getAllDisasterPreventionPoint();
+        return new ResponseEntity<>(disasterPreventionPoints, HttpStatus.OK);
+    }
+
     @GetMapping("/waternetpipe/byriver")
     @ApiOperation("通过表名获取所有数据")
     public ResponseEntity<List<WaterNetPipe>> getAllWaterNetPipeByRiver(@RequestParam String river) {
@@ -226,5 +233,12 @@ public class GenericController {
     public ResponseEntity<List<HealthEvaluation>> getHealthEvaluationByRegion(@RequestParam String region) {
         List<HealthEvaluation> healthEvaluations = generalService.getAllHealthEvaluationByRegion(region);
         return new ResponseEntity<>(healthEvaluations, HttpStatus.OK);
+    }
+
+    @GetMapping("/disasterpoint/byaddress")
+    @ApiOperation("通过region字段获取数据")
+    public ResponseEntity<List<DisasterPreventionPoint>> getDisasterPreventionPointByAddress(@RequestParam String address) {
+        List<DisasterPreventionPoint> disasterPreventionPoints = generalService.getAllDisasterPreventionPointByAddress(address);
+        return new ResponseEntity<>(disasterPreventionPoints, HttpStatus.OK);
     }
 }

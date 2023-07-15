@@ -31,6 +31,9 @@ public class GeneralService {
     @Autowired
     HealthEvaluationRepository healthEvaluationRepository;
 
+    @Autowired
+    DisasterPreventionPointRepository disasterPreventionPointRepository;
+
     //获取所有
     public List<WaterNetPipe> getAllWaterNetPipe(){
         return waterNetPipeRepository.findAll();
@@ -141,4 +144,11 @@ public class GeneralService {
         return healthEvaluationRepository.findAllByRegionContaining(region);
     }
 
+    public List<DisasterPreventionPoint> getAllDisasterPreventionPointByAddress(String address) {
+        return disasterPreventionPointRepository.findAllByAddressContaining(address);
+    }
+
+    public List<DisasterPreventionPoint> getAllDisasterPreventionPoint() {
+        return disasterPreventionPointRepository.findAll();
+    }
 }

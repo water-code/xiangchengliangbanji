@@ -27,7 +27,7 @@
                 <el-option label="尼斯乡" value="尼斯乡" />
                 <el-option label="青德乡" value="青德乡" />
                 <el-option label="正斗乡" value="正斗乡" />
-                <el-option label="香巴拉镇" value="香巴拉镇" />
+                <el-option label="香巴拉" value="香巴拉" />
                 <el-option label="定波乡" value="定波乡" />
                 <el-option label="水洼乡" value="水洼乡" />
                 <el-option label="沙贡乡" value="沙贡乡" />
@@ -39,10 +39,72 @@
               </el-select>
             </template>
             <template #append>
-              <el-button :icon="Search" />
+              <el-button :icon="Search"  @click="searchWithRegion"/>
             </template>
           </el-input>
         </div>
+      </div>
+      <div class="data-table">
+        <el-table  v-if="watersafetyresult.length !== 0" :data="watersafetyresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="type" label="类型" />
+        </el-table>
+        <el-table  v-if="waterresourcesresult.length !== 0" :data="waterresourcesresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="resource_type" label="类型" />
+          <el-table-column prop="extractionRate" label="利用率" />
+        </el-table>
+        <el-table  v-if="waterprojectsresult.length !== 0" :data="waterprojectsresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="type" label="类型" />
+          <el-table-column prop="status" label="状态" />
+        </el-table>
+        <el-table  v-if="disasterpreventionpointresult.length !== 0" :data="disasterpreventionpointresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="type" label="类型" />
+          <el-table-column prop="description" label="描述" />
+        </el-table>
+        <el-table  v-if="solarirstationresult.length !== 0" :data="solarirstationresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
+        <el-table  v-if="sandsiteresult.length !== 0" :data="sandsiteresult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
+        <el-table  v-if="riversidebuildingresult.length !== 0" :data="riversidebuildingresult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
+        <el-table  v-if="waternetpiperesult.length !== 0" :data="waternetpiperesult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
+        <el-table  v-if="irrigationarearesult.length !== 0" :data="irrigationarearesult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="perimet" label="周长" />
+          <el-table-column prop="area" label="面积" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
+        <el-table  v-if="proposalreservoirresult.length !== 0" :data="proposalreservoirresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="region" label="区域" />
+          <el-table-column prop="river" label="流域" />
+        </el-table>
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -60,6 +122,9 @@ export default {
     return {
       shuixiInput: '',
       shuixiTableData: [],
+      select:"",
+      input3:"",
+      typevalue:"",
       initialData: [
         {
           id: 27,
@@ -244,25 +309,90 @@ export default {
           label: '水利工程'
         },
         {
-          value: '岸线规划',
-          label: '岸线规划'
-        },
-        {
-          value: '河湖划界',
-          label: '河湖划界'
-        },
-        {
           value: '灾害转移',
           label: '灾害转移'
         },
         {
-          value: '健康评价',
-          label: '健康评价'
+          value: '太阳能提灌站',
+          label: '太阳能提灌站'
+        },
+        {
+          value: '采砂点位',
+          label: '采砂点位'
+        },
+        {
+          value: '涉河建筑物',
+          label: '涉河建筑物'
+        },
+        {
+          value: '水网管线',
+          label: '水网管线'
+        },
+        {
+          value: '灌区',
+          label: '灌区'
+        },
+        {
+          value: '拟建水库',
+          label: '拟建水库'
         }
-      ]
+      ],
+      watersafetyresult:[],
+      waterresourcesresult:[],
+      waterprojectsresult:[],
+      disasterpreventionpointresult:[],
+      solarirstationresult:[],
+      sandsiteresult:[],
+      riversidebuildingresult:[],
+      waternetpiperesult:[],
+      irrigationarearesult:[],
+      proposalreservoirresult:[],
     }
   },
   methods: {
+    async searchWithRegion() {
+      console.log('搜索开始')
+      console.log(this.input3,this.select, this.typevalue)
+      const type = this.typevalue //水利工程类型
+      const region = this.select  //行政区域
+      // const value = this.input3 //具体内容  暂时不通过这个字段搜索，接口还没写出来
+
+
+
+      if(type === '水安全'){
+        const watersafetyresult = await axios({ url: `/api/generic/watersafety/byregion`, method: 'get', data: { region: region } })
+        this.watersafetyresult = watersafetyresult.data
+      }else if(type === '水资源'){
+        const waterresourcesresult = await axios({ url: `/api/generic/waterresources/byregion`, method: 'get', data: { region: region } })
+        this.waterresourcesresult = waterresourcesresult.data
+      }else if(type === '水利工程'){
+        const waterprojectsresult = await axios({ url: `/api/generic/waterproject/byregion`, method: 'get', data: { region: region } })
+        this.waterprojectsresult = waterprojectsresult.data
+      }else if(type === '灾害转移'){
+        //还没考虑
+        const disasterpreventionpointresult = await axios({ url: `/api/generic/disasterpoint/byaddress`, method: 'get', data: { address: region } })
+        this.disasterpreventionpointresult = disasterpreventionpointresult.data
+      }else if(type === '太阳能提灌站'){
+        const solarirstationresult = await axios({ url: `/api/generic/solarirstation/byregion`, method: 'get', data: { region: region } })
+        this.solarirstationresult = solarirstationresult.data
+      }else if(type === '采砂点位'){
+        const sandsiteresult = await axios({ url: `/api/generic/sandsite/byregion`, method: 'get', data: { region: region } })
+        this.sandsiteresult = sandsiteresult.data
+      }else if(type === '涉河建筑物'){
+        const riversidebuildingresult = await axios({ url: `/api/generic/riversidebuilding/byregion`, method: 'get', data: { region: region } })
+        this.riversidebuildingresult = riversidebuildingresult.data
+      }else if(type === '水网管线'){
+        const waternetpiperesult = await axios({ url: `/api/generic/waternetpipe/byregion`, method: 'get', data: { region: region } })
+        this.waternetpiperesult = waternetpiperesult.data
+      }else if(type === '灌区'){
+        const irrigationarearesult = await axios({ url: `/api/generic/irrigationarea/byregion`, method: 'get', data: { region: region } })
+        this.irrigationarearesult = irrigationarearesult.data
+      }else if(type === '拟建水库'){
+        const proposalreservoirresult = await axios({ url: `/api/generic/proposalreservoir/byregion`, method: 'get', data: { region: region } })
+        this.proposalreservoirresult = proposalreservoirresult.data
+      }
+
+    },
     async shuixiInputChange(element) {
       if (element === '') {
         this.shuixiTableData = this.initialData
@@ -279,9 +409,20 @@ export default {
     },
     async shuixiCellClick(row) {
       console.log('点击这一行：', row)
-      const result = await axios({ url: `/api/water-systems/by-keyword`, method: 'get', data: { keyword: row.riverName } }) //水系基本信息
-      console.log('点击后查询到的数据：', result)
-      bus.emit('shuixiCellClick', result.data[0])
+      const watersystemsresult = await axios({ url: `/api/water-systems/by-keyword`, method: 'get', data: { keyword: row.riverName } }) //水系基本信息
+      //要查询很多数据
+      const solarirstationresult = await axios({ url: `/api/generic/solarirstation/byriver`, method: 'get', data: { river: row.riverName } })
+      const sandsiteresult = await axios({ url: `/api/generic/sandsite/byriver`, method: 'get', data: { river: row.riverName } })
+      const riversidebuildingresult = await axios({ url: `/api/generic/riversidebuilding/byriver`, method: 'get', data: { river: row.riverName } })
+      const waternetpiperesult = await axios({ url: `/api/generic/waternetpipe/byriver`, method: 'get', data: { river: row.riverName } })
+      const irrigationarearesult = await axios({ url: `/api/generic/irrigationarea/byriver`, method: 'get', data: { river: row.riverName } })
+      const proposalreservoirresult = await axios({ url: `/api/generic/proposalreservoir/byriver`, method: 'get', data: { river: row.riverName } })
+      const watersafetyresult = await axios({ url: `/api/generic/watersafety/byriver`, method: 'get', data: { river: row.riverName } })
+      const waterresourcesresult = await axios({ url: `/api/generic/waterresources/byriver`, method: 'get', data: { river: row.riverName } })
+      const waterprojectsresult = await axios({ url: `/api/water-projects`, method: 'get' })
+      const shorelineplanningresult = await axios({ url: `/api/shoreline-planning/by-water-systems-id`, method: 'get', data: { waterSystemsId: row.id } })
+      console.log('太阳能提灌站', solarirstationresult)
+      bus.emit('shuixiCellClick', [watersystemsresult.data[0],solarirstationresult.data,sandsiteresult.data, riversidebuildingresult.data, waternetpiperesult.data, irrigationarearesult.data, proposalreservoirresult.data, watersafetyresult.data, waterresourcesresult.data, waterprojectsresult.data, shorelineplanningresult.data])
     }
   },
   computed: {
@@ -299,9 +440,9 @@ export default {
   setup(props) {
     const state = reactive({
       activeName: ref('shuiXi'),
-      select: '',
-      input3: '',
-      typevalue: ''
+      // select: '',
+      // input3: '',
+      // typevalue: ''
     })
     return {
       ...toRefs(state)
