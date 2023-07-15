@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface WaterResourcesRepository extends JpaRepository<WaterResources, Integer> {
     List<WaterResources> findAllByWaterSystemsId(Integer waterSystemsId);
+
+    List<WaterResources> findAllByRiverContaining(String river);
+
+    List<WaterResources> findAllByRegionContaining(String region);
 }

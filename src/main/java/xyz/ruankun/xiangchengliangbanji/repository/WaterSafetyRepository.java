@@ -14,6 +14,9 @@ public interface WaterSafetyRepository extends JpaRepository<WaterSafety, Intege
 
     List<WaterSafety> findWaterSafetyByNameContainingAndType(String name, WaterSafetyType type);
 
+    List<WaterSafety> findAllByRiverContaining(String river);
+
+    List<WaterSafety> findAllByRegionContaining(String region);
 
 
 }

@@ -68,6 +68,12 @@ public class WaterResources {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "region")
+    private String region;
+
+    @Column(name = "river")
+    private String river;
+
 
 }
 

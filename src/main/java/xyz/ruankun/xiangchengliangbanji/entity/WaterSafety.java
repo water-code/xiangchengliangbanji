@@ -68,5 +68,11 @@ public class WaterSafety {
     @Column(name = "extra_json", nullable = true, columnDefinition = "text")
     private String extraJson;
 
+    @Column(name = "region")
+    private String region;
+
+    @Column(name = "river")
+    private String river;
+
 }
 
