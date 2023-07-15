@@ -1748,8 +1748,8 @@ ul {
   border-radius: 5px;
   box-shadow: #6e6e6e;
   display: none;
-  height: 80%;
-  overflow: auto;
+  height: 40%;
+  // overflow: auto;
   min-width: 300px;
 }
 /* 河流信息 */

@@ -332,4 +332,13 @@ export default {
 .input-with-select .el-input-group__prepend {
   background-color: var(--el-fill-color-blank);
 }
+// 背景色调制透明
+/deep/.el-input--large .el-input__wrapper {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+/deep/.el-table tr,
+/deep/.el-table td.el-table__cell,
+/deep/.el-table th.el-table__cell.is-leaf {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 </style>
