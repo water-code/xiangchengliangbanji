@@ -57,7 +57,7 @@
             <el-table-column prop="intro" label="说明" />
             <el-table-column prop="region" label="区域" />
             <el-table-column prop="river" label="流域" />
-            <el-table-column fixed="right" label="Operations" width="120">
+            <el-table-column fixed="right" label="更多">
               <template #default="scope">
                 <el-button link type="primary" size="small" @click="gotoDetail('采砂点位', scope.row)">详情</el-button>
                 <el-button link type="primary" size="small" @click="layerLocation('采砂点位', scope.row)">跳转</el-button>
@@ -92,7 +92,7 @@
             <el-table-column prop="comment" label="说明" />
             <el-table-column prop="region" label="区域" />
             <el-table-column prop="river" label="流域" />
-            <el-table-column fixed="right" label="Operations" width="120">
+            <el-table-column fixed="right" label="更多">
               <template #default="scope">
                 <el-button link type="primary" size="small" @click="gotoDetail('水网管线', scope.row)">详情</el-button>
                 <el-button link type="primary" size="small" @click="layerLocation('水网管线', scope.row)">跳转</el-button>
