@@ -1512,6 +1512,10 @@ export default {
     },
     goHomeView(layerDis = false) {
       if (layerDis) {
+        //凡是点击了功能按钮就先清除一下高亮
+        if (this.highlight) {
+          this.highlight.remove()
+        }
         let map = view.map
         let layers = map.layers
         layers.forEach(function (layer) {

@@ -64,6 +64,7 @@ import { onMounted } from 'vue'
 //     }
 //   }
 // }
+//https://map.qweather.com/index.html?lat=28.92&lon=99.71&level=8&layer=cloud   乡城县的热力图
 export default {
   setup() {
     onMounted(() => {
@@ -104,6 +105,8 @@ export default {
       document.getElementById('he-plugin-standard').style.width = '100%'
       document.getElementById('he-plugin-standard').style.heigth = '100%'
       document.getElementById('he-plugin-standard').style.backgroundSize = 'auto'
+
+      document.getElementsByClassName('wv-lt-refresh')[0].children[0].href='https://map.qweather.com/index.html?lat=28.92&lon=99.71&level=8&layer=cloud'
     }
   }
 }
