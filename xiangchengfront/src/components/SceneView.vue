@@ -26,7 +26,7 @@
         <CloseBold />
       </el-icon>
     </div>
-    <DetailTab></DetailTab>
+    <DetailTab :attributes="attributes" :name="name"></DetailTab>
 
   </div>
   <div class="weatherTab">
@@ -234,7 +234,9 @@ export default {
       searchTabVisible: false,
       weatherTabVisible: false,
       detailTabVisible: false,
-      highlight: null
+      highlight: null,
+      attributes: {},
+      name: ''
     }
   },
   created() {
@@ -541,7 +543,6 @@ export default {
           title: '护岸',
           popupTemplate: {
             content: element => {
-              console.log(element.graphic.layer.title, element.graphic.attributes)
               this.$emit('setAttributes', element.graphic.layer.title, element.graphic.attributes)
             }
           }
@@ -1008,10 +1009,10 @@ export default {
 
         let ccWidget = new CoordinateConversion({
           view: view
-        });
+        })
 
         // 坐标显示插件
-        view.ui.add(ccWidget, "bottom-left");
+        view.ui.add(ccWidget, 'bottom-left')
 
         // 控制洪水得
         view.ui.add(floodExpand, 'bottom-right')
@@ -1487,8 +1488,10 @@ export default {
 
         bus.on('shuixiCellClick', data => {
           this.detailPaneDisplay()
+        })
+        bus.on('layerLocation', data => {
           //还要进行图层的定位
-          this.layerDataLocation('水系', data[0].id, 14)
+          this.layerDataLocation(data[0], data[1].id, 14)
         })
       } catch (error) {
         console.error('地图初始化失败：', error)

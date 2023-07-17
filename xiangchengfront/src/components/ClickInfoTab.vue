@@ -20,15 +20,15 @@
     </div>
     <div class="disasterInfo" v-if="name === '护岸'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="ID">{{ disasterInfo.Id }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="ID">{{ disasterInfo.id }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '堤防'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="长度">{{ disasterInfo.length }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
@@ -36,23 +36,23 @@
     </div>
     <div class="disasterInfo" v-if="name === '水资源'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
-        <el-descriptions-item label="ID">{{ disasterInfo.Id }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="类型">{{ disasterInfo.type || disasterInfo.resourceType }}</el-descriptions-item>
+        <el-descriptions-item label="ID">{{ disasterInfo.id }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '水电站'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{  disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '水文站'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="名称">{{ disasterInfo.stnm }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{  disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
@@ -74,7 +74,7 @@
     </div>
     <div class="disasterInfo" v-if="name === '灌区'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="面积">{{ disasterInfo.BM_Area }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.BM_Name }}</el-descriptions-item>
         <el-descriptions-item label="BM_Perimet">{{ disasterInfo.BM_Perimet }}</el-descriptions-item>
@@ -86,16 +86,16 @@
     </div>
     <div class="disasterInfo" v-if="name === '拟建水库'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.O_Name || disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '水系'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="支流名称">{{ disasterInfo.rname }}</el-descriptions-item>
-        <el-descriptions-item label="干流名称">{{ disasterInfo.srname }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="支流名称">{{ disasterInfo.riverName || disasterInfo.rname }}</el-descriptions-item>
+        <el-descriptions-item label="干流名称">{{ disasterInfo.affiliatedBasin || disasterInfo.srname}}</el-descriptions-item>
         <el-descriptions-item label="流域总水量">{{ disasterInfo.basinvol }}</el-descriptions-item>
         <el-descriptions-item label="径流">{{ disasterInfo.runoff }}</el-descriptions-item>
         <el-descriptions-item label="已用水量">{{ disasterInfo.consum }}</el-descriptions-item>
@@ -104,7 +104,7 @@
     </div>
     <div class="disasterInfo" v-if="name === '河湖划界'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="干流名称">{{ disasterInfo.rname }}</el-descriptions-item>
         <el-descriptions-item label="支流名称">{{ disasterInfo.srname }}</el-descriptions-item>
       </el-descriptions>
@@ -117,14 +117,14 @@
     </div>
     <div class="disasterInfo" v-if="name === '水网管线'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.O_Name ||  disasterInfo.name}}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
     <div class="disasterInfo" v-if="name === '涉河建筑物'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID || 0}}</el-descriptions-item>
         <el-descriptions-item label="干流">{{ disasterInfo.river }}</el-descriptions-item>
         <el-descriptions-item label="类型">{{ disasterInfo.type }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
@@ -134,7 +134,7 @@
     </div>
     <div class="disasterInfo" v-if="name === '采砂点位'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID }}</el-descriptions-item>
         <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="介绍">{{ disasterInfo.intro }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
@@ -142,9 +142,9 @@
     </div>
     <div class="disasterInfo" v-if="name === '太阳能提灌站'">
       <el-descriptions :border="true" :column="2">
-        <el-descriptions-item label="FID">{{ disasterInfo.FID }}</el-descriptions-item>
-        <el-descriptions-item label="名称">{{ disasterInfo.O_Name }}</el-descriptions-item>
-        <el-descriptions-item label="介绍">{{ disasterInfo.O_Comment }}</el-descriptions-item>
+        <el-descriptions-item label="FID">{{ disasterInfo.id || disasterInfo.FID || 0}}</el-descriptions-item>
+        <el-descriptions-item label="名称">{{ disasterInfo.name }}</el-descriptions-item>
+        <el-descriptions-item label="介绍">{{ disasterInfo.comment }}</el-descriptions-item>
         <el-descriptions-item label="所属行政区划">{{ disasterInfo.region }}</el-descriptions-item>
       </el-descriptions>
     </div>
@@ -173,6 +173,7 @@ export default {
     }
   },
   setup(props) {
+    console.log(props)
     const state = reactive({
       dialogVisible: false,
       activeTab: 'disaster',

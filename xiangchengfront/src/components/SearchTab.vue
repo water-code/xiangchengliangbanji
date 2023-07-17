@@ -9,7 +9,7 @@
       </div>
       <div class="data-table">
         <el-table :data="shuixiTableData" style=" background-color: rgba(255,255,255,0)" row-key="id" @cell-click="shuixiCellClick">
-          <el-table-column prop="riverName" label="河流名称" />
+          <el-table-column prop="riverName" label="河流名称"></el-table-column>
         </el-table>
       </div>
     </el-tab-pane>
@@ -39,59 +39,59 @@
               </el-select>
             </template>
             <template #append>
-              <el-button :icon="Search"  @click="searchWithRegion"/>
+              <el-button :icon="Search" @click="searchWithRegion" />
             </template>
           </el-input>
         </div>
       </div>
       <div class="data-table">
-        <el-table  v-if="watersafetyresult.length !== 0" :data="watersafetyresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="watersafetyresult.length !== 0" :data="watersafetyresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="type" label="类型" />
         </el-table>
-        <el-table  v-if="waterresourcesresult.length !== 0" :data="waterresourcesresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="waterresourcesresult.length !== 0" :data="waterresourcesresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="resource_type" label="类型" />
           <el-table-column prop="extractionRate" label="利用率" />
         </el-table>
-        <el-table  v-if="waterprojectsresult.length !== 0" :data="waterprojectsresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="waterprojectsresult.length !== 0" :data="waterprojectsresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="type" label="类型" />
           <el-table-column prop="status" label="状态" />
         </el-table>
-        <el-table  v-if="disasterpreventionpointresult.length !== 0" :data="disasterpreventionpointresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="disasterpreventionpointresult.length !== 0" :data="disasterpreventionpointresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="type" label="类型" />
           <el-table-column prop="description" label="描述" />
         </el-table>
-        <el-table  v-if="solarirstationresult.length !== 0" :data="solarirstationresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="solarirstationresult.length !== 0" :data="solarirstationresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="region" label="区域" />
           <el-table-column prop="river" label="流域" />
         </el-table>
-        <el-table  v-if="sandsiteresult.length !== 0" :data="sandsiteresult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+        <el-table v-if="sandsiteresult.length !== 0" :data="sandsiteresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="region" label="区域" />
           <el-table-column prop="river" label="流域" />
         </el-table>
-        <el-table  v-if="riversidebuildingresult.length !== 0" :data="riversidebuildingresult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+        <el-table v-if="riversidebuildingresult.length !== 0" :data="riversidebuildingresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="region" label="区域" />
           <el-table-column prop="river" label="流域" />
         </el-table>
-        <el-table  v-if="waternetpiperesult.length !== 0" :data="waternetpiperesult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+        <el-table v-if="waternetpiperesult.length !== 0" :data="waternetpiperesult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="region" label="区域" />
           <el-table-column prop="river" label="流域" />
         </el-table>
-        <el-table  v-if="irrigationarearesult.length !== 0" :data="irrigationarearesult" style=" background-color: rgba(255,255,255,0)" row-key="id" >
+        <el-table v-if="irrigationarearesult.length !== 0" :data="irrigationarearesult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="perimet" label="周长" />
@@ -99,7 +99,7 @@
           <el-table-column prop="region" label="区域" />
           <el-table-column prop="river" label="流域" />
         </el-table>
-        <el-table  v-if="proposalreservoirresult.length !== 0" :data="proposalreservoirresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
+        <el-table v-if="proposalreservoirresult.length !== 0" :data="proposalreservoirresult" style=" background-color: rgba(255,255,255,0)" row-key="id">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="region" label="区域" />
@@ -122,9 +122,9 @@ export default {
     return {
       shuixiInput: '',
       shuixiTableData: [],
-      select:"",
-      input3:"",
-      typevalue:"",
+      select: '',
+      input3: '',
+      typevalue: '',
       initialData: [
         {
           id: 27,
@@ -337,61 +337,58 @@ export default {
           label: '拟建水库'
         }
       ],
-      watersafetyresult:[],
-      waterresourcesresult:[],
-      waterprojectsresult:[],
-      disasterpreventionpointresult:[],
-      solarirstationresult:[],
-      sandsiteresult:[],
-      riversidebuildingresult:[],
-      waternetpiperesult:[],
-      irrigationarearesult:[],
-      proposalreservoirresult:[],
+      watersafetyresult: [],
+      waterresourcesresult: [],
+      waterprojectsresult: [],
+      disasterpreventionpointresult: [],
+      solarirstationresult: [],
+      sandsiteresult: [],
+      riversidebuildingresult: [],
+      waternetpiperesult: [],
+      irrigationarearesult: [],
+      proposalreservoirresult: []
     }
   },
   methods: {
     async searchWithRegion() {
       console.log('搜索开始')
-      console.log(this.input3,this.select, this.typevalue)
+      console.log(this.input3, this.select, this.typevalue)
       const type = this.typevalue //水利工程类型
-      const region = this.select  //行政区域
+      const region = this.select //行政区域
       // const value = this.input3 //具体内容  暂时不通过这个字段搜索，接口还没写出来
 
-
-
-      if(type === '水安全'){
+      if (type === '水安全') {
         const watersafetyresult = await axios({ url: `/api/generic/watersafety/byregion`, method: 'get', data: { region: region } })
         this.watersafetyresult = watersafetyresult.data
-      }else if(type === '水资源'){
+      } else if (type === '水资源') {
         const waterresourcesresult = await axios({ url: `/api/generic/waterresources/byregion`, method: 'get', data: { region: region } })
         this.waterresourcesresult = waterresourcesresult.data
-      }else if(type === '水利工程'){
+      } else if (type === '水利工程') {
         const waterprojectsresult = await axios({ url: `/api/generic/waterproject/byregion`, method: 'get', data: { region: region } })
         this.waterprojectsresult = waterprojectsresult.data
-      }else if(type === '灾害转移'){
+      } else if (type === '灾害转移') {
         //还没考虑
         const disasterpreventionpointresult = await axios({ url: `/api/generic/disasterpoint/byaddress`, method: 'get', data: { address: region } })
         this.disasterpreventionpointresult = disasterpreventionpointresult.data
-      }else if(type === '太阳能提灌站'){
+      } else if (type === '太阳能提灌站') {
         const solarirstationresult = await axios({ url: `/api/generic/solarirstation/byregion`, method: 'get', data: { region: region } })
         this.solarirstationresult = solarirstationresult.data
-      }else if(type === '采砂点位'){
+      } else if (type === '采砂点位') {
         const sandsiteresult = await axios({ url: `/api/generic/sandsite/byregion`, method: 'get', data: { region: region } })
         this.sandsiteresult = sandsiteresult.data
-      }else if(type === '涉河建筑物'){
+      } else if (type === '涉河建筑物') {
         const riversidebuildingresult = await axios({ url: `/api/generic/riversidebuilding/byregion`, method: 'get', data: { region: region } })
         this.riversidebuildingresult = riversidebuildingresult.data
-      }else if(type === '水网管线'){
+      } else if (type === '水网管线') {
         const waternetpiperesult = await axios({ url: `/api/generic/waternetpipe/byregion`, method: 'get', data: { region: region } })
         this.waternetpiperesult = waternetpiperesult.data
-      }else if(type === '灌区'){
+      } else if (type === '灌区') {
         const irrigationarearesult = await axios({ url: `/api/generic/irrigationarea/byregion`, method: 'get', data: { region: region } })
         this.irrigationarearesult = irrigationarearesult.data
-      }else if(type === '拟建水库'){
+      } else if (type === '拟建水库') {
         const proposalreservoirresult = await axios({ url: `/api/generic/proposalreservoir/byregion`, method: 'get', data: { region: region } })
         this.proposalreservoirresult = proposalreservoirresult.data
       }
-
     },
     async shuixiInputChange(element) {
       if (element === '') {
@@ -422,7 +419,19 @@ export default {
       const waterprojectsresult = await axios({ url: `/api/water-projects`, method: 'get' })
       const shorelineplanningresult = await axios({ url: `/api/shoreline-planning/by-water-systems-id`, method: 'get', data: { waterSystemsId: row.id } })
       console.log('太阳能提灌站', solarirstationresult)
-      bus.emit('shuixiCellClick', [watersystemsresult.data[0],solarirstationresult.data,sandsiteresult.data, riversidebuildingresult.data, waternetpiperesult.data, irrigationarearesult.data, proposalreservoirresult.data, watersafetyresult.data, waterresourcesresult.data, waterprojectsresult.data, shorelineplanningresult.data])
+      bus.emit('shuixiCellClick', [
+        watersystemsresult.data[0],
+        solarirstationresult.data,
+        sandsiteresult.data,
+        riversidebuildingresult.data,
+        waternetpiperesult.data,
+        irrigationarearesult.data,
+        proposalreservoirresult.data,
+        watersafetyresult.data,
+        waterresourcesresult.data,
+        waterprojectsresult.data,
+        shorelineplanningresult.data
+      ])
     }
   },
   computed: {
@@ -439,7 +448,7 @@ export default {
   },
   setup(props) {
     const state = reactive({
-      activeName: ref('shuiXi'),
+      activeName: ref('shuiXi')
       // select: '',
       // input3: '',
       // typevalue: ''
@@ -451,7 +460,6 @@ export default {
 }
 </script>
 <style scoped lang="less">
-
 .search-tab > .el-tabs__content {
   /* padding: 5px; */
   color: #6b778c;
