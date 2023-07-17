@@ -420,13 +420,11 @@ export default {
 .el-button + .el-button {
   margin: 0;
 }
-// .el-table__footer-wrapper,
-// /deep/.el-table__header-wrapper {
-//   position: fixed;
-//   z-index: 10;
-// }
-// /deep/.el-table__body-wrapper {
-//   top: 50px;
-//   bottom: 50px;
-// }
+/deep/.el-table__header-wrapper {
+  position: fixed;
+  z-index: 10;
+}
+/deep/.el-table__body {
+  margin-top: 40px;
+}
 </style>
